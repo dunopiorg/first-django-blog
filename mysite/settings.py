@@ -25,12 +25,13 @@ SECRET_KEY = ')97lqjigehe-xxjttmkk4qvtu@6&9yu2icx-dsfekcz5+ys^64'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.125.99.145', '.pythonanywhere.com']
+ALLOWED_HOSTS = ['13.125.99.145', '.pythonanywhere.com', 'ip-172-31-6-125.ap-northeast-2.compute.internal']
 
 
 # Application definition
-
+# corsheaders 설치 
 INSTALLED_APPS = [
+#    'corsheaders', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,9 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'rest_framework',     
 ]
 
+# CommonMiddleware, CorsMiddleware 설치 for CORS Cross Domain Check in Chrome, Firefox..
 MIDDLEWARE = [
+#    'corsheaders.middleware.CorsMiddleware',
+#    'django.middleware.common.CommonMiddleware',   
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +54,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#CORS_ALLOW_CREDENTIALS = True
+# 테스트로 모든 host 허락
+#CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_WHITELIST = (
+#        'www.koreabaseball.com'
+#)
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -114,9 +126,55 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Log file setting
+"""
+LOG_FILE = os.path.join(os.path.dirname(__file__), '../log', 'mysite.log') 
+LOGGING = { 
+    'version': 1, 
+    'disable_existing_loggers': False, 
+    'formatters': { 
+        'verbose': { 
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s", 
+            'datefmt' : "%d/%b/%Y %H:%M:%S" 
+        }, 
+        'simple': { 
+            'format': '%(levelname)s %(message)s' 
+        }, 
+    }, 
+    'handlers': {
+        'file': { 
+            'level': 'DEBUG', 
+            'class': 'logging.handlers.RotatingFileHandler', 
+            'filename': LOG_FILE, 
+            'formatter': 'verbose', 
+            'maxBytes':1024*1024*10, 
+            'backupCount':5, 
+        }, 
+    }, 
+    'loggers': { 
+        'django': { 
+            'handlers':['file'], 
+            'propagate': True, 
+            'level':'INFO', 
+        }, 
+        'django.request': { 
+            'handlers':['file'], 
+            'propagate': True, 
+            'level':'INFO', 
+        }, 
+    } 
+}"""
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
+LOGIN_REDIRECT_URL = '/blog/home'
+
