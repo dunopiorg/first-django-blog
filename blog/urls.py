@@ -8,6 +8,9 @@ from django.contrib.auth.views import (
 urlpatterns = [
     url(r'^gameid/$', views.get_article),
     url(r'^publish/$', views.set_article, name='publish'),
+    url(r'^get_article/$', views.get_article_v2),
+    url(r'^test/$', views.test),
+    url(r'^set_rds_database/$', views.set_rds_database),
     url(r'^$', views.post_list, name='post_list'),
     url(r'^home$', views.home),
     url(r'^login/$', login, {'template_name': 'blog/login.html'}),

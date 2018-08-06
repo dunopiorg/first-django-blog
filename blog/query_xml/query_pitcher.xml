@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<data>
+	<query id="get_hitter_gamecontapp_record">
+		SELECT GMKEY, GYEAR, GDAY, SERNO, TURN, INN, TB, INN2, OCOUNT, BCOUNT, RTURN
+		, HOW, FIELD, PLACE, HITTER,	HITNAME, PITNAME, PITCHER, CATNAME, CATCHER, BCNT
+		, TSCORE, BSCORE, BASE1B, BASE2B, BASE3B, BASE1A, BASE2A, BASE3A
+		FROM minor_baseball.gamecontapp
+		WHERE HITTER = '{HITTER}'
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
+	<query id="get_kbo_pitcher_total">
+		SELECT PCODE, GYEAR, TEAM, ERA, GAMENUM, CG, SHO, W, L, SV, HOLD, BF, INN, INN2, HIT, HR, BB, HP, KK, R, ER, SCORE, WAR, INNG, INNK, QS, OPS, WHIP, INNB, KK_BB_RT, PA_BB_RT, PA_KK_RT, WPA, WRA, INN_FLAG
+        FROM baseball.pittotal
+        WHERE PCODE = '{PITCHER}'
+	</query>
+
+    <query id="get_pitcher">
+		SELECT GMKEY, GDAY, TB, NAME, PCODE, POS, `START`, QUIT, CG, SHO, WLS, HOLD, INN, INN2, BF, PA, AB, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, WP, BK, ERR, R, ER, SCORE
+        FROM minor_baseball.pitcher
+        WHERE PCODE = '{PITCHER}'
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
+    <query id="get_kbo_pitcher">
+		SELECT GMKEY, GDAY, TB, NAME, PCODE, POS, `START`, QUIT, CG, SHO, WLS, HOLD, INN, INN2, BF, PA, AB, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, WP, BK, ERR, R, ER, SCORE
+        FROM baseball.pitcher
+        WHERE PCODE = '{PITCHER}'
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
+    <query id="get_pitcher_total">
+		SELECT PCODE, GYEAR, TEAM, ERA, GAMENUM, CG, SHO, W, L, SV, HOLD, BF, INN, INN2, HIT, HR, BB, HP, KK, R, ER, SCORE
+        FROM minor_baseball.pittotal
+        WHERE PCODE = '{PITCHER}'
+        {GYEAR}
+	</query>
+
+    <query id="get_pitcher_gamecontapp_record">
+        SELECT GMKEY, GYEAR, GDAY, SERNO, TURN, INN, TB, INN2, OCOUNT, BCOUNT, RTURN
+        , HOW, FIELD, PLACE, HITTER,	HITNAME, PITNAME, PITCHER, CATNAME, CATCHER, BCNT
+        , TSCORE, BSCORE, BASE1B, BASE2B, BASE3B, BASE1A, BASE2A, BASE3A
+        FROM minor_baseball.gamecontapp
+        WHERE PITCHER = '{PITCHER}'
+        AND GYEAR = '2018'
+        {GAME_ID}
+        ORDER BY gday DESC
+        {LIMIT}
+    </query>
+</data>

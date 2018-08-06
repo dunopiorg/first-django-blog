@@ -25,7 +25,7 @@ SECRET_KEY = ')97lqjigehe-xxjttmkk4qvtu@6&9yu2icx-dsfekcz5+ys^64'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.125.99.145', '.pythonanywhere.com', 'ip-172-31-6-125.ap-northeast-2.compute.internal']
+ALLOWED_HOSTS = ['13.125.99.145', '.pythonanywhere.com', 'ip-172-31-6-125.ap-northeast-2.compute.internal', 'localhost']
 
 
 # Application definition
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
-    'rest_framework',     
+    # 'rest_framework',
 ]
 
 # CommonMiddleware, CorsMiddleware 설치 for CORS Cross Domain Check in Chrome, Firefox..

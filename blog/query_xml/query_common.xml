@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<data>
+    <query id="get_score">
+		SELECT GMKEY, GDAY, 1T, 1B, 2T, 2B, 3T, 3B, 4T, 4B, 5T, 5B, 6T, 6B, 7T, 7B, 8T, 8B, 9T, 9B, 10T, 10B, 11T, 11B, 12T, 12B, 13T, 13B, 14T, 14B, 15T, 15B, 16T, 16B, 17T, 17B, 18T, 18B, 19T, 19B, 20T, 20B, 21T, 21B, 22T, 22B, 23T, 23B, 24T, 24B, 25T, 25B, TPOINT, BPOINT, THIT, BHIT, TERR, BERR, TBBHP, BBBHP
+		FROM minor_baseball.score
+		WHERE 1 = 1
+		{GYEAR}
+		{TEAM}
+    </query>
+
+	<query id="get_injury">
+		SELECT PCODE
+		, INJURY_START_DT
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = INJURY_PART_ID) AS PART_NM
+		, T_ID
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = INJURY_ID) AS INJURY_NM
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = OCSY_ID) AS OCSY_NM
+		, INJURY_END_DT, INJURY_SIDE_SC
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = INJURY_LEVEL_ID) AS LEVEL_NM
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = OCME_ID) AS OCME_NM
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = CURE_ID) AS CURE_NM
+		, RECURRENCE_CK, SUB_P_ID, ENTRY_OFF_DT
+		, (SELECT CD_NM FROM baseball.cd_detail WHERE CD_SE = NOW_STATE_ID) AS STATE_NM
+		, ETC_ME
+		, REG_DT
+		FROM baseball.player_injury
+		WHERE PCODE = '{PCODE}'
+        ORDER BY REG_DT DESC
+	</query>
+
+    <query id="get_minor_team_name_info">
+        SELECT gyear, team, teamname, league
+        FROM minor_baseball.team_league
+    </query>
+
+    <query id="get_kbo_team_name_info">
+        SELECT team, team_kor
+        FROM baseball.team_name
+    </query>
+
+    <query id="get_team_rank">
+        SELECT GYEAR, RANK, LEAGUE, TEAM, GAME, WIN, LOSE, SAME, WRA, AB, HIT, HR, SB, RUN, INN, INN2, R, ER, ERR, HRA, LRA, BRA, ERA, DRA, `CONTINUE`, H2, H3, BB, HP, SF
+        FROM minor_baseball.teamrank
+    </query>
+
+    <query id="get_team_score">
+        SELECT GMKEY, GDAY, 1T, 1B, 2T, 2B, 3T, 3B, 4T, 4B, 5T, 5B, 6T, 6B, 7T, 7B, 8T, 8B, 9T, 9B,
+        10T, 10B, 11T, 11B, 12T, 12B, 13T, 13B, 14T, 14B, 15T, 15B, 16T, 16B, 17T, 17B, 18T, 18B,
+        19T, 19B, 20T, 20B, 21T, 21B, 22T, 22B, 23T, 23B, 24T, 24B, 25T, 25B,
+        TPOINT, BPOINT, THIT, BHIT, TERR, BERR, TBBHP, BBBHP
+        FROM minor_baseball.score
+        WHERE GDAY LIKE '2018%'
+        AND (GMKEY LIKE '%{TEAM}__0' OR GMKEY LIKE '%{TEAM}0')
+        ORDER BY GDAY DESC
+    </query>
+
+    <query id="get_test_team_scores">
+        SELECT GMKEY, GDAY, 1T, 1B, 2T, 2B, 3T, 3B, 4T, 4B, 5T, 5B, 6T, 6B, 7T, 7B, 8T, 8B, 9T, 9B,
+        10T, 10B, 11T, 11B, 12T, 12B, 13T, 13B, 14T, 14B, 15T, 15B, 16T, 16B, 17T, 17B, 18T, 18B,
+        19T, 19B, 20T, 20B, 21T, 21B, 22T, 22B, 23T, 23B, 24T, 24B, 25T, 25B,
+        TPOINT, BPOINT, THIT, BHIT, TERR, BERR, TBBHP, BBBHP
+        FROM minor_baseball.score
+        WHERE GDAY LIKE '2018%'
+        ORDER BY GDAY DESC
+    </query>
+
+    <query id="set_rds_db_team_sentence">
+        INSERT INTO oper_db.team_sentence
+        (subject, category, `index`, priority, conditions, sentence, parameters)
+        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')
+    </query>
+
+    <query id="delete_rds_db_team_sentence">
+        DELETE FROM oper_db.team_sentence
+    </query>
+
+    <query id="get_template_db_by_name">
+        SELECT *
+        FROM oper_db.{0}
+    </query>
+</data>

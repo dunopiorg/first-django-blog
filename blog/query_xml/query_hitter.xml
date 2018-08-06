@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<data>
+	<query id="get_hitter_gamecontapp_record">
+		SELECT GMKEY, GYEAR, GDAY, SERNO, TURN, INN, TB, INN2, OCOUNT, BCOUNT, RTURN
+		, HOW, FIELD, PLACE, HITTER,	HITNAME, PITNAME, PITCHER, CATNAME, CATCHER, BCNT
+		, TSCORE, BSCORE, BASE1B, BASE2B, BASE3B, BASE1A, BASE2A, BASE3A
+		FROM minor_baseball.gamecontapp
+		WHERE HITTER = '{HITTER}'
+		{GMKEY}
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
+    <query id="get_kbo_hitter_total">
+		SELECT PCODE, GYEAR, TEAM, HRA, GAMENUM, AB, RUN, HIT, H2, H3, HR, TB, RBI, SB, CS, SH, SF, BB, HP, KK, GD, ERR, SCORE, WPA, WAR, ISOP, BABIP, OBP, SLG, PA_FLAG, WRC_PLUS, WOBA, OPS
+        FROM baseball.battotal
+        WHERE PCODE = '{HITTER}'
+	</query>
+
+    <query id="get_hitter">
+		SELECT GMKEY, GDAY, TB, NAME, PCODE, TURN, ONETURN, PA, AB, RBI, RUN, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, ERR, LOB, SCORE
+        FROM minor_baseball.hitter
+        WHERE PCODE = '{HITTER}'
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
+	<query id="get_hitter_total">
+		SELECT PCODE, GYEAR, TEAM, HRA, GAMENUM, AB, RUN, HIT, H2, H3, HR, TB, RBI, SB, CS, SH, SF, BB, HP, KK, GD, ERR, SCORE, WPA, WAR, ISOP, BABIP, OBP, SLG, PA_FLAG, WRC_PLUS, WOBA, OPS
+        FROM minor_baseball.battotal
+        WHERE PCODE = '{HITTER}'
+		{GYEAR}
+	</query>
+</data>
