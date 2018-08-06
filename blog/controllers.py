@@ -26,7 +26,8 @@ class RecordApp(object):
         return result
 
     def test_get_team(self):
-        df_all_score = self.lab2ai_conn.get_test_team_scores()
+        result_list = []
+        df_all_score = self.lab2ai_conn.get_test_team_scores('20180630KTHH0')
         for i, row in df_all_score.iterrows():
             game_id = row['GMKEY']
             t_socre = row['TPOINT']
@@ -35,11 +36,13 @@ class RecordApp(object):
             if t_socre > b_socre:
                 win_team = game_id[8:10]
                 loss_team = game_id[10:12]
-                print(self.get_team_paragraph(win_team, loss_team, game_id))
+                result_list.append(self.get_team_paragraph(win_team, loss_team, game_id))
             elif t_socre < b_socre:
                 loss_team = game_id[8:10]
                 win_team = game_id[10:12]
-                print(self.get_team_paragraph(win_team, loss_team, game_id))
+                result_list.append(self.get_team_paragraph(win_team, loss_team, game_id))
+
+        return result_list
 
     def set_rds_database_from_gsheet(self):
         df_team_sentence_db = self.template.TEAM_SENTENCE_DB

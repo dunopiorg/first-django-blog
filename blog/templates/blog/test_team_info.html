@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>TEST</title>
+{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for d in args %}
+            <li>
+                {% key, value in d.items() %}
+                    {{key}} {{value}}
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

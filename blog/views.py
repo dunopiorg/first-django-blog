@@ -190,11 +190,9 @@ def test(request):
     record_app = RecordApp()
     data = json.loads(request.body.decode('utf-8'))
 
-    win_team = data['win_team']
-    loss_team = data['loss_team']
-    record_app.test_get_team()
-    response = JsonResponse({'status': 'OK', 'message': 'GOOD'}, status=200)
-    return response
+    args = record_app.test_get_team()
+
+    return render(request, 'blog/test_team_info.html', args)
 
 
 @csrf_exempt
@@ -230,7 +228,7 @@ def home(request):
     numbers = [1, 2, 3, 4, 5]
     name = 'Robot Write An Article'
     
-    args = {'siteName': name, 'numbers':numbers}
+    args = {'siteName': name, 'numbers': numbers}
     return render(request, 'blog/home.html', args)
 
 

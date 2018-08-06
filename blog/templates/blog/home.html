@@ -6,5 +6,9 @@
 {% endblock %}
 
 {% block body %}
-<h1>Home</h1>
+    {% if user.is_authenticated %}
+        <h1>Home</h1>
+    {% else %}
+        <h1>로그인해주세요</h1>
+    {% endif %}
 {% endblock %}
