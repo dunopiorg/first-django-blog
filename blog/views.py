@@ -188,9 +188,9 @@ def set_article(request):
 @csrf_exempt
 def test(request):
     record_app = RecordApp()
-    data = json.loads(request.body.decode('utf-8'))
-    game_id = data['game_id']
-    hitter = data['hitter']
+    # data = json.loads(request.body.decode('utf-8'))
+    # game_id = data['game_id']
+    # hitter = data['hitter']
     args = record_app.test_get_team()
     # player_result = record_app.get_player_event_dict(game_id, hitter_code=hitter)
     print(args)
