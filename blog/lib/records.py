@@ -467,6 +467,8 @@ class Records(object):
             if how in self._HIT:
                 hit_count += 1
 
+        if ab_count == 0:
+            return result_list
         avg = round(hit_count / ab_count, 3)
 
         long_days_dict = data_dict.copy()

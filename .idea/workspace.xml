@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29bcd5de-be6d-4e4b-b7ee-bb795d528fc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/blog/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/controllers.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/controllers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/lib/records.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/lib/records.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +39,7 @@
           <entry key="Python Console" value="1030" />
           <entry key="dummy" value="9" />
           <entry key="html" value="239" />
-          <entry key="py" value="16880" />
+          <entry key="py" value="16901" />
           <entry key="txt" value="131" />
           <entry key="xml" value="538" />
         </counts>
@@ -48,7 +48,7 @@
         <counts>
           <entry key="HTML" value="239" />
           <entry key="PLAIN_TEXT" value="140" />
-          <entry key="Python" value="17910" />
+          <entry key="Python" value="17931" />
           <entry key="XML" value="538" />
         </counts>
       </usages-collector>
@@ -146,11 +146,11 @@
       </split-first>
       <split-second>
         <leaf>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/blog/controllers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="304">
-                  <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+                <state relative-caret-position="414">
+                  <caret line="61" column="56" selection-start-line="61" selection-start-column="56" selection-end-line="61" selection-end-column="56" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
                     <marker date="1533557981164" expanded="true" signature="156:157" ph="..." />
@@ -168,11 +168,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/lib/records.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="186">
-                  <caret line="524" column="8" selection-start-line="524" selection-start-column="8" selection-end-line="524" selection-end-column="8" />
+                <state relative-caret-position="296">
+                  <caret line="470" column="30" selection-start-line="470" selection-start-column="30" selection-end-line="470" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#36#0" expanded="true" />
                     <element signature="e#1603#1626#0" />
@@ -184,7 +184,7 @@
                     <element signature="e#12464#13297#0" />
                     <element signature="e#13370#13547#0" />
                     <element signature="e#13612#16069#0" />
-                    <marker date="1533554018111" expanded="true" signature="384:1603" ph="..." />
+                    <marker date="1533558051323" expanded="true" signature="384:1603" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -306,15 +306,15 @@
         <option value="$PROJECT_DIR$/blog/templates/blog/test_team_info.html" />
         <option value="$PROJECT_DIR$/blog/models.py" />
         <option value="$PROJECT_DIR$/blog/query_xml/query_common.xml" />
-        <option value="$PROJECT_DIR$/blog/lib/records.py" />
         <option value="$PROJECT_DIR$/blog/templates/blog/test_player_info.html" />
         <option value="$PROJECT_DIR$/blog/urls.py" />
         <option value="$PROJECT_DIR$/blog/views.py" />
         <option value="$PROJECT_DIR$/blog/controllers.py" />
+        <option value="$PROJECT_DIR$/blog/lib/records.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-1928" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -887,26 +887,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/blog/lib/records.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="524" column="8" selection-start-line="524" selection-start-column="8" selection-end-line="524" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-            <element signature="e#1603#1626#0" />
-            <element signature="e#1692#8235#0" />
-            <element signature="e#8306#8479#0" />
-            <element signature="e#8540#10519#0" />
-            <element signature="e#10587#12065#0" />
-            <element signature="e#12125#12341#0" />
-            <element signature="e#12464#13297#0" />
-            <element signature="e#13370#13547#0" />
-            <element signature="e#13612#16069#0" />
-            <marker date="1533554018111" expanded="true" signature="384:1603" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/blog/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="318">
@@ -920,11 +900,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+        <state relative-caret-position="414">
+          <caret line="61" column="56" selection-start-line="61" selection-start-column="56" selection-end-line="61" selection-end-column="56" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
             <marker date="1533557981164" expanded="true" signature="156:157" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blog/lib/records.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="470" column="30" selection-start-line="470" selection-start-column="30" selection-end-line="470" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+            <element signature="e#1603#1626#0" />
+            <element signature="e#1692#8235#0" />
+            <element signature="e#8306#8479#0" />
+            <element signature="e#8540#10519#0" />
+            <element signature="e#10587#12065#0" />
+            <element signature="e#12125#12341#0" />
+            <element signature="e#12464#13297#0" />
+            <element signature="e#13370#13547#0" />
+            <element signature="e#13612#16069#0" />
+            <marker date="1533558051323" expanded="true" signature="384:1603" ph="..." />
           </folding>
         </state>
       </provider>
