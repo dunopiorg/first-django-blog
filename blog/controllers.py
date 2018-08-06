@@ -28,7 +28,7 @@ class RecordApp(object):
 
     def test_get_team(self):
         result_list = []
-        df_all_score = self.lab2ai_conn.get_test_team_scores('20180630KTHH0')
+        df_all_score = self.lab2ai_conn.get_test_team_scores()
         for i, row in df_all_score.iterrows():
             game_id = row['GMKEY']
             t_socre = row['TPOINT']
