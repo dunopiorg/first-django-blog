@@ -6,7 +6,7 @@
 
 {% block body %}
     <ul>
-        {% for d in args %}
+        {% for d in player_result %}
             <li>
                 {% key, value in d.items() %}
                     {{key}} {{value}}
