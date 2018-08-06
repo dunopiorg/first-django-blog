@@ -182,9 +182,30 @@ def set_article(request):
     else:
         response = JsonResponse({'status':'FAIL', 'message': 'Not exist keys'}, status=300)
     return response
+
+
+def get_player_info_test(data_dict):
+    pitcher_dict = {}
+    hitter_list = []
+    if "info" in data_dict:
+        for info_d in data_dict["info"]:
+            if info_d["info"]:
+                inn = info_d["inning"]
+                tb = info_d["tb"]
+                for hitter_event in info_d["hitter_events"]:
+                    hitter_code = hitter_event["score_scenes"]["hitter_or_runner"]["pcode"]
+                    hitter_name = hitter_event["score_scenes"]["hitter_or_runner"]["name"]
+                    pitcher_code = hitter_event["score_scenes"]["pitcher"]["pcode"]
+                    pitcher_name = hitter_event["score_scenes"]["pitcher"]["name"]
+                    if pitcher_code not in pitcher_dict:
+                        pitcher_dict[pitcher_code] = pitcher_name
+                    hitter_list.append({hitter_code: hitter_name, "inning": inn, "tb": tb})
+
+    print(pitcher_dict, hitter_list)
+
 # endregion Article
 
-
+# region 임시 테스트
 @csrf_exempt
 def test(request):
     record_app = RecordApp()
@@ -197,6 +218,20 @@ def test(request):
     # response = JsonResponse(result_dict, status=200)
     # render(request, 'blog/test_team_info.html', player_result)
     return render(request, 'blog/test_team_info.html', context)
+
+@csrf_exempt
+def test_2(request):
+    record_app = RecordApp()
+    # data = json.loads(request.body.decode('utf-8'))
+    # game_id = data['game_id']
+    # hitter = data['hitter']
+    args = record_app.test_get_team()
+    # player_result = record_app.get_player_event_dict(game_id, hitter_code=hitter)
+    context = {'args': args}
+    # response = JsonResponse(result_dict, status=200)
+    # render(request, 'blog/test_team_info.html', player_result)
+    return render(request, 'blog/test_player_info.html', context)
+# endregion 임시 테스트
 
 
 @csrf_exempt

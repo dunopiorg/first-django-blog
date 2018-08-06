@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>TEST TEAM INFO</title>
+<title>TEST PLAYER INFO</title>
 {% endblock %}
 
 {% block body %}
+    {% for c in contents %}
+        {{c}}
+    {% endfor %}
     <ul>
         {% for d in args %}
             <li>

@@ -15,9 +15,9 @@ class RecordApp(object):
     def get_team_paragraph(self, win_team, loss_team, game_id):
         result = []
         data_dict = {'승리팀': self.record.MINOR_TEAM_NAME[win_team], '패배팀': self.record.MINOR_TEAM_NAME[loss_team]}
-        win_team_data = self.record.get_team_win_record(win_team)
-        loss_team_data = self.record.get_team_loss_record(loss_team)
-        versus_team_data = self.record.get_team_versus_record(win_team, loss_team)
+        win_team_data = self.record.get_team_win_record(win_team, game_id)
+        loss_team_data = self.record.get_team_loss_record(loss_team, game_id)
+        versus_team_data = self.record.get_team_versus_record(win_team, loss_team, game_id)
 
         data_list = [win_team_data[0], loss_team_data[0], versus_team_data[0]]
         result_sentence = self.template.get_team_sentence_list(data_list)

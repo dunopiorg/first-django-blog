@@ -553,11 +553,11 @@ class Records(object):
     # endregion [PITCHER EVENT]
 
     # region [TEAM EVENT]
-    def get_team_win_record(self, team_code):
+    def get_team_win_record(self, team_code, game_id):
         data_dict = {'subject': '팀기록1', 'category': '승리팀_연승패', '승리팀': self.MINOR_TEAM_NAME[team_code]}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code)
+        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
         df_team_score = self.set_wls_score(df_score, team_code)
         wls_list = df_team_score['WLS'].tolist()
         continue_w = 0
@@ -596,11 +596,11 @@ class Records(object):
 
         return result_list
 
-    def get_team_loss_record(self, team_code):
+    def get_team_loss_record(self, team_code, game_id):
         data_dict = {'subject': '팀기록1', 'category': '패배팀_연승패', '패배팀': self.MINOR_TEAM_NAME[team_code]}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code)
+        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
         df_team_score = self.set_wls_score(df_score, team_code)
         wls_list = df_team_score['WLS'].tolist()
 
@@ -640,12 +640,12 @@ class Records(object):
 
         return result_list
 
-    def get_team_versus_record(self, team_code, versus_team):
+    def get_team_versus_record(self, team_code, versus_team, game_id):
         data_dict = {'subject': '팀기록2', 'category': '상대전적_연승패',
                      '승리팀': self.MINOR_TEAM_NAME[team_code], '패배팀': self.MINOR_TEAM_NAME[versus_team]}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code)
+        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
         df_versus = df_score[df_score['GMKEY'].str.contains("{0}{1}|{1}{0}".format(team_code, versus_team))]
         df_team_score = self.set_wls_score(df_versus, team_code)
         wls_list = df_team_score['WLS'].tolist()

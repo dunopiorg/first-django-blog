@@ -316,12 +316,14 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
-    def get_team_score(self, team_code):
+    def get_team_score(self, team_code, game_id):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
 
+        gday = game_id[0:8]
+
         query_format = self.ql.get_query("query_common", "get_team_score")
-        query = query_format.format(TEAM=team_code)
+        query = query_format.format(TEAM=team_code, GDAY=gday)
 
         df = pd.read_sql(query, conn)
         conn.close()

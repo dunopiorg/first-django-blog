@@ -51,6 +51,7 @@
         FROM minor_baseball.score
         WHERE GDAY LIKE '2018%'
         AND (GMKEY LIKE '%{TEAM}__0' OR GMKEY LIKE '%{TEAM}0')
+        AND GDAY &lt;= {GDAY}
         ORDER BY GDAY DESC
     </query>
 
