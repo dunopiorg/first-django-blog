@@ -231,8 +231,8 @@ def test_2(request, game_id):
     pitcher_dict, hitter_list = get_player_info_test(info)
     record_app = RecordApp()
 
-    for code, name in pitcher_dict.items():
-        result_list.append(record_app.get_player_event_dict(game_id, pitcher_code=code))
+    # for code, name in pitcher_dict.items():
+    #     result_list.append(record_app.get_player_event_dict(game_id, pitcher_code=code))
 
     for h_dict in hitter_list:
         result_list.append(record_app.get_player_event_dict(game_id, hitter_code=h_dict['hitter_code']))

@@ -48,7 +48,7 @@ class RecordApp(object):
     # endregion [TEAM EVENT]
 
     # region [HITTER EVENT]
-    def get_player_event_dict(self, game_id, hitter_code=None, pitcher_code=None):
+    def get_player_event_dict(self, game_id, player_name=None, hitter_code=None, pitcher_code=None):
         result_list = []
         if hitter_code:
             # hitter
@@ -62,7 +62,7 @@ class RecordApp(object):
             result_list.append(self.record.get_pitcher_gamecontapp(pitcher_code, game_id))
             # result_list.append(self.record.get_pitcher_how_many_games(pitcher_code))
             result_list.append(self.record.get_pitcher_season_record(pitcher_code))
-        return {'game_id': game_id, 'player_records': result_list}
+        return {'game_id': game_id, 'player_records': result_list, 'player_name': player_name}
 
     # endregion [HITTER EVENT]
     def set_rds_database_from_gsheet(self):

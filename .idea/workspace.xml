@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29bcd5de-be6d-4e4b-b7ee-bb795d528fc5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/controllers.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/controllers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
@@ -41,7 +40,7 @@
           <entry key="Python Console" value="1030" />
           <entry key="dummy" value="9" />
           <entry key="html" value="239" />
-          <entry key="py" value="16911" />
+          <entry key="py" value="16990" />
           <entry key="txt" value="131" />
           <entry key="xml" value="538" />
         </counts>
@@ -50,14 +49,14 @@
         <counts>
           <entry key="HTML" value="239" />
           <entry key="PLAIN_TEXT" value="140" />
-          <entry key="Python" value="17941" />
+          <entry key="Python" value="18020" />
           <entry key="XML" value="538" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.40654698">
+    <splitter split-orientation="horizontal" split-proportion="0.36325237">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file pinned="false" current-in-tab="false">
@@ -151,11 +150,11 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/controllers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="396">
-                  <caret line="63" column="78" selection-start-line="63" selection-start-column="78" selection-end-line="63" selection-end-column="78" />
+                <state relative-caret-position="238">
+                  <caret line="56" column="85" lean-forward="true" selection-start-line="56" selection-start-column="85" selection-end-line="56" selection-end-column="85" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
-                    <marker date="1533558449988" expanded="true" signature="156:157" ph="..." />
+                    <marker date="1533558824296" expanded="true" signature="156:157" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -932,11 +931,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="63" column="78" selection-start-line="63" selection-start-column="78" selection-end-line="63" selection-end-column="78" />
+        <state relative-caret-position="238">
+          <caret line="56" column="85" lean-forward="true" selection-start-line="56" selection-start-column="85" selection-end-line="56" selection-end-column="85" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
-            <marker date="1533558449988" expanded="true" signature="156:157" ph="..." />
+            <marker date="1533558824296" expanded="true" signature="156:157" ph="..." />
           </folding>
         </state>
       </provider>
