@@ -11,6 +11,7 @@ class RecordApp(object):
         self.record = Records()
         self.template = Template()
 
+    # region [TEAM EVENT]
     def get_team_paragraph(self, win_team, loss_team, game_id):
         result = []
         data_dict = {'승리팀': self.record.MINOR_TEAM_NAME[win_team], '패배팀': self.record.MINOR_TEAM_NAME[loss_team]}
@@ -44,9 +45,29 @@ class RecordApp(object):
 
         return result_list
 
+    # endregion [TEAM EVENT]
+
+    # region [HITTER EVENT]
+    def get_hitter_event_list(self, hitter_code, pitcher_code, game_id):
+        result_hitter = []
+        # hitter
+        result_hitter.append(self.record.get_hitter_n_continue_record(hitter_code))
+        result_hitter.append(self.record.get_hitter_prev_record(hitter_code))
+        result_hitter.append(self.record.get_hitter_first_hr(hitter_code, game_id))
+
+        result_pitcher = []
+        #pitcher
+        result_pitcher.append(self.record.get_pitcher_unit_record(pitcher_code))
+        result_pitcher.append(self.record.get_pitcher_how_long_days(pitcher_code))
+        result_pitcher.append(self.record.get_pitcher_gamecontapp(pitcher_code))
+        result_pitcher.append(self.record.get_pitcher_how_many_games(pitcher_code))
+        result_pitcher.append(self.record.get_pitcher_season_record(pitcher_code))
+
+    # endregion [HITTER EVENT]
     def set_rds_database_from_gsheet(self):
         df_team_sentence_db = self.template.TEAM_SENTENCE_DB
 
         print(self.lab2ai_conn.delete_rds_db_team_sentence())
         for i, row in df_team_sentence_db.iterrows():
             print(self.lab2ai_conn.set_rds_db_team_sentence(row))
+
