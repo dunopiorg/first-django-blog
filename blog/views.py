@@ -187,6 +187,7 @@ def set_article(request):
 
 @csrf_exempt
 def test(request):
+    result_dict = {'status': 'OK', 'message': 'GOOD'}
     record_app = RecordApp()
     data = json.loads(request.body.decode('utf-8'))
     game_id = data['game_id']
@@ -194,7 +195,8 @@ def test(request):
     # args = record_app.test_get_team()
     player_result = record_app.get_player_event_dict(game_id, hitter_code=hitter)
     print(player_result)
-    response = JsonResponse(player_result, status=200)
+    result_dict.update(player_result)
+    response = JsonResponse(result_dict, status=200)
     # render(request, 'blog/test_team_info.html', player_result)
     return response
 
