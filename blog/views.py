@@ -255,7 +255,7 @@ def get_article_from_lab64(game_id):
 
 
 def get_article_from_lab64_v2(game_id):
-    lab64_url = cfg.lab64_v2_url_url
+    lab64_url = cfg.lab64_v2_url
     url_form = "{}{}".format(lab64_url, game_id)
     get_response = get(url_form)
 
