@@ -189,16 +189,19 @@ def get_player_info_test(data_list):
     hitter_list = []
     for info_d in data_list:
         if info_d["info"]:
-            inn = info_d["inning"]
-            tb = info_d["tb"]
-            for hitter_event in info_d["hitter_events"]:
-                hitter_code = hitter_event["score_scenes"]["hitter_or_runner"]["pcode"]
-                hitter_name = hitter_event["score_scenes"]["hitter_or_runner"]["name"]
-                pitcher_code = hitter_event["score_scenes"]["pitcher"]["pcode"]
-                pitcher_name = hitter_event["score_scenes"]["pitcher"]["name"]
-                if pitcher_code not in pitcher_dict:
-                    pitcher_dict[pitcher_code] = pitcher_name
-                hitter_list.append({'hitter_code': hitter_code, 'hitter_name': hitter_name, "inning": inn, "tb": tb})
+            info_detail = info_d["info"]
+            inn = info_detail["inning"]
+            tb = info_detail["tb"]
+            for hitter_event in info_detail["hitter_events"]:
+                for hitter_scene in hitter_event["score_scenes"]:
+                    for d in hitter_scene['hitter_or_runner']:
+                        hitter_code = d["pcode"]
+                        hitter_name = d["name"]
+                        hitter_list.append({'hitter_code': hitter_code, 'hitter_name': hitter_name, "inning": inn, "tb": tb})
+                    pitcher_code = hitter_scene["pitcher"]["pcode"]
+                    pitcher_name = hitter_scene["pitcher"]["name"]
+                    if pitcher_code not in pitcher_dict:
+                        pitcher_dict[pitcher_code] = pitcher_name
 
     return pitcher_dict, hitter_list
 
@@ -221,12 +224,12 @@ def test(request):
 @csrf_exempt
 def test_2(request, game_id):
     result_list = []
-    record_app = RecordApp()
     args, lab64_status = get_article_from_lab64_v2(game_id)
     title = args['article']['title']
     article = args['article']['body']
     info = args['info']
     pitcher_dict, hitter_list = get_player_info_test(info)
+    record_app = RecordApp()
     for code, name in pitcher_dict.items():
         result_list.append(record_app.get_player_event_dict(game_id, pitcher_code=code))
 
