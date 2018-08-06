@@ -59,7 +59,7 @@ class RecordApp(object):
             # pitcher
             result_list.append(self.record.get_pitcher_unit_record(pitcher_code))
             result_list.append(self.record.get_pitcher_how_long_days(pitcher_code))
-            result_list.append(self.record.get_pitcher_gamecontapp(pitcher_code))
+            result_list.append(self.record.get_pitcher_gamecontapp(pitcher_code, game_id))
             result_list.append(self.record.get_pitcher_how_many_games(pitcher_code))
             result_list.append(self.record.get_pitcher_season_record(pitcher_code))
         return {'game_id': game_id, 'player_records': result_list}
