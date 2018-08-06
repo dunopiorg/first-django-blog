@@ -5,11 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    {% for c in contents %}
-        {{c}}
-    {% endfor %}
+<p>
+    {{title}}
+</p>
+<p>
+    {{article}}
+</p>
     <ul>
-        {% for d in args %}
+        {% for d in info %}
             <li>
                 {{d}}
             </li>
