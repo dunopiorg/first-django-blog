@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="29bcd5de-be6d-4e4b-b7ee-bb795d528fc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/blog/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/controllers.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/controllers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +39,7 @@
           <entry key="Python Console" value="1019" />
           <entry key="dummy" value="9" />
           <entry key="html" value="166" />
-          <entry key="py" value="15870" />
+          <entry key="py" value="15871" />
           <entry key="txt" value="131" />
           <entry key="xml" value="523" />
         </counts>
@@ -48,7 +48,7 @@
         <counts>
           <entry key="HTML" value="166" />
           <entry key="PLAIN_TEXT" value="140" />
-          <entry key="Python" value="16889" />
+          <entry key="Python" value="16890" />
           <entry key="XML" value="523" />
         </counts>
       </usages-collector>
@@ -73,8 +73,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/blog/controllers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="247">
-                  <caret line="30" column="61" selection-start-line="30" selection-start-column="61" selection-end-line="30" selection-end-column="61" />
+                <state relative-caret-position="-193">
+                  <caret line="28" column="8" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="8" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
                     <element signature="e#1910#2145#0" />
@@ -102,14 +102,14 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="313">
-                  <caret line="192" column="29" lean-forward="true" selection-start-line="192" selection-start-column="29" selection-end-line="192" selection-end-column="29" />
+                <state relative-caret-position="357">
+                  <caret line="194" column="83" selection-start-line="194" selection-start-column="83" selection-end-line="194" selection-end-column="83" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                     <element signature="e#699#3428#0" />
                     <element signature="e#3473#6190#0" />
                     <element signature="e#3474#4549#0" />
-                    <marker date="1533550777954" expanded="true" signature="7232:7949" ph="..." />
+                    <marker date="1533551429190" expanded="true" signature="7232:7933" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -282,8 +282,8 @@
         <option value="C:/Python35/Lib/site-packages/korean/morphology/particle.py" />
         <option value="$PROJECT_DIR$/blog/templates/blog/home.html" />
         <option value="$PROJECT_DIR$/blog/templates/blog/test_team_info.html" />
-        <option value="$PROJECT_DIR$/blog/views.py" />
         <option value="$PROJECT_DIR$/blog/controllers.py" />
+        <option value="$PROJECT_DIR$/blog/views.py" />
       </list>
     </option>
   </component>
@@ -870,8 +870,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="30" column="61" selection-start-line="30" selection-start-column="61" selection-end-line="30" selection-end-column="61" />
+        <state relative-caret-position="-193">
+          <caret line="28" column="8" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="8" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
             <element signature="e#1910#2145#0" />
@@ -883,14 +883,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="192" column="29" lean-forward="true" selection-start-line="192" selection-start-column="29" selection-end-line="192" selection-end-column="29" />
+        <state relative-caret-position="357">
+          <caret line="194" column="83" selection-start-line="194" selection-start-column="83" selection-end-line="194" selection-end-column="83" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
             <element signature="e#699#3428#0" />
             <element signature="e#3473#6190#0" />
             <element signature="e#3474#4549#0" />
-            <marker date="1533550777954" expanded="true" signature="7232:7949" ph="..." />
+            <marker date="1533551429190" expanded="true" signature="7232:7933" ph="..." />
           </folding>
         </state>
       </provider>

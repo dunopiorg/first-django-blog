@@ -193,7 +193,6 @@ def test(request):
     # hitter = data['hitter']
     args = record_app.test_get_team()
     # player_result = record_app.get_player_event_dict(game_id, hitter_code=hitter)
-    print(args)
     context = {'args': args}
     # response = JsonResponse(result_dict, status=200)
     # render(request, 'blog/test_team_info.html', player_result)
