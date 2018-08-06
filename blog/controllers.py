@@ -48,20 +48,21 @@ class RecordApp(object):
     # endregion [TEAM EVENT]
 
     # region [HITTER EVENT]
-    def get_hitter_event_list(self, hitter_code, pitcher_code, game_id):
-        result_hitter = []
-        # hitter
-        result_hitter.append(self.record.get_hitter_n_continue_record(hitter_code))
-        result_hitter.append(self.record.get_hitter_prev_record(hitter_code))
-        result_hitter.append(self.record.get_hitter_first_hr(hitter_code, game_id))
-
-        result_pitcher = []
-        #pitcher
-        result_pitcher.append(self.record.get_pitcher_unit_record(pitcher_code))
-        result_pitcher.append(self.record.get_pitcher_how_long_days(pitcher_code))
-        result_pitcher.append(self.record.get_pitcher_gamecontapp(pitcher_code))
-        result_pitcher.append(self.record.get_pitcher_how_many_games(pitcher_code))
-        result_pitcher.append(self.record.get_pitcher_season_record(pitcher_code))
+    def get_player_event_dict(self, game_id, hitter_code=None, pitcher_code=None):
+        result_list = []
+        if hitter_code:
+            # hitter
+            result_list.append(self.record.get_hitter_n_continue_record(hitter_code))
+            result_list.append(self.record.get_hitter_prev_record(hitter_code))
+            result_list.append(self.record.get_hitter_first_hr(hitter_code, game_id))
+        else:
+            # pitcher
+            result_list.append(self.record.get_pitcher_unit_record(pitcher_code))
+            result_list.append(self.record.get_pitcher_how_long_days(pitcher_code))
+            result_list.append(self.record.get_pitcher_gamecontapp(pitcher_code))
+            result_list.append(self.record.get_pitcher_how_many_games(pitcher_code))
+            result_list.append(self.record.get_pitcher_season_record(pitcher_code))
+        return {'game_id': game_id, 'player_records': result_list}
 
     # endregion [HITTER EVENT]
     def set_rds_database_from_gsheet(self):

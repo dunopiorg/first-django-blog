@@ -191,8 +191,9 @@ def test(request):
     data = json.loads(request.body.decode('utf-8'))
 
     args = record_app.test_get_team()
+    player_result = record_app.get_player_event_dict()
 
-    return render(request, 'blog/test_team_info.html', args)
+    return render(request, 'blog/test_team_info.html', player_result)
 
 
 @csrf_exempt
