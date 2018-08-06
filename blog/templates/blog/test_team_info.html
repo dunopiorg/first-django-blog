@@ -6,11 +6,9 @@
 
 {% block body %}
     <ul>
-        {% for d in player_result %}
+        {% for d in args %}
             <li>
-                {% key, value in d.items() %}
-                    {{key}} {{value}}
-                {% endfor %}
+                {{d}}
             </li>
         {% endfor %}
     </ul>
