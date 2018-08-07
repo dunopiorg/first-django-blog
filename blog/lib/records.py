@@ -691,6 +691,13 @@ class Records(object):
         versus_score_dict[cfg.CATEGORY] = '상대전적_균형'
         versus_score_dict['상대_패배수'] = wls_list.count('L')
         versus_score_dict['상대_승리수'] = wls_list.count('W')
+        win_kor = "{}승".format(wls_list.count('W')) if wls_list.count('W') > 0 else "무승"
+        loss_kor = "{}패".format(wls_list.count('L')) if wls_list.count('L') > 0 else "무패"
+        if wls_list.count('D') == 0:
+            versus_result = "{} {}".format(win_kor, loss_kor)
+        else:
+            versus_result = "{} {}무 {}".format(win_kor, wls_list.count('D'), loss_kor)
+        versus_score_dict['상대_전적'] = versus_result
         result_list.append(versus_score_dict)
         return result_list
     # endregion [TEAM EVENT]
