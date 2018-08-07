@@ -1,7 +1,7 @@
 from ..models import Lab2AIConnector
 from datetime import datetime
-from .. import config
-
+from .. import config as cfg
+from collections import namedtuple
 
 class Records(object):
 
@@ -9,9 +9,9 @@ class Records(object):
         self.lab2ai_conn = Lab2AIConnector()
         self.MINOR_TEAM_NAME = self.get_minor_team_name()
         self.KBO_TEAM_NAME = self.get_kbo_team_name()
-        self._PA = config.PA
-        self._AB = config.AB
-        self._HIT = config.HIT
+        self._PA = cfg.PA
+        self._AB = cfg.AB
+        self._HIT = cfg.HIT
 
     # region [FUNCTIONS]
     def get_minor_team_name(self):
@@ -119,43 +119,43 @@ class Records(object):
         #         n_game_dict = data_dict.copy()
         #         n_game_dict['RESULT'] = counter
         #         n_game_dict['STATE'] = how_k
-        #         n_game_dict['CATEGORY'] = "N게임_연속_안타_출루"
+        #         n_game_dict[cfg.CATEGORY] = "N게임_연속_안타_출루"
         #         result_list.append(n_game_dict)
 
         # N경기 연속 안타
         n_game_hit_dict = data_dict.copy()
         n_game_hit_dict['경기수'] = n_game_count_dict['HIT']
-        n_game_hit_dict['CATEGORY'] = "N게임_연속_안타"
+        n_game_hit_dict[cfg.CATEGORY] = "N게임_연속_안타"
         result_list.append(n_game_hit_dict)
 
         # N경기 연속 홈런
         n_game_hr_dict = data_dict.copy()
         n_game_hr_dict['경기수'] = n_game_count_dict['HR']
-        n_game_hr_dict['CATEGORY'] = "N게임_연속_홈런"
+        n_game_hr_dict[cfg.CATEGORY] = "N게임_연속_홈런"
         result_list.append(n_game_hr_dict)
 
         # N경기 연속 2루타
         n_game_h2_dict = data_dict.copy()
         n_game_h2_dict['경기수'] = n_game_count_dict['H2']
-        n_game_h2_dict['CATEGORY'] = "N게임_연속_2루타"
+        n_game_h2_dict[cfg.CATEGORY] = "N게임_연속_2루타"
         result_list.append(n_game_h2_dict)
 
         # N경기 연속 2루타
         n_game_h3_dict = data_dict.copy()
         n_game_h3_dict['경기수'] = n_game_count_dict['H3']
-        n_game_h3_dict['CATEGORY'] = "N게임_연속_3루타"
+        n_game_h3_dict[cfg.CATEGORY] = "N게임_연속_3루타"
         result_list.append(n_game_h3_dict)
 
         # N경기 연속 출루
         n_game_ob_dict = data_dict.copy()
         n_game_ob_dict['경기수'] = n_game_count_dict['OB']
-        n_game_ob_dict['CATEGORY'] = "N게임_연속_출루"
+        n_game_ob_dict[cfg.CATEGORY] = "N게임_연속_출루"
         result_list.append(n_game_ob_dict)
 
         # N경기 연속 타점
         n_game_rbi_dict = data_dict.copy()
         n_game_rbi_dict['경기수'] = n_game_count_dict['RBI']
-        n_game_rbi_dict['CATEGORY'] = "N게임_연속_타점"
+        n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
         result_list.append(n_game_rbi_dict)
 
         # N경기 타점 기록
@@ -164,7 +164,7 @@ class Records(object):
         #         n_game_rbi_dict = data_dict.copy()
         #         n_game_rbi_dict['RESULT'] = counter
         #         n_game_rbi_dict['STATE'] = place_k
-        #         n_game_rbi_dict['CATEGORY'] = "N게임_연속_타점"
+        #         n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
         #         result_list.append(n_game_rbi_dict)
 
         # N타석 안타, 출루 기록
@@ -173,43 +173,43 @@ class Records(object):
         #         n_pa_dict = data_dict.copy()
         #         n_pa_dict['RESULT'] = counter
         #         n_pa_dict['STATE'] = pa_how_k
-        #         n_pa_dict['CATEGORY'] = "N타석_연속_안타_출루"
+        #         n_pa_dict[cfg.CATEGORY] = "N타석_연속_안타_출루"
         #         result_list.append(n_pa_dict)
 
         # N타석 연속 안타
         n_pa_hit_dict = data_dict.copy()
         n_pa_hit_dict['타석수'] = n_pa_count_dict['HIT']
-        n_pa_hit_dict['CATEGORY'] = "N타석_연속_안타"
+        n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_안타"
         result_list.append(n_pa_hit_dict)
 
         # N타석 연속 홈런
         n_pa_hit_dict = data_dict.copy()
         n_pa_hit_dict['타석수'] = n_pa_count_dict['HR']
-        n_pa_hit_dict['CATEGORY'] = "N타석_연속_홈런"
+        n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_홈런"
         result_list.append(n_pa_hit_dict)
 
         # N타석 연속 2루타
         n_pa_h2_dict = data_dict.copy()
         n_pa_h2_dict['타석수'] = n_pa_count_dict['H2']
-        n_pa_h2_dict['CATEGORY'] = "N타석_연속_2루타"
+        n_pa_h2_dict[cfg.CATEGORY] = "N타석_연속_2루타"
         result_list.append(n_pa_h2_dict)
 
         # N타석 연속 3루타
         n_pa_h3_dict = data_dict.copy()
         n_pa_h3_dict['타석수'] = n_pa_count_dict['H3']
-        n_pa_h3_dict['CATEGORY'] = "N타석_연속_3루타"
+        n_pa_h3_dict[cfg.CATEGORY] = "N타석_연속_3루타"
         result_list.append(n_pa_h3_dict)
 
         # N타석 연속 출루
         n_pa_ob_dict = data_dict.copy()
         n_pa_ob_dict['타석수'] = n_pa_count_dict['OB']
-        n_pa_ob_dict['CATEGORY'] = "N타석_연속_출루"
+        n_pa_ob_dict[cfg.CATEGORY] = "N타석_연속_출루"
         result_list.append(n_pa_ob_dict)
 
         # N타석 연속 타점
         n_pa_rbi_dict = data_dict.copy()
         n_pa_rbi_dict['타석수'] = n_pa_count_dict['RBI']
-        n_pa_rbi_dict['CATEGORY'] = "N타석_연속_타점"
+        n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
         result_list.append(n_pa_rbi_dict)
 
         # N타석 타점 기록
@@ -218,7 +218,7 @@ class Records(object):
         #         n_pa_rbi_dict = data_dict.copy()
         #         n_pa_rbi_dict['RESULT'] = counter
         #         n_pa_rbi_dict['STATE'] = pa_rbi_k
-        #         n_pa_rbi_dict['CATEGORY'] = "N타석_연속_타점"
+        #         n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
         #         result_list.append(n_pa_rbi_dict)
 
         return result_list
@@ -264,21 +264,21 @@ class Records(object):
             multi_hit_hr_dict['홈런수'] = s_prev['HR']
             multi_hit_hr_dict['일자'] = game_day
             multi_hit_hr_dict['상대팀'] = versus_team
-            multi_hit_hr_dict['CATEGORY'] = "이전경기_홈런포함_멀티히트"
+            multi_hit_hr_dict[cfg.CATEGORY] = "이전경기_홈런포함_멀티히트"
             result_list.append(multi_hit_hr_dict)
         elif s_prev['HIT'] >= 2:
             multi_hit_dict = data_dict.copy()
             multi_hit_dict['안타수'] = s_prev['HIT']
             multi_hit_dict['일자'] = game_day
             multi_hit_dict['상대팀'] = versus_team
-            multi_hit_dict['CATEGORY'] = "이전경기_멀티히트"
+            multi_hit_dict[cfg.CATEGORY] = "이전경기_멀티히트"
             result_list.append(multi_hit_dict)
         elif s_prev['HR'] > 0:
             multi_hr_dict = data_dict.copy()
             multi_hr_dict['홈런수'] = s_prev['HR']
             multi_hr_dict['일자'] = game_day
             multi_hr_dict['상대팀'] = versus_team
-            multi_hr_dict['CATEGORY'] = "이전경기_홈런"
+            multi_hr_dict[cfg.CATEGORY] = "이전경기_홈런"
             result_list.append(multi_hr_dict)
         else:
             return None
@@ -301,7 +301,7 @@ class Records(object):
         if df_hitter.shape[0] == 1:
             first_hr_dict = data_dict.copy()
             first_hr_dict['홈런수'] = s_hitter['HR']
-            first_hr_dict['CATEGORY'] = "개인_시즌_첫_경기_홈런"
+            first_hr_dict[cfg.CATEGORY] = "개인_시즌_첫_경기_홈런"
             result_list.append(first_hr_dict)
             return result_list
 
@@ -325,7 +325,7 @@ class Records(object):
             first_hr_dict = data_dict.copy()
             first_hr_dict['경기수'] = df_hitter.shape[0]
             first_hr_dict['타석수'] = pa
-            first_hr_dict['CATEGORY'] = "개인_시즌_첫_홈런"
+            first_hr_dict[cfg.CATEGORY] = "개인_시즌_첫_홈런"
             result_list.append(first_hr_dict)
             return result_list
 
@@ -353,12 +353,12 @@ class Records(object):
 
         if s_pitcher['W'] == 1 and s_pitcher['GAMENUM'] == 1 and df_pitcher_total.shape[0] > 1:
             first_w_dict = data_dict.copy()
-            first_w_dict['CATEGORY'] = "시즌_첫승"
+            first_w_dict[cfg.CATEGORY] = "시즌_첫승"
             result_list.append(first_w_dict)
         elif s_pitcher['W'] % 10 == 0:
             first_w_dict = data_dict.copy()
             first_w_dict['승수'] = s_pitcher['W']
-            first_w_dict['CATEGORY'] = "10단위_승"
+            first_w_dict[cfg.CATEGORY] = "10단위_승"
             result_list.append(first_w_dict)
         else:
             return None
@@ -394,7 +394,7 @@ class Records(object):
 
         if df_minor_pitcher.shape[0] == 1:
             total_first_win_dict = data_dict.copy()
-            total_first_win_dict['CATEGORY'] = "첫등판_첫승"
+            total_first_win_dict[cfg.CATEGORY] = "첫등판_첫승"
             result_list.append(total_first_win_dict)
             return result_list
         else:
@@ -440,7 +440,7 @@ class Records(object):
         long_days_dict['일자'] = game_day
         long_days_dict['리그'] = league_name
         long_days_dict['상대팀'] = versus_team
-        long_days_dict['CATEGORY'] = "며칠_등판_승"
+        long_days_dict[cfg.CATEGORY] = "며칠_등판_승"
         result_list.append(long_days_dict)
 
         return result_list
@@ -473,7 +473,7 @@ class Records(object):
 
         long_days_dict = data_dict.copy()
         long_days_dict['피안타율'] = str(avg)
-        long_days_dict['CATEGORY'] = "오늘_득점권_피안타율"
+        long_days_dict[cfg.CATEGORY] = "오늘_득점권_피안타율"
         result_list.append(long_days_dict)
 
         return result_list
@@ -492,7 +492,7 @@ class Records(object):
         if df_minor_pitcher['WLS'].value_counts()['W'] == 1:
             first_win_dict = data_dict.copy()
             first_win_dict['경기수'] = total_games
-            first_win_dict['CATEGORY'] = "데뷔_첫승"
+            first_win_dict[cfg.CATEGORY] = "데뷔_첫승"
             result_list.append(first_win_dict)
             return result_list
         else:
@@ -520,7 +520,7 @@ class Records(object):
             games_win_dict['경기수'] = games
             games_win_dict['일자'] = game_day
             games_win_dict['상대팀'] = versus_team
-            games_win_dict['CATEGORY'] = "N경기만에_승"
+            games_win_dict[cfg.CATEGORY] = "N경기만에_승"
             result_list.append(games_win_dict)
             return result_list
 
@@ -548,7 +548,7 @@ class Records(object):
         pitcher_season_dict['이닝'] = inn
         pitcher_season_dict['실점'] = r
         pitcher_season_dict['자책'] = er
-        pitcher_season_dict['CATEGORY'] = "투수_주요_기록"
+        pitcher_season_dict[cfg.CATEGORY] = "투수_주요_기록"
         result_list.append(pitcher_season_dict)
         return result_list
 
@@ -556,7 +556,7 @@ class Records(object):
 
     # region [TEAM EVENT]
     def get_team_win_record(self, team_code, game_id):
-        data_dict = {'subject': '팀기록1', 'category': '승리팀_연승패', '승리팀': self.MINOR_TEAM_NAME[team_code]}
+        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '승리팀_연승패', '승리팀': self.MINOR_TEAM_NAME[team_code]}
         result_list = []
 
         df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
@@ -599,7 +599,7 @@ class Records(object):
         return result_list
 
     def get_team_loss_record(self, team_code, game_id):
-        data_dict = {'subject': '팀기록1', 'category': '패배팀_연승패', '패배팀': self.MINOR_TEAM_NAME[team_code]}
+        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '패배팀_연승패', '패배팀': self.MINOR_TEAM_NAME[team_code]}
         result_list = []
 
         df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
@@ -643,7 +643,7 @@ class Records(object):
         return result_list
 
     def get_team_versus_record(self, team_code, versus_team, game_id):
-        data_dict = {'subject': '팀기록2', 'category': '상대전적_연승패',
+        data_dict = {cfg.SUBJECT: '팀기록2',
                      '승리팀': self.MINOR_TEAM_NAME[team_code], '패배팀': self.MINOR_TEAM_NAME[versus_team]}
         result_list = []
 
@@ -680,6 +680,7 @@ class Records(object):
                 break
 
         versus_continue_dict = data_dict.copy()
+        versus_continue_dict[cfg.CATEGORY] = '상대전적_연승패'
         versus_continue_dict['상대_연승수'] = continue_w
         versus_continue_dict['상대_승리_후_경기수'] = after_w_game_cnt
         versus_continue_dict['승_이후_무승부수'] = after_d_cnt
@@ -687,10 +688,11 @@ class Records(object):
         result_list.append(versus_continue_dict)
 
         versus_score_dict = data_dict.copy()
-        versus_score_dict['CATEGORY'] = '상대전적_균형'
+        versus_score_dict[cfg.CATEGORY] = '상대전적_균형'
         versus_score_dict['상대_패배수'] = wls_list.count('L')
         versus_score_dict['상대_승리수'] = wls_list.count('W')
         result_list.append(versus_score_dict)
         return result_list
     # endregion [TEAM EVENT]
+
 

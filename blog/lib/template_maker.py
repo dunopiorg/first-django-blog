@@ -1,6 +1,5 @@
 from .. import config as cfg
 from ..models import Lab2AIConnector
-from .gsheet_conn import Gspread
 from korean import l10n
 
 import random
@@ -9,16 +8,11 @@ import random
 class Template(object):
 
     def __init__(self):
-        self.google_sheet = Gspread()
         self.lab2ai_conn = Lab2AIConnector()
-        # self.PITCHER_DB = self.google_sheet.get_df_sheet_by_name(cfg.PITCHER_SENTENCE)
-        # self.HITTER_DB = self.google_sheet.get_df_sheet_by_name(cfg.HITTER_SENTENCE)
-        # self.TEAM_SENTENCE_DB = self.google_sheet.get_df_sheet_by_name(cfg.TEAM_SENTENCE)
-        # self.TEAM_PARAGRAPH_DB = self.google_sheet.get_df_sheet_by_name(cfg.TEAM_PARAGRAPH)
         self.TEAM_SENTENCE_DB = self.lab2ai_conn.get_template_db_by_name(cfg.TABLE_TEAM_SENTENCE)
         self.TEAM_PARAGRAPH_DB = self.lab2ai_conn.get_template_db_by_name(cfg.TABLE_TEAM_PARAGRAPH)
 
-        # region [문장생성]
+    # region [문장생성]
     def get_team_sentence_list(self, data_list):
         result_list = []
         df_team_db = self.TEAM_SENTENCE_DB.sort_values(by=[cfg.CATEGORY, cfg.PRIORITY])
@@ -26,8 +20,8 @@ class Template(object):
 
         for data_dict in data_list:
             if data_dict[cfg.CATEGORY] in category_list:
-                df_tmp = df_team_db[df_team_db[cfg.CATEGORY] == data_dict[cfg.CATEGORY]]
-                for i, row in df_tmp.iterrows():
+                df_select = df_team_db[df_team_db[cfg.CATEGORY] == data_dict[cfg.CATEGORY]]
+                for i, row in df_select.iterrows():
                     row_condition = row[cfg.CONDITIONS]
                     str_condition = row_condition.format(**data_dict)
                     if eval(str_condition):
@@ -37,14 +31,12 @@ class Template(object):
 
         return result_list
 
-    def get_team_paragraph(self, data_df, data_dict):
+    def get_team_paragraph(self, df_data, data_dict):
         result_list = []
-        if data_df.empty:
-            return result_list
-        else:
-            df_data = data_df
+        result = ''
         team_para_db = self.TEAM_PARAGRAPH_DB.sort_values(by=[cfg.SUBJECT, cfg.CATEGORY, cfg.INDEX])
         subject_list = list(team_para_db[cfg.SUBJECT].unique())
+
         for sub in subject_list:
             df_sub_data = df_data[df_data[cfg.SUBJECT] == sub]
             if df_sub_data.empty:
@@ -61,10 +53,10 @@ class Template(object):
                 data_dict.update(_dict)
                 if is_same_index:
                     paragraph_text = self.get_text(row_sub_db[cfg.SENTENCE], data_dict)
-                    result_list.append(paragraph_text)
+                    result = paragraph_text
                     break
 
-        return result_list
+        return result
     # endregion [문장생성]
 
     # region [FUNCTIONS]

@@ -16,10 +16,10 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 from .models import Post, Lab2AIConnector
 from . import config as cfg
-from .controllers import RecordApp
+from .controllers import RecordApp, GspreadTemplate
 
 
-# region Article
+# region [API]
 @csrf_exempt
 def get_article(request):
     if request.method == "GET" or request.method == "OPTIONS":
@@ -29,7 +29,7 @@ def get_article(request):
             # data = json.load(request.body.decode("utf-8")) #json.loads(request.body.decode("utf-8"))
             # args, lab64_status = get_article_from_lab64(data['game_id'])
             args, lab64_status = get_article_from_lab64(data)
-            
+
             game_id = args['game_id']
             status = args['status']
             le_id = args['le_id']
@@ -77,7 +77,7 @@ def get_article(request):
             article_dict['created_at'] = data['created_at']
 
             counter = lab2ai_conn.select_count(article_dict['game_id'], article_dict['gyear'])[0]
-            article_dict['version'] = counter+1
+            article_dict['version'] = counter + 1
 
             lab2ai_conn.insert_history(article_dict, counter)
             response = JsonResponse({'status': 'OK', 'message': counter})
@@ -156,20 +156,26 @@ def get_article_v2(request):
 def set_article(request):
     lab2ai_conn = Lab2AIConnector()
     data = json.loads(request.body.decode("utf-8"))
-    
-    game_id = data['game_id']
-    le_id = data['le_id']
-    gyear = data['gyear']
-    title = data['title'].replace("\"", "'")
-    article = data['article'].replace("\"", "'")
-    article_dict = {}
 
-    if game_id and le_id and gyear:
+    try:
+        game_id = data['game_id']
+        le_id = data['le_id']
+        gyear = data['gyear']
+        title = data['title'].replace("\"", "'")
+        article = data['article'].replace("\"", "'")
+        serial = data['serial']
+        status = data['status']
+
+        article_dict = {}
+
+        if game_id == '' or le_id == '' or gyear == '':
+            raise Exception('Key Value is Empty')
+
         article_dict['game_id'] = game_id
         article_dict['le_id'] = le_id
         article_dict['gyear'] = gyear
-        article_dict['status'] = data['status']
-        article_dict['serial'] = data['serial']
+        article_dict['status'] = status
+        article_dict['serial'] = serial
         article_dict['title'] = title
         article_dict['article'] = article
         article_dict['created_at'] = data['created_at']
@@ -179,47 +185,33 @@ def set_article(request):
 
         lab2ai_conn.insert_history(article_dict, counter)
         response = JsonResponse({'status': 'OK', 'message': counter}, status=200)
-    else:
-        response = JsonResponse({'status':'FAIL', 'message': 'Not exist keys'}, status=300)
+    except Exception as ex:
+        return JsonResponse({'status': 'FAIL', 'message': ex}, status=300)
     return response
 
+@csrf_exempt
+def get_article_v2_test(request, game_id):
+    if request.method == "GET" or request.method == "OPTIONS":
+        args, lab64_status = get_article_from_lab64_v2(game_id)
 
-def get_player_info_test(data_list):
-    pitcher_dict = {}
-    hitter_list = []
-    for info_d in data_list:
-        if info_d["info"]:
-            info_detail = info_d["info"]
-            inn = info_detail["inning"]
-            tb = info_detail["tb"]
-            for hitter_event in info_detail["hitter_events"]:
-                for hitter_scene in hitter_event["score_scenes"]:
-                    for d in hitter_scene['hitter_or_runner']:
-                        hitter_code = d["pcode"]
-                        hitter_name = d["name"]
-                        hitter_list.append({'hitter_code': hitter_code, 'hitter_name': hitter_name, "inning": inn, "tb": tb})
-                    pitcher_code = hitter_scene["pitcher"]["pcode"]
-                    pitcher_name = hitter_scene["pitcher"]["name"]
-                    if pitcher_code not in pitcher_dict:
-                        pitcher_dict[pitcher_code] = pitcher_name
+        game_id = args['game_id']
+        title = args['article']['title']
+        article = args['article']['body']
+        team_info = RecordApp().get_team_info(game_id)
 
-    return pitcher_dict, hitter_list
+        context = {'title': title, 'article': article, 'team': team_info}
+        return render(request, 'blog/team_info.html', context)
+# endregion [API]
 
-# endregion Article
 
 # region 임시 테스트
 @csrf_exempt
 def test(request):
     record_app = RecordApp()
-    # data = json.loads(request.body.decode('utf-8'))
-    # game_id = data['game_id']
-    # hitter = data['hitter']
-    args = record_app.test_get_team()
-    # player_result = record_app.get_player_event_dict(game_id, hitter_code=hitter)
+    args = record_app.get_team_info()
     context = {'args': args}
-    # response = JsonResponse(result_dict, status=200)
-    # render(request, 'blog/test_team_info.html', player_result)
-    return render(request, 'blog/test_team_info.html', context)
+    return render(request, 'blog/team_info.html', context)
+
 
 @csrf_exempt
 def test_2(request, game_id):
@@ -235,7 +227,7 @@ def test_2(request, game_id):
     #     result_list.append(record_app.get_player_event_dict(game_id, pitcher_code=code))
 
     for h_dict in hitter_list:
-        result_list.append(record_app.get_player_event_dict(game_id, hitter_code=h_dict['hitter_code']))
+        result_list.append(record_app.get_player_event_dict(game_id, player_name=h_dict['hitter_name'], hitter_code=h_dict['hitter_code']))
 
     context = {'title': title, 'article': article, 'info': result_list}
     return render(request, 'blog/test_player_info.html', context)
@@ -243,13 +235,20 @@ def test_2(request, game_id):
 
 
 @csrf_exempt
-def set_rds_database(request):
-    record_app = RecordApp()
-    record_app.set_rds_database_from_gsheet()
-    response = JsonResponse({'status': 'OK', 'message': 'GOOD'}, status=200)
-    return response
+def template_viewer(request, db_name=None):
+    worksheets = get_template_table_list()
+    table_list = [d.title for d in worksheets]
+    context = {"tables": table_list}
 
+    if db_name is not None:
+        worksheet_index = table_list.index(db_name)
+        list_of_hash = worksheets[worksheet_index].get_all_records()
+        if list_of_hash:
+            GspreadTemplate().set_rds_template_from_gspread(db_name, list_of_hash)
 
+    return render(request, 'blog/template_db_setting.html', context)
+
+# region [LAB64]
 def get_article_from_lab64(game_id):
     lab64_url = cfg.lab64_url
     url_form = "{}{}".format(lab64_url, game_id)
@@ -264,7 +263,7 @@ def get_article_from_lab64_v2(game_id):
     get_response = get(url_form)
 
     return get_response.json(), get_response.status_code
-
+# endregion [LAB64]
 
 # region Blog
 def post_list(request):
@@ -329,8 +328,37 @@ def change_password(request):
         return render(request, 'blog/change_password.html', args)
 # endregion Blog
 
+# region [ETC FUNCTIONS]
+
+
+def get_template_table_list():
+    return GspreadTemplate().get_template_tab_list()
+
 
 def change_date_array(date_time):
     d = date_time
     result = datetime.strptime(d, "%Y-%d-%m %X").strftime("%Y-%m-%d %X")
     return result
+
+
+def get_player_info_test(data_list):
+    pitcher_dict = {}
+    hitter_list = []
+    for info_d in data_list:
+        if info_d["info"]:
+            info_detail = info_d["info"]
+            inn = info_detail["inning"]
+            tb = info_detail["tb"]
+            for hitter_event in info_detail["hitter_events"]:
+                for hitter_scene in hitter_event["score_scenes"]:
+                    for d in hitter_scene['hitter_or_runner']:
+                        hitter_code = d["pcode"]
+                        hitter_name = d["name"]
+                        hitter_list.append({'hitter_code': hitter_code, 'hitter_name': hitter_name, "inning": inn, "tb": tb})
+                    pitcher_code = hitter_scene["pitcher"]["pcode"]
+                    pitcher_name = hitter_scene["pitcher"]["name"]
+                    if pitcher_code not in pitcher_dict:
+                        pitcher_dict[pitcher_code] = pitcher_name
+
+    return pitcher_dict, hitter_list
+# endregion [ETC FUNCTIONS]

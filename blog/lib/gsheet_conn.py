@@ -31,3 +31,6 @@ class Gspread(object):
             return df_template
         else:
             return None
+
+    def get_sheet_tab_list(self):
+        return self.sheet.worksheets()

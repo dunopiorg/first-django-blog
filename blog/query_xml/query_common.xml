@@ -72,8 +72,32 @@
         VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')
     </query>
 
-    <query id="delete_rds_db_team_sentence">
-        DELETE FROM oper_db.team_sentence
+    <query id="insert_rds_db_hitter_sentence">
+        INSERT INTO oper_db.hitter_sentence
+        (subject, category, `index`, priority, conditions, sentence, parameters, etc)
+        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+    </query>
+
+    <query id="insert_rds_db_pitcher_sentence">
+        INSERT INTO oper_db.pitcher_sentence
+        (subject, category, `index`, priority, conditions, sentence, parameters, etc)
+        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+    </query>
+
+    <query id="insert_rds_db_team_sentence">
+        INSERT INTO oper_db.pitcher_sentence
+        (subject, category, `index`, priority, conditions, sentence, parameters, etc)
+        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+    </query>
+
+    <query id="insert_rds_db_team_paragraph">
+        INSERT INTO oper_db.team_paragraph
+        (subject, category, `index`, category_dict, sentence, etc, examples)
+        VALUES ('{subject}', '{category}', {index}, '{category_dict}', '{sentence}', '{etc}', '{examples}')
+    </query>
+
+    <query id="delete_rds_db_by_name">
+        DELETE FROM oper_db.{0}
     </query>
 
     <query id="get_template_db_by_name">

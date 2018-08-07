@@ -349,12 +349,12 @@ class Lab2AIConnector(object):
 
         query_format = self.ql.get_query("query_common", "set_rds_db_team_sentence")
         query = query_format.format(data['SUBJECT'],
-                                    data['CATEGORY'],
-                                    data['INDEX'],
-                                    data['PRIORITY'],
-                                    data['CONDITIONS'],
-                                    data['SENTENCE'],
-                                    data['PARAMETERS'],
+                                    data[cfg.CATEGORY],
+                                    data[cfg.INDEX],
+                                    data[cfg.PRIORITY],
+                                    data[cfg.CONDITIONS],
+                                    data[cfg.SENTENCE],
+                                    data[cfg.PARAMETERS],
                                     )
 
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -364,12 +364,27 @@ class Lab2AIConnector(object):
 
         return result
 
-    def delete_rds_db_team_sentence(self):
+    def delete_rds_db_by_name(self, table_name):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db='oper_db', charset='utf8mb4')
 
-        query_format = self.ql.get_query("query_common", "delete_rds_db_team_sentence")
-        query = query_format.format()
+        query_format = self.ql.get_query("query_common", "delete_rds_db_by_name")
+        query = query_format.format(table_name)
+
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            conn.commit()
+
+        return result
+
+    def insert_rds_db_by_name(self, table_name, data_value):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db='oper_db', charset='utf8mb4')
+
+        query_id = "insert_rds_db_{0}".format(table_name)
+        query_format = self.ql.get_query("query_common", query_id)
+        query = query_format.format(**data_value)
 
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(query)
