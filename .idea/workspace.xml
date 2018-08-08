@@ -4,8 +4,6 @@
     <list default="true" id="29bcd5de-be6d-4e4b-b7ee-bb795d528fc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/blog/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/controllers.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/controllers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/query_xml/query_common.xml" beforeDir="false" afterPath="$PROJECT_DIR$/blog/query_xml/query_common.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +39,7 @@
           <entry key="Python Console" value="2014" />
           <entry key="dummy" value="9" />
           <entry key="html" value="592" />
-          <entry key="py" value="20302" />
+          <entry key="py" value="20330" />
           <entry key="txt" value="131" />
           <entry key="xml" value="704" />
         </counts>
@@ -50,7 +48,7 @@
         <counts>
           <entry key="HTML" value="592" />
           <entry key="PLAIN_TEXT" value="140" />
-          <entry key="Python" value="22316" />
+          <entry key="Python" value="22344" />
           <entry key="XML" value="704" />
         </counts>
       </usages-collector>
@@ -96,8 +94,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="250">
-                  <caret line="352" column="37" lean-forward="true" selection-start-line="352" selection-start-column="37" selection-end-line="352" selection-end-column="37" />
+                <state relative-caret-position="338">
+                  <caret line="356" column="45" lean-forward="true" selection-start-line="356" selection-start-column="45" selection-end-line="356" selection-end-column="45" />
                   <folding>
                     <element signature="e#0#28#0" expanded="true" />
                     <element signature="e#1696#2406#0" />
@@ -180,8 +178,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/controllers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="406">
-                  <caret line="64" column="21" lean-forward="true" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
+                <state relative-caret-position="340">
+                  <caret line="61" column="51" selection-start-line="61" selection-start-column="51" selection-end-line="61" selection-end-column="51" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
                   </folding>
@@ -978,8 +976,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="352" column="37" lean-forward="true" selection-start-line="352" selection-start-column="37" selection-end-line="352" selection-end-column="37" />
+        <state relative-caret-position="338">
+          <caret line="356" column="45" lean-forward="true" selection-start-line="356" selection-start-column="45" selection-end-line="356" selection-end-column="45" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
             <element signature="e#1696#2406#0" />
@@ -993,8 +991,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/controllers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="64" column="21" lean-forward="true" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
+        <state relative-caret-position="340">
+          <caret line="61" column="51" selection-start-line="61" selection-start-column="51" selection-end-line="61" selection-end-column="51" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>

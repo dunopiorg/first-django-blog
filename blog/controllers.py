@@ -59,6 +59,7 @@ class RecordApp(object):
             return ''
 
         result_list = self.get_team_paragraph(win_team, loss_team, game_id)
+        result_list = [d for d in result_list if d]
         result_list.append(stadium)
         result = ' '.join(result_list)
 
