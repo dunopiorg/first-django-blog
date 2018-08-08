@@ -189,6 +189,7 @@ def set_article(request):
         return JsonResponse({'status': 'FAIL', 'message': ex}, status=300)
     return response
 
+
 @csrf_exempt
 def get_article_v2_test(request, game_id):
     if request.method == "GET" or request.method == "OPTIONS":
@@ -197,9 +198,12 @@ def get_article_v2_test(request, game_id):
         game_id = args['game_id']
         title = args['article']['title']
         article = args['article']['body']
+        info = args['info']
+        article_dict = get_article_text_dict(info)
+        article_text = "\n\n".join(article_dict['article'])
         team_info = RecordApp().get_team_info(game_id)
 
-        context = {'title': title, 'article': article, 'team': team_info}
+        context = {'title': title, 'article': article_text, 'team': team_info}
         return render(request, 'blog/team_info.html', context)
 # endregion [API]
 
@@ -263,6 +267,24 @@ def get_article_from_lab64_v2(game_id):
     get_response = get(url_form)
 
     return get_response.json(), get_response.status_code
+
+def get_info(info_list):
+    for info_d in info_list:
+        if info_d['info'] is None:
+            continue
+
+
+def get_article_text_dict(info_list):
+    result_dict = {}
+    article_list = []
+    for info_dict in info_list:
+        if info_dict['p_num'] == 0 :
+            result_dict['title'] = info_dict['text']
+        else:
+            article_list.append(info_dict['text'])
+
+    result_dict['article'] = article_list
+    return result_dict
 # endregion [LAB64]
 
 # region Blog
