@@ -58,7 +58,17 @@
     <query id="get_gameinfo">
         SELECT GmKey, Gday, Dbhd, Stadium, Vteam, Hteam, Sttm, Entm, Dltm, Gmtm, Stad, Umpc, Ump1, Ump2, Ump3, Umpl, Umpr, Scoa, Scob, Temp, Mois, Weath, Wind, Wins, Gweek, Crowd, Chajun
         FROM minor_baseball.gameinfo
-        WHERE GmKey = '{GAME_ID}'
+        WHERE 1 = 1
+        {GYEAR}
+        {GAME_ID}
+    </query>
+
+    <query id="get_article_from_db">
+        SELECT game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key
+        FROM oper_db.robot_article
+        WHERE game_id = '{GAME_ID}'
+        ORDER BY serial DESC
+        LIMIT 1
     </query>
 
     <query id="get_test_team_scores">

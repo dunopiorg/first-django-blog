@@ -343,11 +343,32 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
-    def get_gameinfo(self, game_id):
+    def get_gameinfo(self, game_id=None, gyear=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
 
+        if gyear is None:
+            state_gyear = " AND Gday like '2018%'"
+        else:
+            state_gyear = " AND Gday like '{0}%'".format(gyear)
+
+        if game_id is None:
+            state_game_id = ''
+        else:
+            state_game_id = " AND GmKey = '{0}' ".format(game_id)
+
         query_format = self.ql.get_query("query_common", "get_gameinfo")
+        query = query_format.format(GAME_ID=state_game_id, GYEAR=state_gyear)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
+    def get_article_from_db(self, game_id):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db='oper_db', charset='utf8mb4')
+
+        query_format = self.ql.get_query("query_common", "get_article_from_db")
         query = query_format.format(GAME_ID=game_id)
 
         df = pd.read_sql(query, conn)

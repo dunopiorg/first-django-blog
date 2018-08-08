@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Futures Article</title>
+{% endblock %}
+
+{% block body %}
+<div class="container" align="center">
+    <div class="card" align="left" style="width:750px">
+        <div class="card-body">
+            <h3 class="card-title">
+                {{title}}
+            </h3>
+            {% for text in article_text %}
+                <p class="card-text">
+                    {{text}}
+                </p>
+            {% endfor %}
+            <br><br>
+            <a href="/article/home">뒤로가기</a>|
+            <a href="/article/home">기사재생성</a>|
+            <a href="/article/home">기사전송</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

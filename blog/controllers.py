@@ -4,6 +4,7 @@ from .lib.records import Records
 from .lib import gsheet_conn
 from . import config as cfg
 import pandas as pd
+from collections import OrderedDict
 
 
 class RecordApp(object):
@@ -40,7 +41,7 @@ class RecordApp(object):
 
         return result_paragraph
 
-    def get_team_info(self, game_id):
+    def get_paragraph(self, game_id):
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)
         df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id)
         team_score = df_all_score.iloc[0]
@@ -84,6 +85,37 @@ class RecordApp(object):
         return {'game_id': game_id, 'player_records': result_list, 'player_name': player_name}
     # endregion [HITTER EVENT]
 
+    # region [ETC FUNCTIONS]
+    def get_gameinfo_dict_list(self):
+        df_gameinfo = self.lab2ai_conn.get_gameinfo()
+        df_gameinfo = df_gameinfo.sort_values(by='Gday', ascending=False)
+
+        s_gameinfo = df_gameinfo.groupby('Gday')['GmKey'].apply(list).sort_index(ascending=False)
+        gameinfo_dict = s_gameinfo.to_dict()
+        result = OrderedDict(sorted(gameinfo_dict.items(), reverse=True))
+
+        result_list = []
+
+        for game_day, game_id_list in result.items():
+            game_list = []
+            for game_id in game_id_list:
+                top = game_id[8:10]
+                bottom = game_id[10:12]
+                game_kor = "{}:{}".format(self.record.MINOR_TEAM_NAME[top],
+                                          self.record.MINOR_TEAM_NAME[bottom])
+                game_list.append({'game_id': game_id, 'game_kor': game_kor})
+            result_list.append({'game_day': game_day, 'game_list': game_list})
+
+        return result_list
+
+    def get_article(self, game_id):
+        df_gameinfo = self.lab2ai_conn.get_article_from_db(game_id)
+        if df_gameinfo.empty:
+            return None
+        else:
+            return df_gameinfo.to_dict('records')
+
+    # endregion [ETC FUNCTIONS]
 
 class GspreadTemplate(object):
     template = gsheet_conn.Gspread()

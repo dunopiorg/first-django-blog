@@ -201,7 +201,7 @@ def get_article_v2_test(request, game_id):
         info = args['info']
         article_dict = get_article_text_dict(info)
         article_text = "\n\n".join(article_dict['article'])
-        team_info = RecordApp().get_team_info(game_id)
+        team_info = RecordApp().get_paragraph(game_id)
 
         context = {'title': title, 'article': article_text, 'team': team_info}
         return render(request, 'blog/team_info.html', context)
@@ -212,7 +212,7 @@ def get_article_v2_test(request, game_id):
 @csrf_exempt
 def test(request):
     record_app = RecordApp()
-    args = record_app.get_team_info()
+    args = record_app.get_paragraph()
     context = {'args': args}
     return render(request, 'blog/team_info.html', context)
 
@@ -278,7 +278,7 @@ def get_article_text_dict(info_list):
     result_dict = {}
     article_list = []
     for info_dict in info_list:
-        if info_dict['p_num'] == 0 :
+        if info_dict['p_num'] == 0:
             result_dict['title'] = info_dict['text']
         else:
             article_list.append(info_dict['text'])
@@ -293,11 +293,25 @@ def post_list(request):
 
 
 def home(request):
-    numbers = [1, 2, 3, 4, 5]
-    name = 'Robot Write An Article'
-    
-    args = {'siteName': name, 'numbers': numbers}
+    gameinfo_dict_list = RecordApp().get_gameinfo_dict_list()
+    args = {'gameinfo': gameinfo_dict_list}
     return render(request, 'blog/home.html', args)
+
+
+def futures(request, game_id):
+    article_dict = RecordApp().get_article(game_id)
+    if article_dict is None:
+        # Lab64 요청
+        article_dict = {}
+    else:
+        article_dict = article_dict[0]
+
+    title = article_dict['title']
+    article_text = article_dict['article']
+    article_list = article_text.split("\n\n")
+
+    result_article = {'title': title, 'article_text': article_list}
+    return render(request, 'blog/futures_article.html', result_article)
 
 
 def register(request):
