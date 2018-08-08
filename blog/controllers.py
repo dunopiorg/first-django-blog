@@ -42,8 +42,10 @@ class RecordApp(object):
 
     def get_team_info(self, game_id):
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)
+        df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id)
         team_score = df_all_score.iloc[0]
-
+        gameinfo = df_gameinfo.iloc[0]
+        stadium = "[{0}=KBOT]".format(gameinfo['Stadium'])
         t_socre = team_score['TPOINT']
         b_socre = team_score['BPOINT']
 
@@ -57,6 +59,7 @@ class RecordApp(object):
             return ''
 
         result_list = self.get_team_paragraph(win_team, loss_team, game_id)
+        result_list.append(stadium)
         result = ' '.join(result_list)
 
         return result
