@@ -56,7 +56,8 @@ class RecordApp(object):
         else:
             return ''
 
-        result = self.get_team_paragraph(win_team, loss_team, game_id)
+        result_list = self.get_team_paragraph(win_team, loss_team, game_id)
+        result = ' '.join(result_list)
 
         return result
     # endregion [TEAM EVENT]

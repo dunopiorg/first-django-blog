@@ -53,10 +53,10 @@ class Template(object):
                 data_dict.update(_dict)
                 if is_same_index:
                     paragraph_text = self.get_text(row_sub_db[cfg.SENTENCE], data_dict)
-                    result = paragraph_text
+                    result_list.append(paragraph_text)
                     break
 
-        return result
+        return result_list
     # endregion [문장생성]
 
     # region [FUNCTIONS]
