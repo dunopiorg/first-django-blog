@@ -26,8 +26,6 @@ def get_article(request):
         lab2ai_conn = Lab2AIConnector()
         data = request.GET.get('game_id', None)
         if data:
-            # data = json.load(request.body.decode("utf-8")) #json.loads(request.body.decode("utf-8"))
-            # args, lab64_status = get_article_from_lab64(data['game_id'])
             args, lab64_status = get_article_from_lab64(data)
 
             game_id = args['game_id']
@@ -277,8 +275,8 @@ def home(request):
 
 
 def futures(request, game_id):
-    article_dict_v2 = RecordApp().get_article_v2(game_id)
     article_dict_v1 = RecordApp().get_article(game_id)
+    article_dict_v2 = RecordApp().get_article_v2(game_id)
 
     # Lab64 요청
     if article_dict_v1 is None:
