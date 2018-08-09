@@ -53,6 +53,7 @@ class Lab2AIConnector(object):
 
     # region [QUERY EVENT]
     def insert_article(self, data):
+        result = None
         my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
         try:
@@ -61,11 +62,13 @@ class Lab2AIConnector(object):
                  (game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key)
                  VALUES ("{game_id}", {le_id}, {serial}, "{gyear}", 
                  "{status}", "{title}", "{article}", "{created_at}", CAST(NOW()+0 AS CHAR))""".format(**data)
-                
-                cursor.execute(sql_query)
+
+                result = cursor.execute(sql_query)
             my_conn.commit()
         finally:
             my_conn.close()
+
+        return result
     
     def insert_history(self, data, counter):
         my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,

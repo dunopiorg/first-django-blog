@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^$', views.post_list, name='post_list'),
     url(r'^home$', views.home),
     url(r'^futures/(?P<game_id>\S+)$', views.futures),
+    url(r'^futures/refresh/(?P<game_id>\S+)$', views.refresh_futures),
     url(r'^login/$', login, {'template_name': 'blog/login.html'}),
     url(r'^logout/$', logout, {'template_name': 'blog/logout.html'}),
     url(r'^register/$', views.register, name='register'),

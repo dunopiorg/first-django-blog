@@ -90,31 +90,12 @@ def get_article(request):
 @csrf_exempt
 def get_article_v2(request):
     if request.method == "GET" or request.method == "OPTIONS":
-        lab2ai_conn = Lab2AIConnector()
         response_game_id = request.GET.get('game_id', None)
         if response_game_id:
             args, lab64_status = get_article_from_lab64_v2(response_game_id)
 
-            game_id = args['game_id']
-            status = args['status']
-            le_id = args['le_id']
-            gyear = args['gyear']
-            serial = args['serial']
-            title = args['article']['title']
-            article = args['article']['body']
-            args_created_at = change_date_array(args['created_at'])
-            article_dict = {}
-
-            if status == "OK":
-                article_dict['game_id'] = game_id
-                article_dict['status'] = status
-                article_dict['le_id'] = le_id
-                article_dict['gyear'] = gyear
-                article_dict['serial'] = serial
-                article_dict['title'] = title
-                article_dict['article'] = article
-                article_dict['created_at'] = args_created_at
-                lab2ai_conn.insert_article(article_dict)
+            if args['status'] == "OK":
+                article_dict = set_article_to_db(args)
                 response = JsonResponse(article_dict)
             else:
                 response = JsonResponse({'status': 'FAIL', 'message': 'There are some missing data'})
@@ -252,6 +233,7 @@ def template_viewer(request, db_name=None):
 
     return render(request, 'blog/template_db_setting.html', context)
 
+
 # region [LAB64]
 def get_article_from_lab64(game_id):
     lab64_url = cfg.lab64_url
@@ -268,11 +250,6 @@ def get_article_from_lab64_v2(game_id):
 
     return get_response.json(), get_response.status_code
 
-def get_info(info_list):
-    for info_d in info_list:
-        if info_d['info'] is None:
-            continue
-
 
 def get_article_text_dict(info_list):
     result_dict = {}
@@ -286,6 +263,7 @@ def get_article_text_dict(info_list):
     result_dict['article'] = article_list
     return result_dict
 # endregion [LAB64]
+
 
 # region Blog
 def post_list(request):
@@ -302,7 +280,12 @@ def futures(request, game_id):
     article_dict = RecordApp().get_article(game_id)
     if article_dict is None:
         # Lab64 요청
-        article_dict = {}
+        args, lab64_status = get_article_from_lab64_v2(game_id)
+
+        if args['status'] == "OK":
+            article_dict = set_article_to_db(args)
+        else:
+            return render(request, 'blog/futures_article.html', {'error':'error'})
     else:
         article_dict = article_dict[0]
 
@@ -310,7 +293,19 @@ def futures(request, game_id):
     article_text = article_dict['article']
     article_list = article_text.split("\n\n")
 
-    result_article = {'title': title, 'article_text': article_list}
+    result_article = {'title': title, 'article_text': article_list, 'game_id': game_id}
+    return render(request, 'blog/futures_article.html', result_article)
+
+
+def refresh_futures(request, game_id):
+    # Lab64 요청
+    article_dict = {}
+
+    title = article_dict['title']
+    article_text = article_dict['article']
+    article_list = article_text.split("\n\n")
+
+    result_article = {'title': title, 'article_text': article_list, 'game_id': game_id}
     return render(request, 'blog/futures_article.html', result_article)
 
 
@@ -364,7 +359,31 @@ def change_password(request):
         return render(request, 'blog/change_password.html', args)
 # endregion Blog
 
+
 # region [ETC FUNCTIONS]
+def set_article_to_db(args):
+    article_dict = {}
+    lab2ai_conn = Lab2AIConnector()
+
+    article_dict['game_id'] = args['game_id']
+    article_dict['status'] = args['status']
+    article_dict['le_id'] = args['le_id']
+    article_dict['gyear'] = args['gyear']
+    article_dict['serial'] = args['serial']
+
+    info = args['info']
+    article_args_dict = get_article_text_dict(info)
+    team_text = RecordApp().get_paragraph(article_dict['game_id'])
+
+    article_dict['title'] = article_args_dict['title']
+    article_dict['article'].append(team_text)
+    article_text = "\n\n".join(article_dict['article'])
+    article_dict['article'] = article_text
+
+    article_dict['created_at'] = change_date_array(args['created_at'])
+    lab2ai_conn.insert_article(article_dict)
+
+    return article_dict
 
 
 def get_template_table_list():
