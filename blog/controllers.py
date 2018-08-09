@@ -36,9 +36,9 @@ class RecordApp(object):
         df_result_sentence = pd.DataFrame(result_sentence)
         if df_result_sentence.empty:
             return ''
-        result_paragraph = self.template.get_team_paragraph(df_result_sentence, data_dict)
+        result_list = self.template.get_team_paragraph(df_result_sentence, data_dict)
 
-        return result_paragraph
+        return result_list
 
     def get_paragraph(self, game_id):
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)

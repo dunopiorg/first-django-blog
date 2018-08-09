@@ -54,26 +54,8 @@ class Lab2AIConnector(object):
     # region [QUERY EVENT]
     def insert_article(self, data):
         result = None
-        my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
-                               db=self._DATABASE, charset='utf8mb4')
-        try:
-            with my_conn.cursor() as cursor:
-                sql_query = """INSERT INTO minor_baseball.robot_article 
-                 (game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key)
-                 VALUES ("{game_id}", {le_id}, {serial}, "{gyear}", 
-                 "{status}", "{title}", "{article}", "{created_at}", CAST(NOW()+0 AS CHAR))""".format(**data)
-
-                result = cursor.execute(sql_query)
-            my_conn.commit()
-        finally:
-            my_conn.close()
-
-        return result
-
-    def insert_article_v2(self, data):
-        result = None
-        my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
-                               db='oper_db', charset='utf8mb4')
+        my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER,
+                                  password=self._PASSWORD, db='oper_db', charset='utf8mb4')
         try:
             with my_conn.cursor() as cursor:
                 sql_query = """INSERT INTO oper_db.robot_article 
@@ -82,7 +64,25 @@ class Lab2AIConnector(object):
                  "{status}", "{title}", "{article}", "{created_at}", CAST(NOW()+0 AS CHAR))""".format(**data)
 
                 result = cursor.execute(sql_query)
-            my_conn.commit()
+                my_conn.commit()
+        finally:
+            my_conn.close()
+
+        return result
+
+    def insert_article_v2(self, data):
+        result = None
+        my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER,
+                                  password=self._PASSWORD, db='oper_db', charset='utf8mb4')
+        try:
+            with my_conn.cursor() as cursor:
+                sql_query = """INSERT INTO oper_db.robot_article_v2 
+                 (game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key)
+                 VALUES ("{game_id}", {le_id}, {serial}, "{gyear}", 
+                 "{status}", "{title}", "{article}", "{created_at}", CAST(NOW()+0 AS CHAR))""".format(**data)
+
+                result = cursor.execute(sql_query)
+                my_conn.commit()
         finally:
             my_conn.close()
 
