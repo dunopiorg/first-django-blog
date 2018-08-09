@@ -32,7 +32,6 @@ class RecordApp(object):
         if versus_team_data:
             sentence_list.extend(versus_team_data)
 
-        print(sentence_list)
         result_sentence = self.template.get_team_sentence_list(sentence_list)
         df_result_sentence = pd.DataFrame(result_sentence)
         if df_result_sentence.empty:

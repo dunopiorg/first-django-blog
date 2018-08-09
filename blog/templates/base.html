@@ -8,40 +8,36 @@
     <body>
         <br>
         <div class="container">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" 
-                                aria-expaned="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/blog/home">Article</a>
-                    </div>
-                    <div id="navbar" class="navbar-collapse collapse">
-                        {% if user.is_authenticated %}
-                            <ul class="nav navbar-nav">
-                                <li><a href="/blog/home">Home</a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="/blog/logout">Log out</a></li>
-                                <li><a href="/blog/profile">Profile</a></li>
-                                <li><a href="/blog/profile/edit">Edit Profile</a></li>
-                                <li><a href="/blog/change-profile">Change Password</a></li>
-                                <li><a href="/blog/reset-password">Reset Password</a></li>
-                            </ul>
-                        {% else %}
-                            <ul class="nav navbar-nav">
-                                <li><a href="/blog/home">Home</a></li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">       
-                                <li><a href="/blog/login">Login</a></li>             
-                                <li><a href="/blog/register">Register</a></li>
-                            </ul>
-                        {% endif %}
-                    </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/blog/home">Article</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/blog/home">Home</a><span class="sr-only">(current)</span>
+                        </li>
+                    </ul>
+                    <ul class=" navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/blog/logout">Log out</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog/profile">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog/profile/edit">Edit Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog/change-profile">Change Password</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog/reset-password">Reset Password</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a href="/blog/home">Home</a><span class="sr-only">(current)</span>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item"><a class="nav-link" href="/blog/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/blog/register">Register</a></li>
+                    </ul>
+                    {% endif %}
                 </div>
             </nav>
         </div> <!-- /container -->
