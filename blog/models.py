@@ -396,6 +396,17 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
+    def get_article_from_db_v2(self, game_id):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db='oper_db', charset='utf8mb4')
+
+        query_format = self.ql.get_query("query_common", "get_article_from_db_v2")
+        query = query_format.format(GAME_ID=game_id)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
     def set_rds_db_team_sentence(self, data):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db='oper_db', charset='utf8mb4')

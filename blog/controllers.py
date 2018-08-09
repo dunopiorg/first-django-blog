@@ -114,6 +114,13 @@ class RecordApp(object):
         else:
             return df_gameinfo.to_dict('records')
 
+    def get_article_v2(self, game_id):
+        df_gameinfo = self.lab2ai_conn.get_article_from_db_v2(game_id)
+        if df_gameinfo.empty:
+            return None
+        else:
+            return df_gameinfo.to_dict('records')
+
     # endregion [ETC FUNCTIONS]
 
 class GspreadTemplate(object):

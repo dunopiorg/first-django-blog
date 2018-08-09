@@ -95,7 +95,7 @@ def get_article_v2(request):
             args, lab64_status = get_article_from_lab64_v2(response_game_id)
 
             if args['status'] == "OK":
-                article_dict = set_article_to_db(args)
+                article_dict = set_article_v2_to_db(args)
                 response = JsonResponse(article_dict)
             else:
                 response = JsonResponse({'status': 'FAIL', 'message': 'There are some missing data'})
@@ -277,23 +277,40 @@ def home(request):
 
 
 def futures(request, game_id):
-    article_dict = RecordApp().get_article(game_id)
-    if article_dict is None:
-        # Lab64 요청
-        args, lab64_status = get_article_from_lab64_v2(game_id)
+    article_dict_v2 = RecordApp().get_article_v2(game_id)
+    article_dict_v1 = RecordApp().get_article(game_id)
 
+    # Lab64 요청
+    if article_dict_v1 is None:
+        args, lab64_status = get_article_from_lab64(game_id)
         if args['success']:
-            article_dict = set_article_to_db(args)
+            article_dict_v1 = set_article_v1_to_db(args)
         else:
-            return render(request, 'blog/futures_article.html', {'error': 'error'})
+            return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
     else:
-        article_dict = article_dict[0]
+        article_dict_v1 = article_dict_v1[0]
 
-    title = article_dict['title']
-    article_text = article_dict['article']
-    article_list = article_text.split("\n\n")
+    if article_dict_v2 is None:
+        args_v2, lab64_status_v2 = get_article_from_lab64_v2(game_id)
 
-    result_article = {'title': title, 'article_text': article_list, 'game_id': game_id}
+        if args_v2['success']:
+            article_dict_v2 = set_article_v2_to_db(args_v2)
+        else:
+            return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
+    else:
+        article_dict_v2 = article_dict_v2[0]
+
+    title_v1 = article_dict_v1['title']
+    article_text_v1 = article_dict_v1['article']
+    article_list_v1 = article_text_v1.split("\n\n")
+
+    title_v2 = article_dict_v2['title']
+    article_text_v2 = article_dict_v2['article']
+    article_list_v2 = article_text_v2.split("\n\n")
+
+    result_article = {'game_id': game_id, 'status': 'OK',
+                      'title_v1': title_v1, 'article_text_v1': article_list_v1,
+                      'title_v2': title_v2, 'article_text_v2': article_list_v2, }
     return render(request, 'blog/futures_article.html', result_article)
 
 
@@ -361,7 +378,7 @@ def change_password(request):
 
 
 # region [ETC FUNCTIONS]
-def set_article_to_db(args):
+def set_article_v2_to_db(args):
     article_dict = {}
     lab2ai_conn = Lab2AIConnector()
 
@@ -381,7 +398,34 @@ def set_article_to_db(args):
     article_dict['article'] = article_text
 
     article_dict['created_at'] = change_date_array(args['created_at'])
-    lab2ai_conn.insert_article(article_dict)
+    lab2ai_conn.insert_article_v2(article_dict)
+
+    return article_dict
+
+
+def set_article_v1_to_db(args):
+    article_dict = {}
+    lab2ai_conn = Lab2AIConnector()
+
+    game_id = args['game_id']
+    status = args['status']
+    le_id = args['le_id']
+    gyear = args['gyear']
+    serial = args['serial']
+    title = args['article']['title']
+    article = args['article']['body']
+    args_created_at = change_date_array(args['created_at'])
+
+    if status == "OK":
+        article_dict['game_id'] = game_id
+        article_dict['status'] = status
+        article_dict['le_id'] = le_id
+        article_dict['gyear'] = gyear
+        article_dict['serial'] = serial
+        article_dict['title'] = title
+        article_dict['article'] = article
+        article_dict['created_at'] = args_created_at
+        lab2ai_conn.insert_article(article_dict)
 
     return article_dict
 
