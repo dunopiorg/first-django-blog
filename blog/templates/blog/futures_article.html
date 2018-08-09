@@ -6,22 +6,20 @@
 
 {% block body %}
 <div class="container" align="center">
-    <div class="panel panel-default" align="left" style="width: 70rem;">
-        <h5 class="panel-heading">
-            {{title}}
-        </h5>
-        <div class="panel-body">
+    <div class="card" align="left" style="width: 70rem;">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{title}}
+            </h5>
             {% for text in article_text %}
-                <p>
+                <p class="card-text">
                     {{text}}
                 </p>
             {% endfor %}
             <br><br>
-        </div>
-        <div class="panel-footer">
-            <a href="/article/home" class="btn btn-primary">뒤로가기</a>
-            <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
-            <a href="/article/home" class="btn btn-primary">기사전송</a>
+            <a href="/article/home" class="card-link">뒤로가기</a>
+            <a href="/article/futures/refresh/{{game_id}}" class="card-link">기사재생성</a>
+            <a href="/article/home" class="card-link">기사전송</a>
         </div>
     </div>
 </div>
