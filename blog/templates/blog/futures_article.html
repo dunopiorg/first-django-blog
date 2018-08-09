@@ -6,20 +6,23 @@
 
 {% block body %}
 <div class="container" align="center">
-    <div class="card" align="left" style="width:750px">
+    <div class="card" align="left" style="width:200rem;">
+        <h5 class="card-header">
+            
+        </h5>
         <div class="card-body">
-            <h3 class="card-title">
+            <h5 class="card-title">
                 {{title}}
-            </h3>
+            </h5>
             {% for text in article_text %}
                 <p class="card-text">
                     {{text}}
                 </p>
             {% endfor %}
             <br><br>
-            <a href="/article/home">뒤로가기</a>|
-            <a href="/article/home">기사재생성</a>|
-            <a href="/article/home">기사전송</a>
+            <a href="/article/home" class="btn btn-primary">뒤로가기</a>
+            <a href="/article/home" class="btn btn-primary">기사재생성</a>
+            <a href="/article/home" class="btn btn-primary">기사전송</a>
         </div>
     </div>
 </div>
