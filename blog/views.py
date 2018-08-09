@@ -376,8 +376,8 @@ def set_article_to_db(args):
     team_text = RecordApp().get_paragraph(article_dict['game_id'])
 
     article_dict['title'] = article_args_dict['title']
-    article_dict['article'].append(team_text)
-    article_text = "\n\n".join(article_dict['article'])
+    article_args_dict['article'].append(team_text)
+    article_text = "\n\n".join(article_args_dict['article'])
     article_dict['article'] = article_text
 
     article_dict['created_at'] = change_date_array(args['created_at'])
