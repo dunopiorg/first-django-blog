@@ -6,7 +6,17 @@
 
 {% block body %}
 <div class="container" align="center">
-    <div class="card" align="left" style="width: 70rem;">
+    <div class="card" align="left" style="width: 55rem;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" role="tab" data-toggle="tab">Version1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" role="tab" data-toggle="tab">Version2</a>
+                </li>
+            </ul>
+        </div>
         <div class="card-body">
             <h5 class="card-title">
                 {{title}}
@@ -17,9 +27,11 @@
                 </p>
             {% endfor %}
             <br><br>
-            <a href="/article/home" class="card-link">뒤로가기</a>
-            <a href="/article/futures/refresh/{{game_id}}" class="card-link">기사재생성</a>
-            <a href="/article/home" class="card-link">기사전송</a>
+        </div>
+        <div class="card-body">
+            <a href="/article/home" class="btn btn-primary">뒤로가기</a>
+            <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
+            <a href="/article/home" class="btn btn-primary">기사전송</a>
         </div>
     </div>
 </div>
