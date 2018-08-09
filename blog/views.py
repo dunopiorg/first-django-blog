@@ -282,10 +282,10 @@ def futures(request, game_id):
         # Lab64 요청
         args, lab64_status = get_article_from_lab64_v2(game_id)
 
-        if args['status'] == "OK":
+        if args['success']:
             article_dict = set_article_to_db(args)
         else:
-            return render(request, 'blog/futures_article.html', {'error':'error'})
+            return render(request, 'blog/futures_article.html', {'error': 'error'})
     else:
         article_dict = article_dict[0]
 
