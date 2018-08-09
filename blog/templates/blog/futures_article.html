@@ -47,17 +47,6 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade in active" id="version1">
                     <div class="card-body">
-                        <h5 class="card-title">
-                            {{title_v1}}
-                        </h5>
-                        {% for text in article_text_v1 %}
-                            <p class="card-text">
-                                {{text}}
-                            </p>
-                        {% endfor %}
-                        <br><br>
-                    </div>
-                    <div class="card-body">
                         <a href="/article/home" class="btn btn-primary">뒤로가기</a>
                         <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
                         <a href="/article/home" class="btn btn-primary">기사전송</a>
