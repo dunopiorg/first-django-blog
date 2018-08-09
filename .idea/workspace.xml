@@ -40,7 +40,7 @@
         <counts>
           <entry key="Python Console" value="2153" />
           <entry key="dummy" value="15" />
-          <entry key="html" value="2323" />
+          <entry key="html" value="2331" />
           <entry key="py" value="22664" />
           <entry key="txt" value="141" />
           <entry key="xml" value="751" />
@@ -48,7 +48,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="2323" />
+          <entry key="HTML" value="2331" />
           <entry key="PLAIN_TEXT" value="156" />
           <entry key="Python" value="24817" />
           <entry key="XML" value="751" />
@@ -147,15 +147,17 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/templates/blog/futures_article.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="79">
-                  <caret line="17" column="18" lean-forward="true" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+                <state relative-caret-position="374">
+                  <caret line="23" column="53" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="53" />
                   <folding>
                     <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#div#0;n#div#0;n#!!top" />
                     <element signature="n#style#0;n#nav#0;n#div#0;n#!!top" expanded="true" />
+                    <element signature="n#div#0;n#div#1;n#div#0;n#!!top" />
                     <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" />
                     <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" />
+                    <element signature="n#div#1;n#div#1;n#div#0;n#!!top" />
                     <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
                     <element signature="n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#!!top" />
                     <element signature="n#h5#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#!!top" />
@@ -1030,15 +1032,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/blog/templates/blog/futures_article.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
-          <caret line="17" column="18" lean-forward="true" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+        <state relative-caret-position="374">
+          <caret line="23" column="53" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="53" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#div#0;n#!!top" />
             <element signature="n#style#0;n#nav#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#div#0;n#div#1;n#div#0;n#!!top" />
             <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" />
             <element signature="n#div#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" />
+            <element signature="n#div#1;n#div#1;n#div#0;n#!!top" />
             <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#!!top" />
             <element signature="n#h5#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#!!top" />
