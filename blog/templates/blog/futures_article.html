@@ -17,21 +17,26 @@
     {% else %}
         <div class="card" align="left" style="width: 55rem;">
             <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#version1" role="tab" data-toggle="tab">Version1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#version2" role="tab" data-toggle="tab">Version2</a>
-                    </li>
-                </ul>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link" id="nav-version1-ab" data-toggle="tab" href="#nav-version1" role="tab" aria-controls="nav-version1" aria-selected="false">Version1</a>
+                    <a class="nav-item nav-link active" id="nav-version1-tab" data-toggle="tab" href="#nav-version2" role="tab" aria-controls="nav-version2" aria-selected="true">Version2</a>
+                  </div>
+                </nav>
             </div>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="version2">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            {{title_v2}}
-                        </h5>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade" id="nav-version1" role="tabpanel" aria-labelledby="nav-version1-tab">
+                  <div class="card-body">
+                      <a href="/article/home" class="btn btn-primary">뒤로가기</a>
+                      <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
+                      <a href="/article/home" class="btn btn-primary">기사전송</a>
+                  </div>
+              </div>
+              <div class="tab-pane fade show active" id="nav-version2" role="tabpanel" aria-labelledby="nav-version2-tab">
+                  <div class="card-body">
+                      <h5 class="card-title">
+                          {{title_v2}}
+                      </h5>
                         {% for text in article_text_v2 %}
                             <p class="card-text">
                                 {{text}}
@@ -44,14 +49,7 @@
                         <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
                         <a href="/article/home" class="btn btn-primary">기사전송</a>
                     </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="version1">
-                    <div class="card-body">
-                        <a href="/article/home" class="btn btn-primary">뒤로가기</a>
-                        <a href="/article/futures/refresh/{{game_id}}" class="btn btn-primary">기사재생성</a>
-                        <a href="/article/home" class="btn btn-primary">기사전송</a>
-                    </div>
-                </div>
+              </div>
             </div>
         </div>
     {% endif %}
