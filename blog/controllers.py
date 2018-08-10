@@ -149,9 +149,7 @@ class RecordApp(object):
             else:
                 if info_dict['info']:
                     if prev_inning == info_dict['info']['inning']:
-                        print('i=>', i, 'Dict=>', info_dict['text'])
-                        print('article list', article_list[i - 1])
-                        article_list[i - 1] += info_dict['text']
+                        article_list[i - 2] += info_dict['text']
                     else:
                         article_list.append(info_dict['text'])
                         prev_inning = info_dict['info']['inning']
