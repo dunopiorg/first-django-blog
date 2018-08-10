@@ -142,11 +142,19 @@ class RecordApp(object):
     def get_article_text_dict(cls, info_list):
         result_dict = {}
         article_list = []
-        for info_dict in info_list:
+        prev_inning = 0
+        for i, info_dict in enumerate(info_list):
             if info_dict['p_num'] == 0:
                 result_dict['title'] = info_dict['text']
             else:
-                article_list.append(info_dict['text'])
+                if info_dict['info']:
+                    if prev_inning == info_dict['info']['inning']:
+                        article_list[i - 1] += info_dict['text']
+                    else:
+                        article_list.append(info_dict['text'])
+                        prev_inning = info_dict['info']['inning']
+                else:
+                    article_list.append(info_dict['text'])
 
         result_dict['article'] = article_list
         return result_dict
