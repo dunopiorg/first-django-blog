@@ -254,7 +254,7 @@ def call_refresh_game_lab64(game_id):
     url_form = "{0}{1}/refresh".format(lab64_url, game_id)
     get_response = get(url_form)
 
-    return get_response.json(), get_response.status_code
+    return get_response
 
 
 def get_article_text_dict(info_list):
