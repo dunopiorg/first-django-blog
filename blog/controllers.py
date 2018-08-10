@@ -14,9 +14,6 @@ class RecordApp(object):
         self.record = Records()
         self.template = Template()
 
-    class TeamStructure(object):
-        pass
-
     # region [TEAM EVENT]
     def get_team_paragraph(self, win_team, loss_team, game_id):
         sentence_list = []
@@ -64,6 +61,10 @@ class RecordApp(object):
     # endregion [TEAM EVENT]
 
     # region [HITTER EVENT]
+    def get_final_hit_event(self, hitter_code):
+        # get_hitter_final_hit
+        pass
+
     def get_player_event_dict(self, game_id, player_name=None, hitter_code=None, pitcher_code=None):
         result_list = []
         if hitter_code:

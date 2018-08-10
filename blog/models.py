@@ -467,4 +467,37 @@ class Lab2AIConnector(object):
         df = pd.read_sql(query, conn)
         conn.close()
         return df
+
+    def get_ie_record_matrix_mix(self, game_id=None):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        if game_id is None:
+            game_id_state = ''
+        else:
+            game_id_state = " AND GAMEID = '{0}'".format(game_id)
+
+        query_format = self.ql.get_query("query_common", "get_ie_record_matrix_mix")
+        query = query_format.format(GAMEID=game_id_state)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
+    def get_person_info(self, player_code=None):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        if player_code is None:
+            player_code_state = ''
+        else:
+            player_code_state = " AND PCODE = '{0}'".format(player_code)
+
+        query_format = self.ql.get_query("query_common", "get_person_info")
+        query = query_format.format(PCODE=player_code_state)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
     # endregion [ETC RECORD]

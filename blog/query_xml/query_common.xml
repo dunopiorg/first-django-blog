@@ -128,4 +128,18 @@
         SELECT *
         FROM oper_db.{0}
     </query>
+
+    <query id="get_ie_record_matrix_mix">
+        SELECT GAMEID, GYEAR, SEQNO, INN_NO, BAT_AROUND_NO, TB_SC, BEFORE_OUT_CN, BEFORE_AWAY_SCORE_CN, BEFORE_HOME_SCORE_CN, BEFORE_SCORE_GAP_CN, BEFORE_RUNNER_SC, AFTER_OUT_CN, AFTER_AWAY_SCORE_CN, AFTER_HOME_SCORE_CN, AFTER_SCORE_GAP_CN, AFTER_RUNNER_SC, BAT_P_ID, PIT_P_ID, RUN_P_ID, HOW_ID, LIVETEXT_IF, BEFORE_WE_RT, AFTER_WE_RT, WPA_RT, LI_RT, RE_RT, REG_DT
+        FROM minor_baseball.ie_record_matrix_mix
+        WHERE 1 = 1
+        {GAMEID}
+    </query>
+
+    <query id="get_person_info">
+        SELECT NAME, PCODE, TEAM, POSITION, POS, BACKNUM, CNAME, BIRTH, HEIGHT, WEIGHT, CAREER, HITTYPE, INDATE, PROMISE, MONEY, ADDR, NICKNAME, HOBBY, ENTRY, IMG1, IMG2, CAREER2
+        FROM minor_baseball.person
+        WHERE 1 = 1
+        {PCODE}
+    </query>
 </data>

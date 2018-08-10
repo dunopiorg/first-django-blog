@@ -8,6 +8,8 @@
 {% block body %}
 <div class="container" align="center">
     {% if user.is_authenticated %}
+    {% else %}
+    {% endif %}
         <table class="table">
             <thead>
             <tr>
@@ -27,8 +29,5 @@
             {% endfor %}
             </tbody>
         </table>
-    {% else %}
-        <h1>로그인해주세요</h1>
-    {% endif %}
 </div>
 {% endblock %}
