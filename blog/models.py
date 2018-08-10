@@ -80,7 +80,7 @@ class Lab2AIConnector(object):
                  (game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key)
                  VALUES ("{game_id}", {le_id}, {serial}, "{gyear}", 
                  "{status}", "{title}", "{article}", "{created_at}", CAST(NOW()+0 AS CHAR))""".format(**data)
-
+                print(sql_query)
                 result = cursor.execute(sql_query)
                 my_conn.commit()
         finally:
