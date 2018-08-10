@@ -90,10 +90,10 @@ class Lab2AIConnector(object):
     
     def insert_history(self, data, counter):
         my_conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
-                               db=self._DATABASE, charset='utf8mb4')
+                               db='oper_db', charset='utf8mb4')
         try:
             with my_conn.cursor() as cursor:
-                sql_query = """INSERT INTO minor_baseball.robot_article_history 
+                sql_query = """INSERT INTO oper_db.robot_article_history 
                  (game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key)
                  VALUES ("{game_id}", {le_id}, {serial}, "{gyear}", 
                  "{status}", "{title}", "{article}", "{created_at}",CAST(NOW()+0 AS CHAR))""".format(**data)

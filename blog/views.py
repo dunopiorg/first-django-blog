@@ -249,6 +249,14 @@ def get_article_from_lab64_v2(game_id):
     return get_response.json(), get_response.status_code
 
 
+def call_refresh_game_lab64(game_id):
+    lab64_url = cfg.lab64_admin_url
+    url_form = "{0}{1}/refresh".format(lab64_url, game_id)
+    get_response = get(url_form)
+
+    return get_response.json(), get_response.status_code
+
+
 def get_article_text_dict(info_list):
     result_dict = {}
     article_list = []
@@ -280,6 +288,7 @@ def futures(request, game_id):
 
     # Lab64 요청
     if article_dict_v1 is None:
+        call_refresh_game_lab64(game_id)
         args, lab64_status = get_article_from_lab64(game_id)
         if args['success']:
             article_dict_v1 = set_article_v1_to_db(args)
