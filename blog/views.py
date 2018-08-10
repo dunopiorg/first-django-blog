@@ -274,15 +274,34 @@ def futures(request, game_id):
     return render(request, 'blog/futures_article.html', result_article)
 
 
-def refresh_futures(request, game_id):
-    # Lab64 요청
-    article_dict = {}
+def refresh_futures(request, version, game_id):
+    if version == 'v1':
+        article_dict_v2 = RecordApp().get_article_v2(game_id)[0]
+        call_refresh_game_lab64(game_id)
+        args, lab64_status = get_article_from_lab64(game_id)
+        if args['success']:
+            article_dict_v1 = RecordApp().set_article_v1_to_db(args)
+        else:
+            return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
+    else:
+        article_dict_v1 = RecordApp().get_article(game_id)[0]
+        args_v2, lab64_status_v2 = get_article_from_lab64_v2(game_id)
+        if args_v2['success']:
+            article_dict_v2 = RecordApp().set_article_v2_to_db(args_v2)
+        else:
+            return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
 
-    title = article_dict['title']
-    article_text = article_dict['article']
-    article_list = article_text.split("\n\n")
+    title_v1 = article_dict_v1['title']
+    article_text_v1 = article_dict_v1['article']
+    article_list_v1 = article_text_v1.split("\n\n")
 
-    result_article = {'title': title, 'article_text': article_list, 'game_id': game_id}
+    title_v2 = article_dict_v2['title']
+    article_text_v2 = article_dict_v2['article']
+    article_list_v2 = article_text_v2.split("\n\n")
+
+    result_article = {'game_id': game_id, 'status': 'OK',
+                      'title_v1': title_v1, 'article_text_v1': article_list_v1,
+                      'title_v2': title_v2, 'article_text_v2': article_list_v2, }
     return render(request, 'blog/futures_article.html', result_article)
 
 
