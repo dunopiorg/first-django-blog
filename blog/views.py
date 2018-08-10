@@ -35,7 +35,7 @@ def get_article(request):
             serial = args['serial']
             title = args['article']['title']
             article = args['article']['body']
-            args_created_at = change_date_array(args['created_at'])
+            args_created_at = RecordApp().change_date_array(args['created_at'])
             article_dict = {}
 
             if status == "OK":
@@ -93,7 +93,7 @@ def get_article_v2(request):
             args, lab64_status = get_article_from_lab64_v2(response_game_id)
 
             if args['status'] == "OK":
-                article_dict = set_article_v2_to_db(args)
+                article_dict = RecordApp().set_article_v2_to_db(args)
                 response = JsonResponse(article_dict)
             else:
                 response = JsonResponse({'status': 'FAIL', 'message': 'There are some missing data'})
@@ -167,54 +167,7 @@ def set_article(request):
     except Exception as ex:
         return JsonResponse({'status': 'FAIL', 'message': ex}, status=300)
     return response
-
-
-@csrf_exempt
-def get_article_v2_test(request, game_id):
-    if request.method == "GET" or request.method == "OPTIONS":
-        args, lab64_status = get_article_from_lab64_v2(game_id)
-
-        game_id = args['game_id']
-        title = args['article']['title']
-        article = args['article']['body']
-        info = args['info']
-        article_dict = get_article_text_dict(info)
-        article_text = "\n\n".join(article_dict['article'])
-        team_info = RecordApp().get_paragraph(game_id)
-
-        context = {'title': title, 'article': article_text, 'team': team_info}
-        return render(request, 'blog/team_info.html', context)
 # endregion [API]
-
-
-# region 임시 테스트
-@csrf_exempt
-def test(request):
-    record_app = RecordApp()
-    args = record_app.get_paragraph()
-    context = {'args': args}
-    return render(request, 'blog/team_info.html', context)
-
-
-@csrf_exempt
-def test_2(request, game_id):
-    result_list = []
-    args, lab64_status = get_article_from_lab64_v2(game_id)
-    title = args['article']['title']
-    article = args['article']['body']
-    info = args['info']
-    pitcher_dict, hitter_list = get_player_info_test(info)
-    record_app = RecordApp()
-
-    # for code, name in pitcher_dict.items():
-    #     result_list.append(record_app.get_player_event_dict(game_id, pitcher_code=code))
-
-    for h_dict in hitter_list:
-        result_list.append(record_app.get_player_event_dict(game_id, player_name=h_dict['hitter_name'], hitter_code=h_dict['hitter_code']))
-
-    context = {'title': title, 'article': article, 'info': result_list}
-    return render(request, 'blog/test_player_info.html', context)
-# endregion 임시 테스트
 
 
 @csrf_exempt
@@ -291,7 +244,9 @@ def futures(request, game_id):
         call_refresh_game_lab64(game_id)
         args, lab64_status = get_article_from_lab64(game_id)
         if args['success']:
-            article_dict_v1 = set_article_v1_to_db(args)
+            article_dict_v1 = RecordApp().set_article_v1_to_db(args)
+            stadium_text = RecordApp().get_stadium_text(game_id)
+            article_dict_v1['article'][-1] += stadium_text
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
     else:
@@ -301,7 +256,9 @@ def futures(request, game_id):
         args_v2, lab64_status_v2 = get_article_from_lab64_v2(game_id)
 
         if args_v2['success']:
-            article_dict_v2 = set_article_v2_to_db(args_v2)
+            article_dict_v2 = RecordApp().set_article_v2_to_db(args_v2)
+            stadium_text = RecordApp().get_stadium_text(game_id)
+            article_dict_v2['article'][-1] += stadium_text
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
     else:
@@ -385,66 +342,8 @@ def change_password(request):
 
 
 # region [ETC FUNCTIONS]
-def set_article_v2_to_db(args):
-    article_dict = {}
-    lab2ai_conn = Lab2AIConnector()
-
-    article_dict['game_id'] = args['game_id']
-    article_dict['status'] = args['status']
-    article_dict['le_id'] = args['le_id']
-    article_dict['gyear'] = args['gyear']
-    article_dict['serial'] = args['serial']
-
-    info = args['info']
-    article_args_dict = get_article_text_dict(info)
-    team_text = RecordApp().get_paragraph(article_dict['game_id'])
-
-    article_dict['title'] = article_args_dict['title']
-    article_args_dict['article'].append(team_text)
-    article_text = "\n\n".join(article_args_dict['article'])
-    article_dict['article'] = article_text
-
-    article_dict['created_at'] = change_date_array(args['created_at'])
-    lab2ai_conn.insert_article_v2(article_dict)
-
-    return article_dict
-
-
-def set_article_v1_to_db(args):
-    article_dict = {}
-    lab2ai_conn = Lab2AIConnector()
-
-    game_id = args['game_id']
-    status = args['status']
-    le_id = args['le_id']
-    gyear = args['gyear']
-    serial = args['serial']
-    title = args['article']['title']
-    article = args['article']['body']
-    args_created_at = change_date_array(args['created_at'])
-
-    if status == "OK":
-        article_dict['game_id'] = game_id
-        article_dict['status'] = status
-        article_dict['le_id'] = le_id
-        article_dict['gyear'] = gyear
-        article_dict['serial'] = serial
-        article_dict['title'] = title
-        article_dict['article'] = article
-        article_dict['created_at'] = args_created_at
-        lab2ai_conn.insert_article(article_dict)
-
-    return article_dict
-
-
 def get_template_table_list():
     return GspreadTemplate().get_template_tab_list()
-
-
-def change_date_array(date_time):
-    d = date_time
-    result = datetime.strptime(d, "%Y-%d-%m %X").strftime("%Y-%m-%d %X")
-    return result
 
 
 def get_player_info_test(data_list):

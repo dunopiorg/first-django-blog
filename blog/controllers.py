@@ -1,3 +1,4 @@
+from datetime import datetime
 from .models import Lab2AIConnector
 from .lib.template_maker import Template
 from .lib.records import Records
@@ -42,10 +43,7 @@ class RecordApp(object):
 
     def get_paragraph(self, game_id):
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)
-        df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id)
         team_score = df_all_score.iloc[0]
-        gameinfo = df_gameinfo.iloc[0]
-        stadium = "[{0}=KBOT]".format(gameinfo['Stadium'])
         t_socre = team_score['TPOINT']
         b_socre = team_score['BPOINT']
 
@@ -60,7 +58,6 @@ class RecordApp(object):
 
         result_list = self.get_team_paragraph(win_team, loss_team, game_id)
         result_list = [d for d in result_list if d]
-        result_list.append(stadium)
         result = ' '.join(result_list)
 
         return result
@@ -83,6 +80,79 @@ class RecordApp(object):
             result_list.append(self.record.get_pitcher_season_record(pitcher_code))
         return {'game_id': game_id, 'player_records': result_list, 'player_name': player_name}
     # endregion [HITTER EVENT]
+
+    # region [ARTICLE CONTROL FUNCTION]
+    @classmethod
+    def set_article_v1_to_db(cls, args):
+        article_dict = {}
+        lab2ai_conn = Lab2AIConnector()
+
+        game_id = args['game_id']
+        status = args['status']
+        le_id = args['le_id']
+        gyear = args['gyear']
+        serial = args['serial']
+        title = args['article']['title']
+        article = args['article']['body']
+        args_created_at = cls.change_date_array(args['created_at'])
+
+        if status == "OK":
+            article_dict['game_id'] = game_id
+            article_dict['status'] = status
+            article_dict['le_id'] = le_id
+            article_dict['gyear'] = gyear
+            article_dict['serial'] = serial
+            article_dict['title'] = title
+            article_dict['article'] = article
+            article_dict['created_at'] = args_created_at
+            lab2ai_conn.insert_article(article_dict)
+
+        return article_dict
+
+    @classmethod
+    def set_article_v2_to_db(cls, args):
+        article_dict = {}
+        lab2ai_conn = Lab2AIConnector()
+
+        article_dict['game_id'] = args['game_id']
+        article_dict['status'] = args['status']
+        article_dict['le_id'] = args['le_id']
+        article_dict['gyear'] = args['gyear']
+        article_dict['serial'] = args['serial']
+
+        info = args['info']
+        article_args_dict = cls.get_article_text_dict(info)
+        team_text = RecordApp().get_paragraph(article_dict['game_id'])
+
+        article_dict['title'] = article_args_dict['title']
+        article_args_dict['article'].append(team_text)
+        article_text = "\n\n".join(article_args_dict['article'])
+        article_dict['article'] = article_text
+
+        article_dict['created_at'] = cls.change_date_array(args['created_at'])
+        lab2ai_conn.insert_article_v2(article_dict)
+
+        return article_dict
+
+    @classmethod
+    def get_article_text_dict(cls, info_list):
+        result_dict = {}
+        article_list = []
+        for info_dict in info_list:
+            if info_dict['p_num'] == 0:
+                result_dict['title'] = info_dict['text']
+            else:
+                article_list.append(info_dict['text'])
+
+        result_dict['article'] = article_list
+        return result_dict
+
+    def get_stadium_text(self, game_id):
+        df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id)
+        gameinfo = df_gameinfo.iloc[0]
+        stadium = " [{0}=KBOT]".format(gameinfo['Stadium'])
+        return stadium
+    # endregion [ARTICLE CONTROL FUNCTION]
 
     # region [ETC FUNCTIONS]
     def get_gameinfo_dict_list(self):
@@ -121,7 +191,13 @@ class RecordApp(object):
         else:
             return df_gameinfo.to_dict('records')
 
+    @classmethod
+    def change_date_array(cls, date_time):
+        d = date_time
+        result = datetime.strptime(d, "%Y-%d-%m %X").strftime("%Y-%m-%d %X")
+        return result
     # endregion [ETC FUNCTIONS]
+
 
 class GspreadTemplate(object):
     template = gsheet_conn.Gspread()
