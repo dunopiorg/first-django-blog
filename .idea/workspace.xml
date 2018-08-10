@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="29bcd5de-be6d-4e4b-b7ee-bb795d528fc5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/blog/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/controllers.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/controllers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,7 +41,7 @@
           <entry key="Python Console" value="2295" />
           <entry key="dummy" value="15" />
           <entry key="html" value="2408" />
-          <entry key="py" value="23242" />
+          <entry key="py" value="23244" />
           <entry key="txt" value="141" />
           <entry key="xml" value="751" />
         </counts>
@@ -52,14 +50,14 @@
         <counts>
           <entry key="HTML" value="2408" />
           <entry key="PLAIN_TEXT" value="156" />
-          <entry key="Python" value="25537" />
+          <entry key="Python" value="25539" />
           <entry key="XML" value="751" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4493136">
+    <splitter split-orientation="horizontal" split-proportion="0.4783527">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file pinned="false" current-in-tab="false">
@@ -104,8 +102,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/views.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="269">
-                  <caret line="253" lean-forward="true" selection-start-line="253" selection-end-line="253" />
+                <state relative-caret-position="313">
+                  <caret line="258" column="56" lean-forward="true" selection-start-line="258" selection-start-column="56" selection-end-line="258" selection-end-column="56" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                     <element signature="e#8697#8713#0" />
@@ -185,8 +183,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/blog/controllers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="313">
-                  <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+                <state relative-caret-position="5">
+                  <caret line="112" column="8" selection-start-line="112" selection-start-column="8" selection-end-line="112" selection-end-column="8" />
                   <folding>
                     <element signature="e#0#29#0" expanded="true" />
                     <element signature="e#1905#1928#0" />
@@ -1009,10 +1007,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/blog/controllers.py">
+    <entry file="file://$PROJECT_DIR$/blog/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="313">
-          <caret line="154" column="32" selection-start-line="154" selection-start-column="32" selection-end-line="154" selection-end-column="32" />
+          <caret line="258" column="56" lean-forward="true" selection-start-line="258" selection-start-column="56" selection-end-line="258" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#8697#8713#0" />
+            <element signature="e#12282#12306#0" />
+            <element signature="e#13147#13195#0" />
+            <element signature="e#13384#14304#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/blog/controllers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5">
+          <caret line="112" column="8" selection-start-line="112" selection-start-column="8" selection-end-line="112" selection-end-column="8" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
             <element signature="e#1905#1928#0" />
@@ -1021,20 +1033,6 @@
             <element signature="e#3324#3998#0" />
             <marker date="1533865235977" expanded="true" signature="5522:5710" ph="..." />
             <marker date="1533865235977" expanded="true" signature="6763:7365" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/blog/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="253" lean-forward="true" selection-start-line="253" selection-end-line="253" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#8697#8713#0" />
-            <element signature="e#12282#12306#0" />
-            <element signature="e#13147#13195#0" />
-            <element signature="e#13384#14304#0" />
           </folding>
         </state>
       </provider>

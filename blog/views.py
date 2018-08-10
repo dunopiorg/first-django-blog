@@ -246,7 +246,7 @@ def futures(request, game_id):
         if args['success']:
             article_dict_v1 = RecordApp().set_article_v1_to_db(args)
             stadium_text = RecordApp().get_stadium_text(game_id)
-            article_dict_v1['article'][-1] += stadium_text
+            article_dict_v1['article'] += stadium_text
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
     else:
@@ -258,7 +258,7 @@ def futures(request, game_id):
         if args_v2['success']:
             article_dict_v2 = RecordApp().set_article_v2_to_db(args_v2)
             stadium_text = RecordApp().get_stadium_text(game_id)
-            article_dict_v2['article'][-1] += stadium_text
+            article_dict_v2['article'] += stadium_text
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
     else:
