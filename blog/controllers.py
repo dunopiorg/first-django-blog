@@ -147,7 +147,7 @@ class RecordApp(object):
             if info_dict['p_num'] == 0:
                 result_dict['title'] = info_dict['text']
             else:
-                if info_dict['info']:
+                if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
                         article_list[-1] += " {}".format(info_dict['text'])
                     else:
