@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^update-template-db/(?P<db_name>\S+)/$', views.template_viewer),
     url(r'^home$', views.home),
     url(r'^futures/(?P<game_id>\S+)$', views.futures),
-    url(r'^futures/refresh/(?P<version>\S+)/(?P<game_id>\S+)$', views.refresh_futures),
+    url(r'^refresh/(?P<version>\S+)/(?P<game_id>\S+)$', views.refresh_futures),
     url(r'^login/$', login, {'template_name': 'blog/login.html'}),
     url(r'^logout/$', logout, {'template_name': 'blog/logout.html'}),
     url(r'^register/$', views.register, name='register'),
