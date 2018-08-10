@@ -127,8 +127,12 @@ class RecordApp(object):
         article_dict['title'] = article_args_dict['title']
         article_args_dict['article'].append(team_text)
         article_text = "\n\n".join(article_args_dict['article'])
-        article_dict['article'] = article_text
 
+        df_gameinfo = lab2ai_conn.get_gameinfo(article_dict['game_id'])
+        gameinfo = df_gameinfo.iloc[0]
+        stadium_text = " [{0}=KBOT]".format(gameinfo['Stadium'])
+
+        article_dict['article'] = article_text.rstrip('\n\n') + stadium_text
         article_dict['created_at'] = cls.change_date_array(args['created_at'])
         lab2ai_conn.insert_article_v2(article_dict)
 
@@ -146,12 +150,6 @@ class RecordApp(object):
 
         result_dict['article'] = article_list
         return result_dict
-
-    def get_stadium_text(self, game_id):
-        df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id)
-        gameinfo = df_gameinfo.iloc[0]
-        stadium = " [{0}=KBOT]".format(gameinfo['Stadium'])
-        return stadium
     # endregion [ARTICLE CONTROL FUNCTION]
 
     # region [ETC FUNCTIONS]
