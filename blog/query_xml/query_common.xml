@@ -109,7 +109,7 @@
     </query>
 
     <query id="insert_rds_db_team_sentence">
-        INSERT INTO oper_db.pitcher_sentence
+        INSERT INTO oper_db.team_sentence
         (subject, category, `index`, priority, conditions, sentence, parameters, etc)
         VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
     </query>
