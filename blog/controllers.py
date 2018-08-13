@@ -27,7 +27,7 @@ class RecordApp(object):
         loss_team_data = self.record.get_team_loss_record(loss_team, game_id)
         if loss_team_data:
             _loss_team = self.get_variable_dict(loss_team_data)
-            data_dict['패바팀'] = _loss_team
+            data_dict['패배팀'] = _loss_team
             # sentence_list.extend(loss_team_data)
 
         versus_team_data = self.record.get_team_versus_record(win_team, loss_team, game_id)
@@ -38,7 +38,6 @@ class RecordApp(object):
 
         # result_sentence = self.template.get_team_sentence_list(sentence_list)
         result_sentence = self.template.get_sentence_list(data_dict, cfg.TABLE_TEAM_SENTENCE)
-        print(result_sentence)
         df_result_sentence = pd.DataFrame(result_sentence)
         if df_result_sentence.empty:
             return ''
