@@ -173,9 +173,9 @@ class RecordApp(object):
                         for hitter_events in hitter_events_list:
                             score_scenes_list = hitter_events['score_scenes']
                             for score_scene in score_scenes_list:
-                                hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
-                for hitter in hitter_list:
-                    self.get_hitter_event(game_id, hitter)
+                                _hitter_code = score_scene['hitter_or_runner'][0]['pcode']
+                                hitter_list.append(_hitter_code)
+                                self.get_hitter_event(game_id, _hitter_code)
 
                 if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
