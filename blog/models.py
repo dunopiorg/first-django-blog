@@ -451,6 +451,7 @@ class Lab2AIConnector(object):
         query = query_format.format(**data_value)
 
         with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            print(query)
             cursor.execute(query)
             result = cursor.fetchall()
             conn.commit()
