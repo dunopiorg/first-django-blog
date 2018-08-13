@@ -14,7 +14,7 @@ class Records(object):
         self._AB = cfg.AB
         self._HIT = cfg.HIT
 
-    # region [FUNCTIONS]
+    # region [ETC FUNCTIONS]
     @classmethod
     def get_minor_team_name(cls):
         df_team = cls.lab2ai_conn.get_minor_team_name_info()
@@ -48,7 +48,7 @@ class Records(object):
                     wls_list.append('D')
         df['WLS'] = wls_list
         return df
-    # endregion [FUNCTIONS]
+    # endregion [ETC FUNCTIONS]
 
     # region [HITTER EVENT]
     def get_hitter_n_continue_record(self, hitter_code):
@@ -344,39 +344,43 @@ class Records(object):
     @classmethod
     def get_hitter_final_hit(cls, game_id):
         data_dict = dict()
+        data_dict['존재여부'] = False
         lab2ai_conn = Lab2AIConnector()
         df_record_matrix = lab2ai_conn.get_ie_record_matrix_mix(game_id)
         df_record_matrix = df_record_matrix.sort_values(by='SEQNO', ascending=False)
 
+        index_cnt = 0
         for i, row in df_record_matrix.iterrows():
-            if i == 0 and row['AFTER_SCORE_GAP_CN'] == 0:
+            if index_cnt == 0 and row['AFTER_SCORE_GAP_CN'] == 0:
                 return data_dict
-            if row['AFTER_SCORE_GAP_CN'] == 0:
-                s_record = df_record_matrix.iloc[i-1]
-                team_name = cls.get_minor_team_name()
+            else:
+                index_cnt += 1
+                if row['AFTER_SCORE_GAP_CN'] == 0:
+                    s_record = df_record_matrix.iloc[index_cnt - 2]
+                    team_name = cls.get_minor_team_name()
 
-                hitter_code = s_record['BAT_P_ID']
-                df_person = lab2ai_conn.get_person_info(hitter_code)
-                s_person = df_person.iloc[0]
-                if s_record['AFTER_SCORE_GAP_CN'] > 0:
-                    win_team = team_name[game_id[10:12]]
-                else:
-                    win_team = team_name[game_id[8:10]]
+                    hitter_code = s_record['BAT_P_ID']
+                    df_person = lab2ai_conn.get_person_info(hitter_code)
+                    s_person = df_person.iloc[0]
+                    if s_record['AFTER_SCORE_GAP_CN'] > 0:
+                        win_team = team_name[game_id[10:12]]
+                    else:
+                        win_team = team_name[game_id[8:10]]
 
-                how_code = s_record['HOW_ID']
-                if how_code not in cfg.HIT:
+                    how_code = s_record['HOW_ID']
+                    if how_code not in cfg.HIT:
+                        return data_dict
+                    else:
+                        how_code = cfg.HOW_KOR_DICT[how_code]
+
+                    inn_no = s_record['INN_NO']
+                    data_dict['선수명'] = s_person['NAME']
+                    data_dict['선수코드'] = str(hitter_code)
+                    data_dict['팀명'] = win_team
+                    data_dict['타격종류'] = how_code
+                    data_dict['이닝'] = inn_no
+                    data_dict['존재여부'] = True
                     return data_dict
-                else:
-                    how_code = cfg.HOW_KOR_DICT[how_code]
-
-                inn_no = s_record['INN_NO']
-                data_dict['선수명'] = s_person['NAME']
-                data_dict['팀명'] = win_team
-                data_dict['타격종류'] = how_code
-                data_dict['이닝'] = inn_no
-                return data_dict
-
-
     # endregion [HITTER EVENT]
 
     # region [PITCHER EVENT]

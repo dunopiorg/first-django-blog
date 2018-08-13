@@ -1,7 +1,7 @@
 from .. import config as cfg
 from ..models import Lab2AIConnector
 from korean import l10n
-
+from types import SimpleNamespace
 import random
 
 
@@ -56,15 +56,52 @@ class Template(object):
                     break
 
         return result_list
+
+    def get_sentence_list(self, data_list, table_name):
+        result_list = []
+        lab2ai_conn = Lab2AIConnector()
+        df_db = lab2ai_conn.get_template_db_by_name(table_name)
+
+        for data in data_list:
+            for i, row in df_db.iterrows():
+                row_condition = row[cfg.CONDITIONS]
+                str_condition = row_condition.format(**data)
+                if eval(str_condition):
+                    row[cfg.SENTENCE] = self.get_text(row[cfg.SENTENCE], data)
+                    result_list.append(row.to_dict())
+
+        return result_list
     # endregion [문장생성]
 
-    # region [FUNCTIONS]
+    # region [변수생성]
+    @classmethod
+    def set_variable(cls, data_list):
+        class CommonVariable(object):
+            pass
+
+        val = CommonVariable()
+        for d in data_list:
+            val.__setattr__(d['key'], d['value'])
+
+        return val
+    # endregion [변수생성]
+
+    # region [ETC FUNCTIONS]
     def get_text(self, template, data_dict):
         text = ''
-        temp_list = [d.strip() for d in template.split('#') if d]  # 공백제거
+        temp_list = [d.strip() for d in template.split('@') if d]  # 공백제거
         s = random.choice(temp_list)
         if s:
-            text = l10n.Template(s).format(**data_dict)
+            text = s.format(**data_dict)
+            for i, s_str in enumerate(text):
+                if s_str == '#':
+                    l_str = text[i - 1]
+                    c_str = text[i + 1]
+                    change_form = "{0:%s}" % c_str
+                    text[i + 1] = l10n.Template(change_form).format(l_str)[1:]
+
+            # text = l10n.Template(s).format(**data_dict)
+            # text = l10n.proofread(text)
         return text
 
     def get_string_to_dict(self, str_dict):
@@ -97,4 +134,4 @@ class Template(object):
                 result_flag = False
 
         return result_flag, result_dict
-    # endregion [FUNCTIONS]
+    # endregion [ETC FUNCTIONS]

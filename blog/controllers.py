@@ -61,9 +61,15 @@ class RecordApp(object):
     # endregion [TEAM EVENT]
 
     # region [HITTER EVENT]
-    def get_final_hit_event(self, hitter_code):
-        # get_hitter_final_hit
-        pass
+    def get_final_hit_event(self, game_id):
+        variable_list = []
+        final_hit_dict = self.record.get_hitter_final_hit(game_id)
+        for k, v in final_hit_dict.items():
+            variable_list.append({'key': k, 'value': v})
+
+        _final_hit = self.template.set_variable(variable_list)
+        data_dict = {'결승타': _final_hit}
+        return data_dict
 
     def get_player_event_dict(self, game_id, player_name=None, hitter_code=None, pitcher_code=None):
         result_list = []
@@ -110,8 +116,7 @@ class RecordApp(object):
 
         return article_dict
 
-    @classmethod
-    def set_article_v2_to_db(cls, args):
+    def set_article_v2_to_db(self, args):
         article_dict = {}
         lab2ai_conn = Lab2AIConnector()
 
@@ -122,7 +127,7 @@ class RecordApp(object):
         article_dict['serial'] = args['serial']
 
         info = args['info']
-        article_args_dict = cls.get_article_text_dict(info)
+        article_args_dict = self.get_article_text_dict(info, game_id=article_dict['game_id'])
         team_text = RecordApp().get_paragraph(article_dict['game_id'])
 
         article_dict['title'] = article_args_dict['title']
@@ -134,20 +139,45 @@ class RecordApp(object):
         stadium_text = " [{0}=KBOT]".format(gameinfo['Stadium'])
 
         article_dict['article'] = article_text.rstrip('\n\n') + stadium_text
-        article_dict['created_at'] = cls.change_date_array(args['created_at'])
+        article_dict['created_at'] = self.change_date_array(args['created_at'])
         lab2ai_conn.insert_article_v2(article_dict)
 
         return article_dict
 
-    @classmethod
-    def get_article_text_dict(cls, info_list):
+    def get_article_text_dict(self, info_list, game_id=None):
         result_dict = {}
         article_list = []
         prev_inning = 0
+        final_hit_dict = self.get_final_hit_event(game_id)
+        final_hitter = final_hit_dict['결승타']
         for i, info_dict in enumerate(info_list):
             if info_dict['p_num'] == 0:
                 result_dict['title'] = info_dict['text']
             else:
+                if isinstance(info_dict['info'], dict):
+                    _info_dict = [info_dict]
+                else:
+                    _info_dict = info_dict
+
+                hitter_list = []
+                for info in _info_dict:
+                    hitter_events_list = info['info']['hitter_events']
+                    for hitter_events in hitter_events_list:
+                        score_scenes_list = hitter_events['score_scenes']
+                        for score_scene in score_scenes_list:
+                            hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
+
+                if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 == info_dict['info']['inning']:
+                    if isinstance(info_dict['info'], dict):
+                        final_hit_dict['기록리스트길이'] = 1
+                    else:
+                        final_hit_dict['기록리스트길이'] = len(info_dict['info'])
+                    final_hit_result = self.template.get_sentence_list([final_hit_dict], cfg.TABLE_HALF_INNING_SENTENCE)
+                    if final_hit_result:
+                        final_hit_result = final_hit_result[0]
+                        info_dict['text'] += ' '
+                        info_dict['text'] += final_hit_result['sentence']
+
                 if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
                         article_list[-1] += " {}".format(info_dict['text'])
@@ -216,7 +246,7 @@ class GspreadTemplate(object):
 
     @classmethod
     def set_rds_template_from_gspread(cls, table_name, table_hash):
-        rds_table_nm = cfg.SHEET_MATCHING_DICT[table_name]
+        rds_table_nm = cfg.GSPREAD_MATCHING_DICT[table_name]
         # delete
         cls.lab2ai_conn.delete_rds_db_by_name(rds_table_nm)
         df_table = pd.DataFrame(table_hash)
