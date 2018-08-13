@@ -737,8 +737,8 @@ class Records(object):
         versus_continue_dict['패배수'] = wls_list.count('L')
         versus_continue_dict['연승수'] = continue_w
         versus_continue_dict['연패수'] = continue_l
-        versus_continue_dict['승리_이후_경기수'] = after_w_game_cnt
-        versus_continue_dict['승리_이후_무승부수'] = after_d_cnt
+        versus_continue_dict['승_이후_경기수'] = after_w_game_cnt
+        versus_continue_dict['승_이후_무승부수'] = after_d_cnt
         # result_list.append(versus_continue_dict)
 
         # versus_score_dict = data_dict.copy()
