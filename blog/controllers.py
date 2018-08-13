@@ -168,7 +168,7 @@ class RecordApp(object):
                             score_scenes_list = hitter_events['score_scenes']
                             for score_scene in score_scenes_list:
                                 hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
-                    print(final_hitter.__dict__)
+
                     if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 in inning_list:
                         if isinstance(info_dict['info'], dict):
                             final_hit_dict['기록리스트길이'] = 1
