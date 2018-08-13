@@ -642,12 +642,12 @@ class Records(object):
         data_dict['승_이후_경기수'] = after_w_game_cnt
         data_dict['승_이후_무승부수'] = after_d_cnt
         data_dict['승리팀'] = self.MINOR_TEAM_NAME[team_code]
-        result_list.append(data_dict)
+        # result_list.append(data_dict)
 
-        return result_list
+        return data_dict
 
     def get_team_loss_record(self, team_code, game_id):
-        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '패배팀_연승패', '패배팀': self.MINOR_TEAM_NAME[team_code]}
+        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '패배팀_연승패'}
         result_list = []
 
         df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
@@ -681,14 +681,18 @@ class Records(object):
             else:
                 break
 
+        data_dict['이름'] = self.MINOR_TEAM_NAME[team_code]
+        data_dict['승수'] = wls_list.count('W')
         data_dict['패수'] = wls_list.count('L')
+        data_dict['무승부수'] = wls_list.count('D')
         data_dict['연패수'] = continue_l
+        data_dict['직전_연승수'] = continue_w
         data_dict['패_이후_경기수'] = after_l_game_cnt
         data_dict['패_이후_무승부수'] = after_d_cnt
-        data_dict['직전_연승수'] = continue_w
-        result_list.append(data_dict)
+        data_dict['패배팀'] = self.MINOR_TEAM_NAME[team_code]
+        # result_list.append(data_dict)
 
-        return result_list
+        return data_dict
 
     def get_team_versus_record(self, team_code, versus_team, game_id):
         data_dict = {cfg.SUBJECT: '팀기록2',
@@ -729,25 +733,27 @@ class Records(object):
 
         versus_continue_dict = data_dict.copy()
         versus_continue_dict[cfg.CATEGORY] = '상대전적_연승패'
-        versus_continue_dict['상대_연승수'] = continue_w
-        versus_continue_dict['상대_승리_후_경기수'] = after_w_game_cnt
-        versus_continue_dict['승_이후_무승부수'] = after_d_cnt
-        versus_continue_dict['상대_연패수'] = continue_l
-        result_list.append(versus_continue_dict)
+        versus_continue_dict['승리수'] = wls_list.count('W')
+        versus_continue_dict['패배수'] = wls_list.count('L')
+        versus_continue_dict['연승수'] = continue_w
+        versus_continue_dict['연패수'] = continue_l
+        versus_continue_dict['승리_이후_경기수'] = after_w_game_cnt
+        versus_continue_dict['승리_이후_무승부수'] = after_d_cnt
+        # result_list.append(versus_continue_dict)
 
-        versus_score_dict = data_dict.copy()
-        versus_score_dict[cfg.CATEGORY] = '상대전적_균형'
-        versus_score_dict['상대_패배수'] = wls_list.count('L')
-        versus_score_dict['상대_승리수'] = wls_list.count('W')
+        # versus_score_dict = data_dict.copy()
+        # versus_score_dict[cfg.CATEGORY] = '상대전적_균형'
+        # versus_score_dict['상대_패배수'] = wls_list.count('L')
+        # versus_score_dict['상대_승리수'] = wls_list.count('W')
         win_kor = "{}승".format(wls_list.count('W')) if wls_list.count('W') > 0 else "무승"
         loss_kor = "{}패".format(wls_list.count('L')) if wls_list.count('L') > 0 else "무패"
         if wls_list.count('D') == 0:
             versus_result = "{} {}".format(win_kor, loss_kor)
         else:
             versus_result = "{} {}무 {}".format(win_kor, wls_list.count('D'), loss_kor)
-        versus_score_dict['상대_전적'] = versus_result
-        result_list.append(versus_score_dict)
-        return result_list
+        versus_continue_dict['전적'] = versus_result
+        # result_list.append(versus_score_dict)
+        return versus_continue_dict
     # endregion [TEAM EVENT]
 
 
