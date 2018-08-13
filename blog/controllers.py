@@ -161,7 +161,7 @@ class RecordApp(object):
                 if _info_dict:
                     hitter_list = []
                     for info in _info_dict:
-                        hitter_events_list = info['info']['hitter_events']
+                        hitter_events_list = info['hitter_events']
                         for hitter_events in hitter_events_list:
                             score_scenes_list = hitter_events['score_scenes']
                             for score_scene in score_scenes_list:
