@@ -158,25 +158,25 @@ class RecordApp(object):
                     _info_dict = [info_dict]
                 else:
                     _info_dict = info_dict
+                if _info_dict:
+                    hitter_list = []
+                    for info in _info_dict:
+                        hitter_events_list = info['info']['hitter_events']
+                        for hitter_events in hitter_events_list:
+                            score_scenes_list = hitter_events['score_scenes']
+                            for score_scene in score_scenes_list:
+                                hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
 
-                hitter_list = []
-                for info in _info_dict:
-                    hitter_events_list = info['info']['hitter_events']
-                    for hitter_events in hitter_events_list:
-                        score_scenes_list = hitter_events['score_scenes']
-                        for score_scene in score_scenes_list:
-                            hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
-
-                if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 == info_dict['info']['inning']:
-                    if isinstance(info_dict['info'], dict):
-                        final_hit_dict['기록리스트길이'] = 1
-                    else:
-                        final_hit_dict['기록리스트길이'] = len(info_dict['info'])
-                    final_hit_result = self.template.get_sentence_list([final_hit_dict], cfg.TABLE_HALF_INNING_SENTENCE)
-                    if final_hit_result:
-                        final_hit_result = final_hit_result[0]
-                        info_dict['text'] += ' '
-                        info_dict['text'] += final_hit_result['sentence']
+                    if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 == info_dict['info']['inning']:
+                        if isinstance(info_dict['info'], dict):
+                            final_hit_dict['기록리스트길이'] = 1
+                        else:
+                            final_hit_dict['기록리스트길이'] = len(info_dict['info'])
+                        final_hit_result = self.template.get_sentence_list([final_hit_dict], cfg.TABLE_HALF_INNING_SENTENCE)
+                        if final_hit_result:
+                            final_hit_result = final_hit_result[0]
+                            info_dict['text'] += ' '
+                            info_dict['text'] += final_hit_result['sentence']
 
                 if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
