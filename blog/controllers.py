@@ -160,14 +160,16 @@ class RecordApp(object):
                     _info_dict = info_dict['info']
                 if _info_dict:
                     hitter_list = []
+                    inning_list = []
                     for info in _info_dict:
                         hitter_events_list = info['hitter_events']
+                        inning_list.append(info['inning'])
                         for hitter_events in hitter_events_list:
                             score_scenes_list = hitter_events['score_scenes']
                             for score_scene in score_scenes_list:
                                 hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
-
-                    if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 == info_dict['info']['inning']:
+                    print(final_hitter.__dict__)
+                    if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 in inning_list:
                         if isinstance(info_dict['info'], dict):
                             final_hit_dict['기록리스트길이'] = 1
                         else:
