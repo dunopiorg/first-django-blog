@@ -52,14 +52,14 @@ class Records(object):
 
     # region [HITTER EVENT]
     def get_hitter_n_continue_record(self, hitter_code):
-        how_dict = {'HIT': self._HIT, 'HR': ['HR'], 'H2': ['H2'], 'H3': ['H3'],
-                    'OB': ['H1', 'H2', 'H3', 'HR', 'HI', 'HB', 'BB']}
-        place_dict = {'RBI': ['E', 'R', 'H']}
-        n_pa_count_dict = {'HIT': 3, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 3, 'OB': 5}
-        n_game_count_dict = {'HIT': 5, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 5, 'OB': 10}
+        how_dict = {'안타': self._HIT, '홈런': ['HR'], '2루타': ['H2'], '3루타': ['H3'],
+                    '출루': ['H1', 'H2', 'H3', 'HR', 'HI', 'HB', 'BB']}
+        place_dict = {'타점': ['E', 'R', 'H']}
+        # n_pa_count_dict = {'HIT': 3, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 3, 'OB': 5}
+        # n_game_count_dict = {'HIT': 5, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 5, 'OB': 10}
         result_list = []
 
-        data_dict = {'HITTER': hitter_code}
+        data_dict = {}
 
         df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, limit=200)
 
@@ -84,12 +84,11 @@ class Records(object):
                     break
 
         # N경기 타점 셋팅
-        n_game_rbi_counter = {}
         for place_k, place_v in place_dict.items():
-            n_game_rbi_counter[place_k] = 0
+            n_game_counter[place_k] = 0
             for i, places in enumerate(s_place.values):
-                if i == n_game_rbi_counter[place_k] and any(item in place_v for item in places):
-                    n_game_rbi_counter[place_k] += 1
+                if i == n_game_counter[place_k] and any(item in place_v for item in places):
+                    n_game_counter[place_k] += 1
                 else:
                     break
 
@@ -107,12 +106,11 @@ class Records(object):
                     break
 
         # N타석 타점 셋팅
-        n_pa_rbi_counter = {}
         for place_k, place_v in place_dict.items():
-            n_pa_rbi_counter[place_k] = 0
+            n_pa_counter[place_k] = 0
             for i, place in enumerate(s_pa_place.values):
-                if i == n_pa_rbi_counter[place_k] and place in place_v:
-                    n_pa_rbi_counter[place_k] += 1
+                if i == n_pa_counter[place_k] and place in place_v:
+                    n_pa_counter[place_k] += 1
                 else:
                     break
 
@@ -125,41 +123,45 @@ class Records(object):
         #         n_game_dict[cfg.CATEGORY] = "N게임_연속_안타_출루"
         #         result_list.append(n_game_dict)
 
-        # N경기 연속 안타
-        n_game_hit_dict = data_dict.copy()
-        n_game_hit_dict['경기수'] = n_game_count_dict['HIT']
-        n_game_hit_dict[cfg.CATEGORY] = "N게임_연속_안타"
-        result_list.append(n_game_hit_dict)
-
-        # N경기 연속 홈런
-        n_game_hr_dict = data_dict.copy()
-        n_game_hr_dict['경기수'] = n_game_count_dict['HR']
-        n_game_hr_dict[cfg.CATEGORY] = "N게임_연속_홈런"
-        result_list.append(n_game_hr_dict)
-
-        # N경기 연속 2루타
-        n_game_h2_dict = data_dict.copy()
-        n_game_h2_dict['경기수'] = n_game_count_dict['H2']
-        n_game_h2_dict[cfg.CATEGORY] = "N게임_연속_2루타"
-        result_list.append(n_game_h2_dict)
-
-        # N경기 연속 2루타
-        n_game_h3_dict = data_dict.copy()
-        n_game_h3_dict['경기수'] = n_game_count_dict['H3']
-        n_game_h3_dict[cfg.CATEGORY] = "N게임_연속_3루타"
-        result_list.append(n_game_h3_dict)
-
-        # N경기 연속 출루
-        n_game_ob_dict = data_dict.copy()
-        n_game_ob_dict['경기수'] = n_game_count_dict['OB']
-        n_game_ob_dict[cfg.CATEGORY] = "N게임_연속_출루"
-        result_list.append(n_game_ob_dict)
-
-        # N경기 연속 타점
-        n_game_rbi_dict = data_dict.copy()
-        n_game_rbi_dict['경기수'] = n_game_count_dict['RBI']
-        n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
-        result_list.append(n_game_rbi_dict)
+        #n경기 기록
+        data_dict['n경기_연속'] = n_game_counter
+        data_dict['n타석_연속'] = n_game_counter
+        #
+        # # N경기 연속 안타
+        # n_game_hit_dict = data_dict.copy()
+        # n_game_hit_dict['경기수'] = n_game_count_dict['HIT']
+        # n_game_hit_dict[cfg.CATEGORY] = "N게임_연속_안타"
+        # result_list.append(n_game_hit_dict)
+        #
+        # # N경기 연속 홈런
+        # n_game_hr_dict = data_dict.copy()
+        # n_game_hr_dict['경기수'] = n_game_count_dict['HR']
+        # n_game_hr_dict[cfg.CATEGORY] = "N게임_연속_홈런"
+        # result_list.append(n_game_hr_dict)
+        #
+        # # N경기 연속 2루타
+        # n_game_h2_dict = data_dict.copy()
+        # n_game_h2_dict['경기수'] = n_game_count_dict['H2']
+        # n_game_h2_dict[cfg.CATEGORY] = "N게임_연속_2루타"
+        # result_list.append(n_game_h2_dict)
+        #
+        # # N경기 연속 2루타
+        # n_game_h3_dict = data_dict.copy()
+        # n_game_h3_dict['경기수'] = n_game_count_dict['H3']
+        # n_game_h3_dict[cfg.CATEGORY] = "N게임_연속_3루타"
+        # result_list.append(n_game_h3_dict)
+        #
+        # # N경기 연속 출루
+        # n_game_ob_dict = data_dict.copy()
+        # n_game_ob_dict['경기수'] = n_game_count_dict['OB']
+        # n_game_ob_dict[cfg.CATEGORY] = "N게임_연속_출루"
+        # result_list.append(n_game_ob_dict)
+        #
+        # # N경기 연속 타점
+        # n_game_rbi_dict = data_dict.copy()
+        # n_game_rbi_dict['경기수'] = n_game_count_dict['RBI']
+        # n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
+        # result_list.append(n_game_rbi_dict)
 
         # N경기 타점 기록
         # for place_k, counter in n_game_rbi_counter.items():
@@ -179,41 +181,41 @@ class Records(object):
         #         n_pa_dict[cfg.CATEGORY] = "N타석_연속_안타_출루"
         #         result_list.append(n_pa_dict)
 
-        # N타석 연속 안타
-        n_pa_hit_dict = data_dict.copy()
-        n_pa_hit_dict['타석수'] = n_pa_count_dict['HIT']
-        n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_안타"
-        result_list.append(n_pa_hit_dict)
-
-        # N타석 연속 홈런
-        n_pa_hit_dict = data_dict.copy()
-        n_pa_hit_dict['타석수'] = n_pa_count_dict['HR']
-        n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_홈런"
-        result_list.append(n_pa_hit_dict)
-
-        # N타석 연속 2루타
-        n_pa_h2_dict = data_dict.copy()
-        n_pa_h2_dict['타석수'] = n_pa_count_dict['H2']
-        n_pa_h2_dict[cfg.CATEGORY] = "N타석_연속_2루타"
-        result_list.append(n_pa_h2_dict)
-
-        # N타석 연속 3루타
-        n_pa_h3_dict = data_dict.copy()
-        n_pa_h3_dict['타석수'] = n_pa_count_dict['H3']
-        n_pa_h3_dict[cfg.CATEGORY] = "N타석_연속_3루타"
-        result_list.append(n_pa_h3_dict)
-
-        # N타석 연속 출루
-        n_pa_ob_dict = data_dict.copy()
-        n_pa_ob_dict['타석수'] = n_pa_count_dict['OB']
-        n_pa_ob_dict[cfg.CATEGORY] = "N타석_연속_출루"
-        result_list.append(n_pa_ob_dict)
-
-        # N타석 연속 타점
-        n_pa_rbi_dict = data_dict.copy()
-        n_pa_rbi_dict['타석수'] = n_pa_count_dict['RBI']
-        n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
-        result_list.append(n_pa_rbi_dict)
+        # # N타석 연속 안타
+        # n_pa_hit_dict = data_dict.copy()
+        # n_pa_hit_dict['타석수'] = n_pa_count_dict['HIT']
+        # n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_안타"
+        # result_list.append(n_pa_hit_dict)
+        #
+        # # N타석 연속 홈런
+        # n_pa_hit_dict = data_dict.copy()
+        # n_pa_hit_dict['타석수'] = n_pa_count_dict['HR']
+        # n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_홈런"
+        # result_list.append(n_pa_hit_dict)
+        #
+        # # N타석 연속 2루타
+        # n_pa_h2_dict = data_dict.copy()
+        # n_pa_h2_dict['타석수'] = n_pa_count_dict['H2']
+        # n_pa_h2_dict[cfg.CATEGORY] = "N타석_연속_2루타"
+        # result_list.append(n_pa_h2_dict)
+        #
+        # # N타석 연속 3루타
+        # n_pa_h3_dict = data_dict.copy()
+        # n_pa_h3_dict['타석수'] = n_pa_count_dict['H3']
+        # n_pa_h3_dict[cfg.CATEGORY] = "N타석_연속_3루타"
+        # result_list.append(n_pa_h3_dict)
+        #
+        # # N타석 연속 출루
+        # n_pa_ob_dict = data_dict.copy()
+        # n_pa_ob_dict['타석수'] = n_pa_count_dict['OB']
+        # n_pa_ob_dict[cfg.CATEGORY] = "N타석_연속_출루"
+        # result_list.append(n_pa_ob_dict)
+        #
+        # # N타석 연속 타점
+        # n_pa_rbi_dict = data_dict.copy()
+        # n_pa_rbi_dict['타석수'] = n_pa_count_dict['RBI']
+        # n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
+        # result_list.append(n_pa_rbi_dict)
 
         # N타석 타점 기록
         # for pa_rbi_k, counter in n_pa_rbi_counter.items():
@@ -224,7 +226,7 @@ class Records(object):
         #         n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
         #         result_list.append(n_pa_rbi_dict)
 
-        return result_list
+        return data_dict
 
     def get_hitter_named(self, hitter_code, team_code=None):
         df_score = self.lab2ai_conn.get_score(2018, 'SK')

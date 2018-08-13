@@ -89,6 +89,10 @@ class RecordApp(object):
             # result_list.append(self.record.get_pitcher_how_many_games(pitcher_code))
             result_list.append(self.record.get_pitcher_season_record(pitcher_code))
         return {'game_id': game_id, 'player_records': result_list, 'player_name': player_name}
+
+    def get_hitter_event(self, game_id, hitter_code):
+        n_countinue_dict = self.record.get_hitter_n_continue_record(hitter_code)
+        print(n_countinue_dict)
     # endregion [HITTER EVENT]
 
     # region [ARTICLE CONTROL FUNCTION]
@@ -151,8 +155,6 @@ class RecordApp(object):
         result_dict = {}
         article_list = []
         prev_inning = 0
-        final_hit_dict = self.get_final_hit_event(game_id)
-        final_hitter = final_hit_dict['결승타']
         for i, info_dict in enumerate(info_list):
             if info_dict['p_num'] == 0:
                 result_dict['title'] = info_dict['text']
@@ -161,6 +163,7 @@ class RecordApp(object):
                     _info_dict = [info_dict['info']]
                 else:
                     _info_dict = info_dict['info']
+
                 if _info_dict:
                     hitter_list = []
                     inning_list = []
@@ -171,17 +174,8 @@ class RecordApp(object):
                             score_scenes_list = hitter_events['score_scenes']
                             for score_scene in score_scenes_list:
                                 hitter_list.append(score_scene['hitter_or_runner'][0]['pcode'])
-
-                    if final_hitter.존재여부 and final_hitter.선수코드 in hitter_list and final_hitter.이닝 in inning_list:
-                        if isinstance(info_dict['info'], dict):
-                            final_hit_dict['기록리스트길이'] = 1
-                        else:
-                            final_hit_dict['기록리스트길이'] = len(info_dict['info'])
-                        final_hit_result = self.template.get_sentence_list(final_hit_dict, cfg.TABLE_HALF_INNING_SENTENCE)
-                        if final_hit_result:
-                            final_hit_result = final_hit_result[0]
-                            info_dict['text'] += ' '
-                            info_dict['text'] += final_hit_result['sentence']
+                for hitter in hitter_list:
+                    self.get_hitter_event(game_id, hitter)
 
                 if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
