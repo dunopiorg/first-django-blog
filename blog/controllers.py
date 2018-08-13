@@ -16,21 +16,29 @@ class RecordApp(object):
 
     # region [TEAM EVENT]
     def get_team_paragraph(self, win_team, loss_team, game_id):
-        sentence_list = []
-        data_dict = {'승리팀': self.record.MINOR_TEAM_NAME[win_team], '패배팀': self.record.MINOR_TEAM_NAME[loss_team]}
+        data_dict = {}
+        # data_dict = {'승리팀': self.record.MINOR_TEAM_NAME[win_team], '패배팀': self.record.MINOR_TEAM_NAME[loss_team]}
         win_team_data = self.record.get_team_win_record(win_team, game_id)
         if win_team_data:
-            sentence_list.extend(win_team_data)
+            _win_team = self.get_variable_dict(win_team_data)
+            data_dict['승리팀'] = _win_team
+            # sentence_list.extend(win_team_data)
 
         loss_team_data = self.record.get_team_loss_record(loss_team, game_id)
         if loss_team_data:
-            sentence_list.extend(loss_team_data)
+            _loss_team = self.get_variable_dict(loss_team_data)
+            data_dict['패바팀'] = _loss_team
+            # sentence_list.extend(loss_team_data)
 
         versus_team_data = self.record.get_team_versus_record(win_team, loss_team, game_id)
         if versus_team_data:
-            sentence_list.extend(versus_team_data)
+            _versus_team = self.get_variable_dict(versus_team_data)
+            data_dict['상대전적'] = _versus_team
+            # sentence_list.extend(versus_team_data)
 
-        result_sentence = self.template.get_team_sentence_list(sentence_list)
+        # result_sentence = self.template.get_team_sentence_list(sentence_list)
+        result_sentence = self.template.get_sentence_list(data_dict, cfg.TABLE_TEAM_SENTENCE)
+        print(result_sentence)
         df_result_sentence = pd.DataFrame(result_sentence)
         if df_result_sentence.empty:
             return ''
@@ -62,12 +70,8 @@ class RecordApp(object):
 
     # region [HITTER EVENT]
     def get_final_hit_event(self, game_id):
-        variable_list = []
         final_hit_dict = self.record.get_hitter_final_hit(game_id)
-        for k, v in final_hit_dict.items():
-            variable_list.append({'key': k, 'value': v})
-
-        _final_hit = self.template.set_variable(variable_list)
+        _final_hit = self.get_variable_dict(final_hit_dict)
         data_dict = {'결승타': _final_hit}
         return data_dict
 
@@ -174,7 +178,7 @@ class RecordApp(object):
                             final_hit_dict['기록리스트길이'] = 1
                         else:
                             final_hit_dict['기록리스트길이'] = len(info_dict['info'])
-                        final_hit_result = self.template.get_sentence_list([final_hit_dict], cfg.TABLE_HALF_INNING_SENTENCE)
+                        final_hit_result = self.template.get_sentence_list(final_hit_dict, cfg.TABLE_HALF_INNING_SENTENCE)
                         if final_hit_result:
                             final_hit_result = final_hit_result[0]
                             info_dict['text'] += ' '
@@ -194,6 +198,14 @@ class RecordApp(object):
     # endregion [ARTICLE CONTROL FUNCTION]
 
     # region [ETC FUNCTIONS]
+    def get_variable_dict(self, data):
+        variable_list = []
+        for k, v in data.items():
+            variable_list.append({'key': k, 'value': v})
+
+        _final_val = self.template.set_variable(variable_list)
+        return _final_val
+
     def get_gameinfo_dict_list(self):
         df_gameinfo = self.lab2ai_conn.get_gameinfo()
         df_gameinfo = df_gameinfo.sort_values(by='Gday', ascending=False)

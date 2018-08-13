@@ -600,7 +600,7 @@ class Records(object):
 
     # region [TEAM EVENT]
     def get_team_win_record(self, team_code, game_id):
-        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '승리팀_연승패', '승리팀': self.MINOR_TEAM_NAME[team_code]}
+        data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '승리팀_연승패'}
         result_list = []
 
         df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
@@ -633,11 +633,15 @@ class Records(object):
             else:
                 break
 
+        data_dict['이름'] = self.MINOR_TEAM_NAME[team_code]
         data_dict['승수'] = wls_list.count('W')
+        data_dict['패수'] = wls_list.count('L')
+        data_dict['무승부'] = wls_list.count('D')
         data_dict['연승수'] = continue_w
+        data_dict['직전_연패수'] = continue_l
         data_dict['승_이후_경기수'] = after_w_game_cnt
         data_dict['승_이후_무승부수'] = after_d_cnt
-        data_dict['직전_연패수'] = continue_l
+        data_dict['승리팀'] = self.MINOR_TEAM_NAME[team_code]
         result_list.append(data_dict)
 
         return result_list

@@ -57,18 +57,17 @@ class Template(object):
 
         return result_list
 
-    def get_sentence_list(self, data_list, table_name):
+    def get_sentence_list(self, data_dict, table_name):
         result_list = []
         lab2ai_conn = Lab2AIConnector()
         df_db = lab2ai_conn.get_template_db_by_name(table_name)
 
-        for data in data_list:
-            for i, row in df_db.iterrows():
-                row_condition = row[cfg.CONDITIONS]
-                str_condition = row_condition.format(**data)
-                if eval(str_condition):
-                    row[cfg.SENTENCE] = self.get_text(row[cfg.SENTENCE], data)
-                    result_list.append(row.to_dict())
+        for i, row in df_db.iterrows():
+            row_condition = row[cfg.CONDITIONS]
+            str_condition = row_condition.format(**data_dict)
+            if eval(str_condition):
+                row[cfg.SENTENCE] = self.get_text(row[cfg.SENTENCE], data_dict)
+                result_list.append(row.to_dict())
 
         return result_list
     # endregion [문장생성]
