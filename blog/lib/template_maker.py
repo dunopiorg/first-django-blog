@@ -98,7 +98,8 @@ class Template(object):
                     l_str = text[i - 1]
                     c_str = text[i + 1]
                     change_form = "{0:%s}" % c_str
-                    text[i + 1] = l10n.Template(change_form).format(l_str)[1:]
+                    change_words = l10n.Template(change_form).format(l_str)[1:]
+                    text[i + 1] = change_words
 
             # text = l10n.Template(s).format(**data_dict)
             # text = l10n.proofread(text)
