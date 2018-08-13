@@ -155,9 +155,9 @@ class RecordApp(object):
                 result_dict['title'] = info_dict['text']
             else:
                 if isinstance(info_dict['info'], dict):
-                    _info_dict = [info_dict]
+                    _info_dict = [info_dict['info']]
                 else:
-                    _info_dict = info_dict
+                    _info_dict = info_dict['info']
                 if _info_dict:
                     hitter_list = []
                     for info in _info_dict:
