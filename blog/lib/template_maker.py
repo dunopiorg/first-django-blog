@@ -95,11 +95,12 @@ class Template(object):
             text = s.format(**data_dict)
             for i, s_str in enumerate(text):
                 if s_str == '#':
-                    l_str = text[i - 1]
-                    c_str = text[i + 1]
+                    index = text.index(s_str)
+                    l_str = text[index - 1]
+                    c_str = text[index + 1]
                     change_form = "{0:%s}" % c_str
                     change_words = l10n.Template(change_form).format(l_str)[1:]
-                    text = text.replace(text[i:i + 2], change_words)
+                    text = text.replace(text[index:index + 2], change_words)
 
             # text = l10n.Template(s).format(**data_dict)
             # text = l10n.proofread(text)
