@@ -123,7 +123,7 @@
     <query id="insert_rds_db_half_inning_sentence">
         INSERT INTO oper_db.half_inning_sentence
         (subject, `index`, priority, conditions, sentence, parameters, etc)
-        VALUES ('{subject}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+        VALUES ("{subject}", {index}, {priority}, "{conditions}", "{sentence}", "{parameters}", "{etc}")
     </query>
 
     <query id="delete_rds_db_by_name">
