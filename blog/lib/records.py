@@ -16,6 +16,18 @@ class Records(object):
 
     # region [ETC FUNCTIONS]
     @classmethod
+    def get_date_kor(cls, game_date, record_date):
+        game_dt = datetime.strptime(game_date, '%Y%m%d')
+        record_dt = datetime.strptime(record_date, '%Y%m%d')
+        dt = game_dt - record_dt
+        if dt.days > 25:
+            s_format = "{0}월 {1}일".format(record_dt.month, record_dt.day)
+        else:
+            s_format = "지난 {0}일".format(record_dt.day)
+
+        return s_format
+
+    @classmethod
     def get_minor_team_name(cls):
         df_team = cls.lab2ai_conn.get_minor_team_name_info()
         return df_team.set_index('team')['teamname'].to_dict()
@@ -51,7 +63,7 @@ class Records(object):
     # endregion [ETC FUNCTIONS]
 
     # region [HITTER EVENT]
-    def get_hitter_n_continue_record(self, hitter_code):
+    def get_hitter_n_continue_record(self, game_id, hitter_code):
         how_dict = {'안타': self._HIT, '홈런': ['HR'], '2루타': ['H2'], '3루타': ['H3'],
                     '출루': ['H1', 'H2', 'H3', 'HR', 'HI', 'HB', 'BB']}
         place_dict = {'타점': ['E', 'R', 'H']}
@@ -60,8 +72,14 @@ class Records(object):
         result_list = []
 
         data_dict = {}
+        game_date = game_id[0:8]
+        df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, game_date=game_date, limit=200)
 
-        df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, limit=200)
+        s_temp = df.iloc[0]
+        if s_temp['TB'] == 'T':
+            hitter_team_cd = s_temp['GMKEY'][8:10]
+        else:
+            hitter_team_cd = s_temp['GMKEY'][10:12]
 
         if df.empty:
             return None
@@ -70,26 +88,46 @@ class Records(object):
             s_how = df_game.groupby('GMKEY')['HOW'].apply(list)
             s_place = df_game.groupby('GMKEY')['PLACE'].apply(list)
 
-        s_how = s_how.sort_values(ascending=False)
-        s_place = s_place.sort_values(ascending=False)
+        s_how = s_how.sort_index(ascending=False)
+        s_place = s_place.sort_index(ascending=False)
 
         # N경기 안타, 출루 셋팅
-        n_game_counter = {}
+        n_game_continue = {}
         for how_k, how_v in how_dict.items():
-            n_game_counter[how_k] = 0
-            for i, hows in enumerate(s_how.values):
-                if i == n_game_counter[how_k] and any(item in how_v for item in hows):
-                    n_game_counter[how_k] += 1
+            n_game_counter = 0
+            for i, (s_index, hows) in enumerate(s_how.items()):
+                if i == n_game_counter and any(item in how_v for item in hows):
+                    n_game_counter += 1
                 else:
+                    if s_index[8:10] == hitter_team_cd:
+                        vs_team_cd = s_index[10:12]
+                    else:
+                        vs_team_cd = s_index[8:10]
+
+                    n_game_continue[how_k] = {
+                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
+                        '경기수': n_game_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
                     break
 
         # N경기 타점 셋팅
         for place_k, place_v in place_dict.items():
-            n_game_counter[place_k] = 0
-            for i, places in enumerate(s_place.values):
-                if i == n_game_counter[place_k] and any(item in place_v for item in places):
-                    n_game_counter[place_k] += 1
+            n_game_counter = 0
+            for i, (s_index, places) in enumerate(s_place.items()):
+                if i == n_game_counter and any(item in place_v for item in places):
+                    n_game_counter += 1
                 else:
+                    if s_index[8:10] == hitter_team_cd:
+                        vs_team_cd = s_index[10:12]
+                    else:
+                        vs_team_cd = s_index[8:10]
+
+                    n_game_continue[place_k] = {
+                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
+                        '경기수': n_game_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
                     break
 
         s_pa_how = df_game['HOW']
@@ -114,6 +152,27 @@ class Records(object):
                 else:
                     break
 
+        # N경기 만에 안타, 출루 셋팅
+        n_game_last = {}
+        for how_k, how_v in how_dict.items():
+            n_game_last_counter = 0
+            for i, (s_index, hows) in enumerate(s_how.items()):
+                if i == n_game_last_counter and not any(item in how_v for item in hows):
+                    n_game_last_counter += 1
+                else:
+                    if s_index[8:10] == hitter_team_cd:
+                        vs_team_cd = s_index[10:12]
+                    else:
+                        vs_team_cd = s_index[8:10]
+
+                    n_game_last_counter += 1
+                    n_game_last[how_k] = {
+                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
+                        '경기수': n_game_last_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
+                    break
+
         # N경기 안타, 출루 기록
         # for how_k, counter in n_game_counter.items():
         #     if counter > n_game_count_dict[how_k]:
@@ -124,8 +183,7 @@ class Records(object):
         #         result_list.append(n_game_dict)
 
         #n경기 기록
-        data_dict['n경기_연속'] = n_game_counter
-        data_dict['n타석_연속'] = n_game_counter
+        # data_dict['n타석_연속'] = n_game_counter
         #
         # # N경기 연속 안타
         # n_game_hit_dict = data_dict.copy()
@@ -226,7 +284,7 @@ class Records(object):
         #         n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
         #         result_list.append(n_pa_rbi_dict)
 
-        return data_dict
+        return n_game_continue, n_game_last
 
     def get_hitter_named(self, hitter_code, team_code=None):
         df_score = self.lab2ai_conn.get_score(2018, 'SK')
@@ -319,7 +377,8 @@ class Records(object):
         pa = df_hitter['PA'].sum()
 
         if today_hr > 0 and prev_hr == 0:
-            df_hitter_gamecont = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, game_key=game_key)
+            game_date = game_key[0:8]
+            df_hitter_gamecont = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, game_date=game_date, game_key=game_key)
 
             for i, row in df_hitter_gamecont.iterrows():
                 if row['HOW'] in self._PA:

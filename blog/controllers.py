@@ -91,8 +91,21 @@ class RecordApp(object):
         return {'game_id': game_id, 'player_records': result_list, 'player_name': player_name}
 
     def get_hitter_event(self, game_id, hitter_code):
-        n_countinue_dict = self.record.get_hitter_n_continue_record(hitter_code)
-        print(n_countinue_dict)
+        n_countinue_dict, n_last_dict = self.record.get_hitter_n_continue_record(game_id, hitter_code)
+        df_person = self.lab2ai_conn.get_person_info(hitter_code)
+        s_person = df_person.iloc[0]
+        hitter_name = s_person['NAME']
+        hitter_team = s_person['TEAM']
+
+        data_dict = {
+            '이름': hitter_name,
+            'n경기_연속': self.get_variable_dict(n_countinue_dict),
+            'n경기_만에': self.get_variable_dict(n_last_dict),
+            '팀': hitter_team
+        }
+        hitter_info = self.get_variable_dict(data_dict)
+        return hitter_info
+
     # endregion [HITTER EVENT]
 
     # region [ARTICLE CONTROL FUNCTION]
@@ -155,27 +168,31 @@ class RecordApp(object):
         result_dict = {}
         article_list = []
         prev_inning = 0
+        # 문장 합치기
         for i, info_dict in enumerate(info_list):
             if info_dict['p_num'] == 0:
                 result_dict['title'] = info_dict['text']
             else:
-                if isinstance(info_dict['info'], dict):
-                    _info_dict = [info_dict['info']]
-                else:
-                    _info_dict = info_dict['info']
+                if info_dict['info']:
+                    _info = info_dict['info']
+                    if isinstance(_info, dict):
+                        _info_dict = [_info]
+                    else:
+                        _info_dict = _info
 
-                if _info_dict:
-                    hitter_list = []
-                    inning_list = []
                     for info in _info_dict:
-                        hitter_events_list = info['hitter_events']
-                        inning_list.append(info['inning'])
-                        for hitter_events in hitter_events_list:
-                            score_scenes_list = hitter_events['score_scenes']
-                            for score_scene in score_scenes_list:
+                        for hitter_events in info['hitter_events']:
+                            for score_scene in hitter_events['score_scenes']:
                                 _hitter_code = score_scene['hitter_or_runner'][0]['pcode']
-                                hitter_list.append(_hitter_code)
-                                self.get_hitter_event(game_id, _hitter_code)
+                                _how = score_scene['how']
+                                _how_kor = score_scene['how_kor']
+                                hitter_info = self.get_hitter_event(game_id, _hitter_code)
+                                data_dict = {'_타격종류': _how_kor, '타자': hitter_info}
+                                hitter_sentence_list = self.template.get_sentence_list(data_dict, cfg.TABLE_HALF_INNING_SENTENCE)
+                                if hitter_sentence_list:
+                                    hitter_event_info = hitter_sentence_list[0]
+                                    info_dict['text'] += ' '
+                                    info_dict['text'] += hitter_event_info['sentence']
 
                 if isinstance(info_dict['info'], dict):
                     if prev_inning == info_dict['info']['inning']:
@@ -193,11 +210,14 @@ class RecordApp(object):
     # region [ETC FUNCTIONS]
     def get_variable_dict(self, data):
         variable_list = []
-        for k, v in data.items():
-            variable_list.append({'key': k, 'value': v})
+        if isinstance(data, dict):
+            for k, v in data.items():
+                variable_list.append({'key': k, 'value': self.get_variable_dict(v)})
 
-        _final_val = self.template.set_variable(variable_list)
-        return _final_val
+            _final_val = self.template.set_variable(variable_list)
+            return _final_val
+        else:
+            return data
 
     def get_gameinfo_dict_list(self):
         df_gameinfo = self.lab2ai_conn.get_gameinfo()

@@ -63,6 +63,8 @@ class Template(object):
         df_db = lab2ai_conn.get_template_db_by_name(table_name)
 
         for i, row in df_db.iterrows():
+            if row['subject'] not in data_dict.keys():
+                continue
             row_condition = row[cfg.CONDITIONS]
             str_condition = row_condition.format(**data_dict)
             if eval(str_condition):

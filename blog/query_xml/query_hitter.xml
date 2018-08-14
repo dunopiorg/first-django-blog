@@ -6,6 +6,7 @@
 		, TSCORE, BSCORE, BASE1B, BASE2B, BASE3B, BASE1A, BASE2A, BASE3A
 		FROM minor_baseball.gamecontapp
 		WHERE HITTER = '{HITTER}'
+		{GDAY}
 		{GMKEY}
         ORDER BY gday DESC
         {LIMIT}

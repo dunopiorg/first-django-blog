@@ -43,12 +43,20 @@ class Lab2AIConnector(object):
 
     # region [INITIALIZATION]
     def __init__(self):
-        self._HOST = cfg.AWS_SERVER
-        self._USER = cfg.AWS_USER
-        self._PASSWORD = cfg.AWS_PASSWORD
-        self._DATABASE = cfg.AWS_DATABASE
-        self._PORT = cfg.AWS_PORT
-        self.ql = query_loader.QueryLoader('blog/query_xml')
+        if cfg.LOCAL:
+            self._HOST = 'localhost'
+            self._USER = 'root'
+            self._PASSWORD = 'lab2ai64'
+            self._DATABASE = 'minor_baseball'
+            self._PORT = 3307
+            self.ql = query_loader.QueryLoader('blog/query_xml')
+        else:
+            self._HOST = cfg.AWS_SERVER
+            self._USER = cfg.AWS_USER
+            self._PASSWORD = cfg.AWS_PASSWORD
+            self._DATABASE = cfg.AWS_DATABASE
+            self._PORT = cfg.AWS_PORT
+            self.ql = query_loader.QueryLoader('blog/query_xml')
     # endregion [INITIALIZATION]
 
     # region [QUERY EVENT]
@@ -122,9 +130,14 @@ class Lab2AIConnector(object):
     # endregion [QUERY EVENT]
 
     # region [HITTER RECORD]
-    def get_hitter_gamecontapp_record(self, hitter_code, game_key=None, limit=None):
+    def get_hitter_gamecontapp_record(self, hitter_code, game_date=None, game_key=None, limit=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
+
+        if game_date is None:
+            gday = ' '
+        else:
+            gday = " AND GDAY < '{0}' ".format(game_date)
 
         if game_key is None:
             gmkey = ' '
@@ -137,7 +150,7 @@ class Lab2AIConnector(object):
             limit_state = " LIMIT {0} ".format(limit)
 
         query_format = self.ql.get_query("query_hitter", "get_hitter_gamecontapp_record")
-        query = query_format.format(HITTER=hitter_code, GMKEY=gmkey, LIMIT=limit_state)
+        query = query_format.format(HITTER=hitter_code, GDAY=gday, GMKEY=gmkey, LIMIT=limit_state)
 
         df = pd.read_sql(query, conn)
         conn.close()
