@@ -24,7 +24,7 @@
 		, ETC_ME
 		, REG_DT
 		FROM baseball.player_injury
-		WHERE PCODE = '{PCODE}'
+		WHERE PCODE = "{PCODE}"
         ORDER BY REG_DT DESC
 	</query>
 
@@ -49,8 +49,8 @@
         19T, 19B, 20T, 20B, 21T, 21B, 22T, 22B, 23T, 23B, 24T, 24B, 25T, 25B,
         TPOINT, BPOINT, THIT, BHIT, TERR, BERR, TBBHP, BBBHP
         FROM minor_baseball.score
-        WHERE GDAY LIKE '2018%'
-        AND (GMKEY LIKE '%{TEAM}__0' OR GMKEY LIKE '%{TEAM}0')
+        WHERE GDAY LIKE "2018%"
+        AND (GMKEY LIKE "%{TEAM}__0" OR GMKEY LIKE "%{TEAM}0")
         AND GDAY &lt;= {GDAY}
         ORDER BY GDAY DESC
     </query>
@@ -66,7 +66,7 @@
     <query id="get_article_from_db">
         SELECT game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key
         FROM oper_db.robot_article
-        WHERE game_id = '{GAME_ID}'
+        WHERE game_id = "{GAME_ID}"
         ORDER BY serial DESC
         LIMIT 1
     </query>
@@ -74,7 +74,7 @@
     <query id="get_article_from_db_v2">
         SELECT game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key
         FROM oper_db.robot_article_v2
-        WHERE game_id = '{GAME_ID}'
+        WHERE game_id = "{GAME_ID}"
         ORDER BY serial DESC
         LIMIT 1
     </query>
@@ -85,7 +85,7 @@
         19T, 19B, 20T, 20B, 21T, 21B, 22T, 22B, 23T, 23B, 24T, 24B, 25T, 25B,
         TPOINT, BPOINT, THIT, BHIT, TERR, BERR, TBBHP, BBBHP
         FROM minor_baseball.score
-        WHERE GDAY LIKE '2018%'
+        WHERE GDAY LIKE "2018%"
         {GAME_ID}
         ORDER BY GDAY DESC
     </query>
@@ -93,31 +93,31 @@
     <query id="set_rds_db_team_sentence">
         INSERT INTO oper_db.team_sentence
         (subject, category, `index`, priority, conditions, sentence, parameters)
-        VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')
+        VALUES ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}", "{6}")
     </query>
 
     <query id="insert_rds_db_hitter_sentence">
         INSERT INTO oper_db.hitter_sentence
         (subject, category, `index`, priority, conditions, sentence, parameters, etc)
-        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+        VALUES ("{subject}", "{category}", {index}, {priority}, "{conditions}", "{sentence}", "{parameters}", "{etc}")
     </query>
 
     <query id="insert_rds_db_pitcher_sentence">
         INSERT INTO oper_db.pitcher_sentence
         (subject, category, `index`, priority, conditions, sentence, parameters, etc)
-        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+        VALUES ("{subject}", "{category}", {index}, {priority}, "{conditions}", "{sentence}", "{parameters}", "{etc}")
     </query>
 
     <query id="insert_rds_db_team_sentence">
         INSERT INTO oper_db.team_sentence
         (subject, category, `index`, priority, conditions, sentence, parameters, etc)
-        VALUES ('{subject}', '{category}', {index}, {priority}, '{conditions}', '{sentence}', '{parameters}', '{etc}')
+        VALUES ("{subject}", "{category}", {index}, {priority}, "{conditions}", "{sentence}", "{parameters}", "{etc}")
     </query>
 
     <query id="insert_rds_db_team_paragraph">
         INSERT INTO oper_db.team_paragraph
         (subject, category, `index`, category_dict, sentence, etc, examples)
-        VALUES ('{subject}', '{category}', {index}, '{category_dict}', '{sentence}', '{etc}', '{examples}')
+        VALUES ("{subject}", "{category}", {index}, "{category_dict}", "{sentence}", "{etc}", "{examples}")
     </query>
 
     <query id="insert_rds_db_half_inning_sentence">
