@@ -155,6 +155,11 @@ class Records(object):
         # N경기 만에 안타, 출루 셋팅
         n_game_last = {}
         for how_k, how_v in how_dict.items():
+            n_game_last[how_k] = {
+                '날짜': '',
+                '경기수': 0,
+                '상대팀': ''
+            }
             n_game_last_counter = 0
             for i, (s_index, hows) in enumerate(s_how.items()):
                 if i == n_game_last_counter and not any(item in how_v for item in hows):
