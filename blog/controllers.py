@@ -181,6 +181,8 @@ class RecordApp(object):
                         _info_dict = _info
 
                     for info in _info_dict:
+                        if 'hitter_events' not in info:
+                            continue
                         for hitter_events in info['hitter_events']:
                             for score_scene in hitter_events['score_scenes']:
                                 _hitter_code = score_scene['hitter_or_runner'][0]['pcode']
