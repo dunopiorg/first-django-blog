@@ -196,7 +196,7 @@ class RecordApp(object):
                                     info_dict['text'] += ' '
                                     info_dict['text'] += hitter_event_info['sentence']
 
-                if isinstance(info_dict['info'], dict):
+                if isinstance(info_dict['info'], dict) and 'inning' in info_dict['info']:
                     if prev_inning == info_dict['info']['inning']:
                         article_list[-1] += " {}".format(info_dict['text'])
                     else:
