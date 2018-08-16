@@ -130,19 +130,14 @@ class Lab2AIConnector(object):
     # endregion [QUERY EVENT]
 
     # region [HITTER RECORD]
-    def get_hitter_gamecontapp_record(self, hitter_code, game_date=None, game_key=None, limit=None):
+    def get_hitter_gamecontapp_record(self, hitter_code, where_phrase=None, limit=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
 
-        if game_date is None:
-            gday = ' '
+        if where_phrase is None:
+            where_state = ' '
         else:
-            gday = " AND GDAY < '{0}' ".format(game_date)
-
-        if game_key is None:
-            gmkey = ' '
-        else:
-            gmkey = " AND GMKEY = '{0}' ".format(game_key)
+            where_state = " {}".format(where_phrase)
 
         if limit is None:
             limit_state = ' '
@@ -150,7 +145,7 @@ class Lab2AIConnector(object):
             limit_state = " LIMIT {0} ".format(limit)
 
         query_format = self.ql.get_query("query_hitter", "get_hitter_gamecontapp_record")
-        query = query_format.format(HITTER=hitter_code, GDAY=gday, GMKEY=gmkey, LIMIT=limit_state)
+        query = query_format.format(HITTER=hitter_code, WHERE=where_state, LIMIT=limit_state)
 
         df = pd.read_sql(query, conn)
         conn.close()
@@ -174,9 +169,9 @@ class Lab2AIConnector(object):
         if game_year is None:
             gyear = ''
         else:
-            gyear = game_year
+            gyear = " AND GYEAR = '{0}'".format(game_year)
 
-        query_format = self.ql.get_query("query_hitter", "get_kbo_hitter_total")
+        query_format = self.ql.get_query("query_hitter", "get_hitter_total")
         query = query_format.format(HITTER=hitter_code, GYEAR=gyear)
 
         df = pd.read_sql(query, conn)
@@ -199,12 +194,37 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
+    def get_kbo_hitter(self, hitter_code, where_phrase=None, limit=None):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        if where_phrase is None:
+            where_state = ' '
+        else:
+            where_state = " {0}".format(where_phrase)
+
+        if limit is None:
+            limit_state = ' '
+        else:
+            limit_state = " LIMIT {0} ".format(limit)
+
+        query_format = self.ql.get_query("query_hitter", "get_kbo_hitter")
+        query = query_format.format(HITTER=hitter_code, WHERE=where_state, LIMIT=limit_state)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
     # endregion [HITTER RECORD]
 
     # region [PITCHER RECORD]
-    def get_pitcher(self, pitcher_code, limit=None):
+    def get_pitcher(self, pitcher_code, where_phrase=None, limit=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
+
+        if where_phrase is None:
+            where_state = ' '
+        else:
+            where_state = ' {}'.format(where_phrase)
 
         if limit is None:
             limit_state = ' '
@@ -212,15 +232,31 @@ class Lab2AIConnector(object):
             limit_state = " LIMIT {0} ".format(limit)
 
         query_format = self.ql.get_query("query_pitcher", "get_pitcher")
-        query = query_format.format(PITCHER=pitcher_code, LIMIT=limit_state)
+        query = query_format.format(PITCHER=pitcher_code, WHERE=where_state, LIMIT=limit_state)
 
         df = pd.read_sql(query, conn)
         conn.close()
         return df
 
-    def get_kbo_pitcher(self, pitcher_code, limit=None):
+    def get_today_game_pitcher_list(self, game_id):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
+
+        query_format = self.ql.get_query("query_pitcher", "get_today_game_pitcher_list")
+        query = query_format.format(GAME_ID=game_id)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
+    def get_kbo_pitcher(self, pitcher_code, where_phrase=None, limit=None):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        if where_phrase is None:
+            where_state = ' '
+        else:
+            where_state = ' {}'.format(where_phrase)
 
         if limit is None:
             limit_state = ' '
@@ -228,7 +264,7 @@ class Lab2AIConnector(object):
             limit_state = " LIMIT {0} ".format(limit)
 
         query_format = self.ql.get_query("query_pitcher", "get_kbo_pitcher")
-        query = query_format.format(PITCHER=pitcher_code, LIMIT=limit_state)
+        query = query_format.format(PITCHER=pitcher_code, WHERE=where_state, LIMIT=limit_state)
 
         df = pd.read_sql(query, conn)
         conn.close()

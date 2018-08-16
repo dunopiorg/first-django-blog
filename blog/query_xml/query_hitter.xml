@@ -6,8 +6,7 @@
 		, TSCORE, BSCORE, BASE1B, BASE2B, BASE3B, BASE1A, BASE2A, BASE3A
 		FROM minor_baseball.gamecontapp
 		WHERE HITTER = '{HITTER}'
-		{GDAY}
-		{GMKEY}
+		{WHERE}
         ORDER BY gday DESC
         {LIMIT}
 	</query>
@@ -27,9 +26,19 @@
 	</query>
 
 	<query id="get_hitter_total">
-		SELECT PCODE, GYEAR, TEAM, HRA, GAMENUM, AB, RUN, HIT, H2, H3, HR, TB, RBI, SB, CS, SH, SF, BB, HP, KK, GD, ERR, SCORE, WPA, WAR, ISOP, BABIP, OBP, SLG, PA_FLAG, WRC_PLUS, WOBA, OPS
-        FROM minor_baseball.battotal
+		SELECT PCODE, GYEAR, TEAM, HRA, GAMENUM, AB, RUN, HIT, H2, H3, HR, TB, RBI, SB, CS, SH, SF, BB, HP, KK, GD, ERR, SCORE
+		FROM minor_baseball.battotal
         WHERE PCODE = '{HITTER}'
 		{GYEAR}
 	</query>
+
+	<query id="get_kbo_hitter">
+		SELECT GMKEY, GDAY, TB, NAME, PCODE, TURN, ONETURN, PA, AB, RBI, RUN, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, ERR, LOB, SCORE
+		FROM baseball.hitter
+        WHERE PCODE = '{HITTER}'
+		{WHERE}
+        ORDER BY gday DESC
+        {LIMIT}
+	</query>
+
 </data>

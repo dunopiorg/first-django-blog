@@ -24,10 +24,17 @@
         {LIMIT}
 	</query>
 
+    <query id="get_today_game_pitcher_list">
+		SELECT GMKEY, GDAY, TB, NAME, PCODE, POS, `START`, QUIT, CG, SHO, WLS, HOLD, INN, INN2, BF, PA, AB, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, WP, BK, ERR, R, ER, SCORE
+        FROM minor_baseball.pitcher
+        WHERE GMKEY = '{GAME_ID}'
+	</query>
+
     <query id="get_kbo_pitcher">
 		SELECT GMKEY, GDAY, TB, NAME, PCODE, POS, `START`, QUIT, CG, SHO, WLS, HOLD, INN, INN2, BF, PA, AB, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, WP, BK, ERR, R, ER, SCORE
         FROM baseball.pitcher
         WHERE PCODE = '{PITCHER}'
+        {WHERE}
         ORDER BY gday DESC
         {LIMIT}
 	</query>

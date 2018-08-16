@@ -63,17 +63,47 @@ class Records(object):
     # endregion [ETC FUNCTIONS]
 
     # region [HITTER EVENT]
+    def get_hitter_total_record(self, game_id, hitter_code):
+        """
+        타자 종합 기록
+        :param game_id:
+        :param hitter_code:
+        :return:
+        """
+        data_dict = {'선수코드': hitter_code}
+        game_year = game_id[0:4]
+        df_hitter_total = self.lab2ai_conn.get_hitter_total(hitter_code, game_year)
+        s_hitter = df_hitter_total.iloc[0]
+
+        data_dict['팀명'] = s_hitter['TEAM']
+        data_dict['경기수'] = s_hitter['GAMENUM']
+        data_dict['타율'] = s_hitter['HRA']
+        data_dict['득점'] = s_hitter['RUN']
+        data_dict['안타수'] = s_hitter['HIT']
+        data_dict['2루타수'] = s_hitter['H2']
+        data_dict['3루타수'] = s_hitter['H3']
+        data_dict['홈런수'] = s_hitter['HR']
+        data_dict['타점'] = s_hitter['RBI']
+        data_dict['도루수'] = s_hitter['SB']
+
+        return data_dict
+
     def get_hitter_n_continue_record(self, game_id, hitter_code):
         how_dict = {'안타': self._HIT, '홈런': ['HR'], '2루타': ['H2'], '3루타': ['H3'],
                     '출루': ['H1', 'H2', 'H3', 'HR', 'HI', 'HB', 'BB']}
         place_dict = {'타점': ['E', 'R', 'H']}
-        # n_pa_count_dict = {'HIT': 3, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 3, 'OB': 5}
-        # n_game_count_dict = {'HIT': 5, 'HR': 2, 'H2': 2, 'H3': 2, 'RBI': 5, 'OB': 10}
-        result_list = []
 
-        data_dict = {}
         game_date = game_id[0:8]
-        df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, game_date=game_date, limit=200)
+        where_phrase = "AND GDAY <= '{0}'".format(game_date)
+        df_kbo_hitter = self.lab2ai_conn.get_kbo_hitter(hitter_code, where_phrase=where_phrase, limit=1)
+        if df_kbo_hitter.empty:
+            kbo_last_date = 0
+        else:
+            s_kbo_hitter = df_kbo_hitter.iloc[0]
+            kbo_last_date = s_kbo_hitter['GDAY']
+
+        where_phrase = "AND GDAY <= '{0}' AND GDAY > '{1}' AND GDAY LIKE '{2}%'".format(game_date, kbo_last_date, game_date[0:4])
+        df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, where_phrase=where_phrase)
 
         s_temp = df.iloc[0]
         if s_temp['TB'] == 'T':
@@ -94,6 +124,11 @@ class Records(object):
         # N경기 안타, 출루 셋팅
         n_game_continue = {}
         for how_k, how_v in how_dict.items():
+            n_game_continue[how_k] = {
+                '날짜': '',
+                '경기수': 0,
+                '상대팀': ''
+            }
             n_game_counter = 0
             for i, (s_index, hows) in enumerate(s_how.items()):
                 if i == n_game_counter and any(item in how_v for item in hows):
@@ -113,6 +148,11 @@ class Records(object):
 
         # N경기 타점 셋팅
         for place_k, place_v in place_dict.items():
+            n_game_continue[place_k] = {
+                '날짜': '',
+                '경기수': 0,
+                '상대팀': ''
+            }
             n_game_counter = 0
             for i, (s_index, places) in enumerate(s_place.items()):
                 if i == n_game_counter and any(item in place_v for item in places):
@@ -160,8 +200,13 @@ class Records(object):
                 '경기수': 0,
                 '상대팀': ''
             }
-            n_game_last_counter = 0
+            n_game_last_counter = 1
             for i, (s_index, hows) in enumerate(s_how.items()):
+                if i == 0 and not any(item in how_v for item in hows):
+                    break
+                elif i == 0 and any(item in how_v for item in hows):
+                    continue
+
                 if i == n_game_last_counter and not any(item in how_v for item in hows):
                     n_game_last_counter += 1
                 else:
@@ -170,124 +215,12 @@ class Records(object):
                     else:
                         vs_team_cd = s_index[8:10]
 
-                    n_game_last_counter += 1
                     n_game_last[how_k] = {
                         '날짜': self.get_date_kor(game_date, s_index[0:8]),
                         '경기수': n_game_last_counter,
                         '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
                     }
                     break
-
-        # N경기 안타, 출루 기록
-        # for how_k, counter in n_game_counter.items():
-        #     if counter > n_game_count_dict[how_k]:
-        #         n_game_dict = data_dict.copy()
-        #         n_game_dict['RESULT'] = counter
-        #         n_game_dict['STATE'] = how_k
-        #         n_game_dict[cfg.CATEGORY] = "N게임_연속_안타_출루"
-        #         result_list.append(n_game_dict)
-
-        #n경기 기록
-        # data_dict['n타석_연속'] = n_game_counter
-        #
-        # # N경기 연속 안타
-        # n_game_hit_dict = data_dict.copy()
-        # n_game_hit_dict['경기수'] = n_game_count_dict['HIT']
-        # n_game_hit_dict[cfg.CATEGORY] = "N게임_연속_안타"
-        # result_list.append(n_game_hit_dict)
-        #
-        # # N경기 연속 홈런
-        # n_game_hr_dict = data_dict.copy()
-        # n_game_hr_dict['경기수'] = n_game_count_dict['HR']
-        # n_game_hr_dict[cfg.CATEGORY] = "N게임_연속_홈런"
-        # result_list.append(n_game_hr_dict)
-        #
-        # # N경기 연속 2루타
-        # n_game_h2_dict = data_dict.copy()
-        # n_game_h2_dict['경기수'] = n_game_count_dict['H2']
-        # n_game_h2_dict[cfg.CATEGORY] = "N게임_연속_2루타"
-        # result_list.append(n_game_h2_dict)
-        #
-        # # N경기 연속 2루타
-        # n_game_h3_dict = data_dict.copy()
-        # n_game_h3_dict['경기수'] = n_game_count_dict['H3']
-        # n_game_h3_dict[cfg.CATEGORY] = "N게임_연속_3루타"
-        # result_list.append(n_game_h3_dict)
-        #
-        # # N경기 연속 출루
-        # n_game_ob_dict = data_dict.copy()
-        # n_game_ob_dict['경기수'] = n_game_count_dict['OB']
-        # n_game_ob_dict[cfg.CATEGORY] = "N게임_연속_출루"
-        # result_list.append(n_game_ob_dict)
-        #
-        # # N경기 연속 타점
-        # n_game_rbi_dict = data_dict.copy()
-        # n_game_rbi_dict['경기수'] = n_game_count_dict['RBI']
-        # n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
-        # result_list.append(n_game_rbi_dict)
-
-        # N경기 타점 기록
-        # for place_k, counter in n_game_rbi_counter.items():
-        #     if counter > n_game_count_dict[place_k]:
-        #         n_game_rbi_dict = data_dict.copy()
-        #         n_game_rbi_dict['RESULT'] = counter
-        #         n_game_rbi_dict['STATE'] = place_k
-        #         n_game_rbi_dict[cfg.CATEGORY] = "N게임_연속_타점"
-        #         result_list.append(n_game_rbi_dict)
-
-        # N타석 안타, 출루 기록
-        # for pa_how_k, counter in n_pa_counter.items():
-        #     if counter > n_pa_count_dict[pa_how_k]:
-        #         n_pa_dict = data_dict.copy()
-        #         n_pa_dict['RESULT'] = counter
-        #         n_pa_dict['STATE'] = pa_how_k
-        #         n_pa_dict[cfg.CATEGORY] = "N타석_연속_안타_출루"
-        #         result_list.append(n_pa_dict)
-
-        # # N타석 연속 안타
-        # n_pa_hit_dict = data_dict.copy()
-        # n_pa_hit_dict['타석수'] = n_pa_count_dict['HIT']
-        # n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_안타"
-        # result_list.append(n_pa_hit_dict)
-        #
-        # # N타석 연속 홈런
-        # n_pa_hit_dict = data_dict.copy()
-        # n_pa_hit_dict['타석수'] = n_pa_count_dict['HR']
-        # n_pa_hit_dict[cfg.CATEGORY] = "N타석_연속_홈런"
-        # result_list.append(n_pa_hit_dict)
-        #
-        # # N타석 연속 2루타
-        # n_pa_h2_dict = data_dict.copy()
-        # n_pa_h2_dict['타석수'] = n_pa_count_dict['H2']
-        # n_pa_h2_dict[cfg.CATEGORY] = "N타석_연속_2루타"
-        # result_list.append(n_pa_h2_dict)
-        #
-        # # N타석 연속 3루타
-        # n_pa_h3_dict = data_dict.copy()
-        # n_pa_h3_dict['타석수'] = n_pa_count_dict['H3']
-        # n_pa_h3_dict[cfg.CATEGORY] = "N타석_연속_3루타"
-        # result_list.append(n_pa_h3_dict)
-        #
-        # # N타석 연속 출루
-        # n_pa_ob_dict = data_dict.copy()
-        # n_pa_ob_dict['타석수'] = n_pa_count_dict['OB']
-        # n_pa_ob_dict[cfg.CATEGORY] = "N타석_연속_출루"
-        # result_list.append(n_pa_ob_dict)
-        #
-        # # N타석 연속 타점
-        # n_pa_rbi_dict = data_dict.copy()
-        # n_pa_rbi_dict['타석수'] = n_pa_count_dict['RBI']
-        # n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
-        # result_list.append(n_pa_rbi_dict)
-
-        # N타석 타점 기록
-        # for pa_rbi_k, counter in n_pa_rbi_counter.items():
-        #     if counter > n_pa_count_dict[pa_rbi_k]:
-        #         n_pa_rbi_dict = data_dict.copy()
-        #         n_pa_rbi_dict['RESULT'] = counter
-        #         n_pa_rbi_dict['STATE'] = pa_rbi_k
-        #         n_pa_rbi_dict[cfg.CATEGORY] = "N타석_연속_타점"
-        #         result_list.append(n_pa_rbi_dict)
 
         return n_game_continue, n_game_last
 
@@ -383,7 +316,8 @@ class Records(object):
 
         if today_hr > 0 and prev_hr == 0:
             game_date = game_key[0:8]
-            df_hitter_gamecont = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, game_date=game_date, game_key=game_key)
+            where_phrase = " AND GDAY <= {0}".format(game_date)
+            df_hitter_gamecont = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, where_phrase=where_phrase)
 
             for i, row in df_hitter_gamecont.iterrows():
                 if row['HOW'] in self._PA:
@@ -450,30 +384,158 @@ class Records(object):
     # endregion [HITTER EVENT]
 
     # region [PITCHER EVENT]
-    def get_pitcher_unit_record(self, pitcher_code):
+    def get_pitcher_total_record(self, game_id, pitcher_code):
         """
-        시즌 첫 승, 10단위 승
+        투수 total record
+        :param game_id:
         :param pitcher_code:
         :return:
         """
-        data_dict = {'선수코드': pitcher_code, '경기': 'SEASON'}
-        result_list = []
-        df_pitcher_total = self.lab2ai_conn.get_pitcher_total(pitcher_code, datetime.now().year)
+        data_dict = {'선수코드': pitcher_code}
+        game_year = game_id[0:4]
+        df_pitcher_total = self.lab2ai_conn.get_pitcher_total(pitcher_code, game_year)
         s_pitcher = df_pitcher_total.iloc[0]
 
-        if s_pitcher['W'] == 1 and s_pitcher['GAMENUM'] == 1 and df_pitcher_total.shape[0] > 1:
-            first_w_dict = data_dict.copy()
-            first_w_dict[cfg.CATEGORY] = "시즌_첫승"
-            result_list.append(first_w_dict)
-        elif s_pitcher['W'] % 10 == 0:
-            first_w_dict = data_dict.copy()
-            first_w_dict['승수'] = s_pitcher['W']
-            first_w_dict[cfg.CATEGORY] = "10단위_승"
-            result_list.append(first_w_dict)
-        else:
-            return None
+        data_dict['경기수'] = s_pitcher['GAMENUM']
+        data_dict['방어율'] = s_pitcher['ERA']
+        data_dict['완투'] = s_pitcher['CG']
+        data_dict['완봉'] = s_pitcher['SHO']
+        data_dict['승리수'] = s_pitcher['W']
+        data_dict['패배수'] = s_pitcher['L']
+        data_dict['세이브수'] = s_pitcher['SV']
+        data_dict['홀드수'] = s_pitcher['HOLD']
+        data_dict['탈삼진수'] = s_pitcher['KK']
+        data_dict['팀명'] = s_pitcher['TEAM']
 
-        return result_list
+        return data_dict
+
+    def get_pitcher_n_continue_record(self, game_id, pitcher_code):
+        """
+        연속 기록
+        :param game_id:
+        :param pitcher_code:
+        :return:
+        """
+        wls_dict = {'승리': ['W'], '세이브': ['SV']}
+
+        game_date = game_id[0:8]
+        where_phrase = "AND GDAY <= '{0}'".format(game_date)
+        df_kbo_pitcher = self.lab2ai_conn.get_kbo_pitcher(pitcher_code, where_phrase=where_phrase, limit=1)
+        if df_kbo_pitcher.empty:
+            kbo_last_date = 0
+        else:
+            s_kbo_hitter = df_kbo_pitcher.iloc[0]
+            kbo_last_date = s_kbo_hitter['GDAY']
+
+        where_phrase = "AND GDAY <= '{0}' AND GDAY > '{1}' and GDAY LIKE '{2}%'".format(game_date, kbo_last_date, game_date[0:4])
+        df = self.lab2ai_conn.get_pitcher(pitcher_code, where_phrase=where_phrase)
+
+        n_game_continue = {}
+        # n경기 연속 승패세
+        for wls_k, wls_v in wls_dict.items():
+            n_game_continue[wls_k] = {
+                '날짜': '',
+                '경기수': 0,
+                '상대팀': ''
+            }
+            n_game_counter = 0
+            for i, row in df.iterrows():
+                if i == n_game_counter and row['WLS'] == wls_v:
+                    n_game_counter += 1
+                else:
+                    if row['TB'] == 'T':
+                        vs_team_cd = row['GMKEY'][10:12]
+                    else:
+                        vs_team_cd = row['GMKEY'][8:10]
+
+                    n_game_continue[wls_k] = {
+                        '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                        '경기수': n_game_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
+                    break
+
+        # n경기 연속 홀드
+        n_game_continue['홀드'] = {
+            '날짜': '',
+            '경기수': 0,
+            '상대팀': ''
+        }
+        n_game_counter = 0
+        for i, row in df.iterrows():
+            if i == n_game_counter and row['HOLD'] > 0:
+                n_game_counter += 1
+            else:
+                if row['TB'] == 'T':
+                    vs_team_cd = row['GMKEY'][10:12]
+                else:
+                    vs_team_cd = row['GMKEY'][8:10]
+
+                n_game_continue['홀드'] = {
+                    '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                    '경기수': n_game_counter,
+                    '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                }
+                break
+
+        # n경기 만에 승패세
+        n_game_last = {}
+        for wls_k, wls_v in wls_dict.items():
+            n_game_last[wls_k] = {
+                '날짜': '',
+                '경기수': 0,
+                '상대팀': ''
+            }
+            n_game_last_counter = 1
+            for i, row in df.iterrows():
+                if i == 0 and row['WLS'] != wls_v:
+                    break
+                elif i == 0 and row['WLS'] == wls_v:
+                    continue
+
+                if i == n_game_counter and row['WLS'] != wls_v:
+                    n_game_last_counter += 1
+                else:
+                    if row['TB'] == 'T':
+                        vs_team_cd = row['GMKEY'][10:12]
+                    else:
+                        vs_team_cd = row['GMKEY'][8:10]
+
+                    n_game_continue[wls_k] = {
+                        '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                        '경기수': n_game_last_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
+                    break
+
+        # n경기 만에 홀드
+        n_game_last['홀드'] = {
+            '날짜': '',
+            '경기수': 0,
+            '상대팀': ''
+        }
+        n_game_last_counter = 1
+        for i, row in df.iterrows():
+            if i == 0 and row['HOLD'] == 0:
+                break
+            elif i == 0 and row['HOLD'] > 0:
+                continue
+
+            if i == n_game_counter and row['HOLD'] == 0:
+                n_game_last_counter += 1
+            else:
+                if row['TB'] == 'T':
+                    vs_team_cd = row['GMKEY'][10:12]
+                else:
+                    vs_team_cd = row['GMKEY'][8:10]
+
+                n_game_continue['홀드'] = {
+                    '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                    '경기수': n_game_last_counter,
+                    '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                }
+                break
+        return n_game_continue, n_game_last
 
     def get_pitcher_named(self, pitcher_code, team_code=None):
         df_score = self.lab2ai_conn.get_score(2018, 'SK')
