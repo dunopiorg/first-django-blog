@@ -427,7 +427,7 @@ class Records(object):
             s_kbo_hitter = df_kbo_pitcher.iloc[0]
             kbo_last_date = s_kbo_hitter['GDAY']
 
-        where_phrase = "AND GDAY <= '{0}' AND GDAY > '{1}' and GDAY LIKE '{2}%'".format(game_date, kbo_last_date, game_date[0:4])
+        where_phrase = " AND GDAY <= '{0}' AND GDAY > '{1}' AND GDAY LIKE '{2}%'".format(game_date, kbo_last_date, game_date[0:4])
         df = self.lab2ai_conn.get_pitcher(pitcher_code, where_phrase=where_phrase)
 
         n_game_continue = {}
