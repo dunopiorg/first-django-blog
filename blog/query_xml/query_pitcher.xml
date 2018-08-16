@@ -48,7 +48,7 @@
         , SUM(CASE WHEN WLS = 'L' THEN 1 ELSE 0 END) AS L
         , SUM(CASE WHEN WLS = 'S' THEN 1 ELSE 0 END) AS SV
         , SUM(HOLD) AS HOLD
-        , SUM(KK)
+        , SUM(KK) AS KK
         FROM minor_baseball.pitcher
         WHERE PCODE = '{PITCHER}'
         {WHERE}
