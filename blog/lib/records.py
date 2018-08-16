@@ -75,15 +75,15 @@ class Records(object):
         df_hitter_total = self.lab2ai_conn.get_hitter_total(hitter_code, where_phrase=where_phrase)
         s_hitter = df_hitter_total.iloc[0]
 
-        data_dict['경기수'] = s_hitter['GAMENUM']
+        data_dict['경기수'] = int(s_hitter['GAMENUM'])
         data_dict['타율'] = s_hitter['HRA']
-        data_dict['득점'] = s_hitter['RUN']
-        data_dict['안타수'] = s_hitter['HIT']
-        data_dict['2루타수'] = s_hitter['H2']
-        data_dict['3루타수'] = s_hitter['H3']
-        data_dict['홈런수'] = s_hitter['HR']
-        data_dict['타점'] = s_hitter['RBI']
-        data_dict['도루수'] = s_hitter['SB']
+        data_dict['득점'] = int(s_hitter['RUN'])
+        data_dict['안타수'] = int(s_hitter['HIT'])
+        data_dict['2루타수'] = int(s_hitter['H2'])
+        data_dict['3루타수'] = int(s_hitter['H3'])
+        data_dict['홈런수'] = int(s_hitter['HR'])
+        data_dict['타점'] = int(s_hitter['RBI'])
+        data_dict['도루수'] = int(s_hitter['SB'])
 
         return data_dict
 
@@ -395,15 +395,15 @@ class Records(object):
         df_pitcher_total = self.lab2ai_conn.get_pitcher_total(pitcher_code, where_phrase=where_phrase)
         s_pitcher = df_pitcher_total.iloc[0]
 
-        data_dict['경기수'] = s_pitcher['GAMENUM']
+        data_dict['경기수'] = int(s_pitcher['GAMENUM'])
         data_dict['방어율'] = s_pitcher['ERA']
-        data_dict['완투'] = s_pitcher['CG']
-        data_dict['완봉'] = s_pitcher['SHO']
-        data_dict['승리수'] = s_pitcher['W']
-        data_dict['패배수'] = s_pitcher['L']
-        data_dict['세이브수'] = s_pitcher['SV']
-        data_dict['홀드수'] = s_pitcher['HOLD']
-        data_dict['탈삼진수'] = s_pitcher['KK']
+        data_dict['완투'] = int(s_pitcher['CG'])
+        data_dict['완봉'] = int(s_pitcher['SHO'])
+        data_dict['승리수'] = int(s_pitcher['W'])
+        data_dict['패배수'] = int(s_pitcher['L'])
+        data_dict['세이브수'] = int(s_pitcher['SV'])
+        data_dict['홀드수'] = int(s_pitcher['HOLD'])
+        data_dict['탈삼진수'] = int(s_pitcher['KK'])
 
         return data_dict
 
