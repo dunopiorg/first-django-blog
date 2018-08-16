@@ -416,7 +416,7 @@ class Records(object):
         :param pitcher_code:
         :return:
         """
-        wls_dict = {'승리': ['W'], '세이브': ['SV']}
+        wls_dict = {'승리': 'W', '세이브': 'SV'}
 
         game_date = game_id[0:8]
         where_phrase = "AND GDAY <= '{0}'".format(game_date)
