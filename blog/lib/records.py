@@ -501,7 +501,7 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
 
-                    n_game_continue[wls_k] = {
+                        n_game_last[wls_k] = {
                         '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
                         '경기수': n_game_last_counter,
                         '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
@@ -529,7 +529,7 @@ class Records(object):
                 else:
                     vs_team_cd = row['GMKEY'][8:10]
 
-                n_game_continue['홀드'] = {
+                    n_game_last['홀드'] = {
                     '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
                     '경기수': n_game_last_counter,
                     '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
