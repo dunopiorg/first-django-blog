@@ -26,10 +26,19 @@
 	</query>
 
 	<query id="get_hitter_total">
-		SELECT PCODE, GYEAR, TEAM, HRA, GAMENUM, AB, RUN, HIT, H2, H3, HR, TB, RBI, SB, CS, SH, SF, BB, HP, KK, GD, ERR, SCORE
-		FROM minor_baseball.battotal
+		SELECT NAME, PCODE
+		, COUNT(GMKEY) AS GAMENUM
+		, ROUND(SUM(HIT)/SUM(AB), 3) AS HRA
+		, SUM(RUN) AS RUN
+		, SUM(HIT) AS HIT
+		, SUM(H2) AS H2
+		, SUM(H3) AS H3
+		, SUM(HR) AS HR
+		, SUM(SB) AS SB
+		, SUM(RBI) AS RBI
+		FROM minor_baseball.hitter
         WHERE PCODE = '{HITTER}'
-		{GYEAR}
+		{WHERE}
 	</query>
 
 	<query id="get_kbo_hitter">

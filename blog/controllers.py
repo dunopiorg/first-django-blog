@@ -95,9 +95,9 @@ class RecordApp(object):
         n_countinue_dict, n_last_dict = self.record.get_hitter_n_continue_record(game_id, hitter_code)
         df_person = self.lab2ai_conn.get_person_info(hitter_code)
         s_person = df_person.iloc[0]
-        hitter_name = s_person['NAME']
 
-        data_dict.update({'이름': hitter_name})
+        data_dict.update({'이름': s_person['NAME']})
+        data_dict.update({'팀명': s_person['TEAM']})
         data_dict.update({'n경기_연속': self.get_variable_dict(n_countinue_dict)})
         data_dict.update({'n경기_만에': self.get_variable_dict(n_last_dict)})
 
@@ -112,9 +112,9 @@ class RecordApp(object):
         n_countinue_dict, n_last_dict = self.record.get_pitcher_n_continue_record(game_id, pitcher_code)
         df_person = self.lab2ai_conn.get_person_info(pitcher_code)
         s_person = df_person.iloc[0]
-        pitcher_name = s_person['NAME']
 
-        data_dict.update({'이름': pitcher_name})
+        data_dict.update({'이름': s_person['NAME']})
+        data_dict.update({'팀명': s_person['TEAM']})
         data_dict.update({'n경기_연속': self.get_variable_dict(n_countinue_dict)})
         data_dict.update({'n경기_만에': self.get_variable_dict(n_last_dict)})
 

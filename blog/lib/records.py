@@ -71,11 +71,10 @@ class Records(object):
         :return:
         """
         data_dict = {'선수코드': hitter_code}
-        game_year = game_id[0:4]
-        df_hitter_total = self.lab2ai_conn.get_hitter_total(hitter_code, game_year)
+        where_phrase = " AND GDAY LIKE '{0}%' AND GDAY <= '{1}'".format(game_id[0:4], game_id[0:8])
+        df_hitter_total = self.lab2ai_conn.get_hitter_total(hitter_code, where_phrase=where_phrase)
         s_hitter = df_hitter_total.iloc[0]
 
-        data_dict['팀명'] = s_hitter['TEAM']
         data_dict['경기수'] = s_hitter['GAMENUM']
         data_dict['타율'] = s_hitter['HRA']
         data_dict['득점'] = s_hitter['RUN']
@@ -392,8 +391,8 @@ class Records(object):
         :return:
         """
         data_dict = {'선수코드': pitcher_code}
-        game_year = game_id[0:4]
-        df_pitcher_total = self.lab2ai_conn.get_pitcher_total(pitcher_code, game_year)
+        where_phrase = " AND GDAY LIKE '{0}%' AND GDAY <= '{1}'".format(game_id[0:4], game_id[0:8])
+        df_pitcher_total = self.lab2ai_conn.get_pitcher_total(pitcher_code, where_phrase=where_phrase)
         s_pitcher = df_pitcher_total.iloc[0]
 
         data_dict['경기수'] = s_pitcher['GAMENUM']
@@ -405,7 +404,6 @@ class Records(object):
         data_dict['세이브수'] = s_pitcher['SV']
         data_dict['홀드수'] = s_pitcher['HOLD']
         data_dict['탈삼진수'] = s_pitcher['KK']
-        data_dict['팀명'] = s_pitcher['TEAM']
 
         return data_dict
 

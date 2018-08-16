@@ -41,10 +41,17 @@
 	</query>
 
     <query id="get_pitcher_total">
-		SELECT PCODE, GYEAR, TEAM, ERA, GAMENUM, CG, SHO, W, L, SV, HOLD, BF, INN, INN2, HIT, HR, BB, HP, KK, R, ER, SCORE
-        FROM minor_baseball.pittotal
+		SELECT NAME, PCODE
+        , COUNT(GMKEY) AS GAMENUM, SUM(CG) AS CG, SUM(SHO) AS SHO
+        , ROUND((SUM(ER) * 9) / (SUM(INN2) / 3), 3) AS ERA
+        , SUM(CASE WHEN WLS = 'W' THEN 1 ELSE 0 END) AS W
+        , SUM(CASE WHEN WLS = 'L' THEN 1 ELSE 0 END) AS L
+        , SUM(CASE WHEN WLS = 'S' THEN 1 ELSE 0 END) AS SV
+        , SUM(HOLD) AS HOLD
+        , SUM(KK)
+        FROM minor_baseball.pitcher
         WHERE PCODE = '{PITCHER}'
-        {GYEAR}
+        {WHERE}
 	</query>
 
     <query id="get_pitcher_gamecontapp_record">
