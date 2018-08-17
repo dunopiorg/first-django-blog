@@ -37,29 +37,15 @@ class Records(object):
         df_team = cls.lab2ai_conn.get_kbo_team_name_info()
         return df_team.set_index('team')['team_kor'].to_dict()
 
-    def set_wls_score(self, df_score, team_code):
-        df = df_score
-        wls_list = []
-        for i, row in df.iterrows():
-            game_key = row['GMKEY']
-            if row['9T'] == -1:
-                wls_list.append('D')
-            elif game_key[8:10] == team_code:
-                if row['TPOINT'] > row['BPOINT']:
-                    wls_list.append('W')
-                elif row['TPOINT'] < row['BPOINT']:
-                    wls_list.append('L')
-                else:
-                    wls_list.append('D')
-            else:
-                if row['TPOINT'] < row['BPOINT']:
-                    wls_list.append('W')
-                elif row['TPOINT'] > row['BPOINT']:
-                    wls_list.append('L')
-                else:
-                    wls_list.append('D')
-        df['WLS'] = wls_list
-        return df
+    def set_wls_score(self, game_id, team_code):
+        df_team_wls = self.lab2ai_conn.get_team_wls(team_code, game_id)
+        wls_list = df_team_wls['WLS'].tolist()
+        return wls_list
+
+    def set_vs_wls_score(self, team_code, versus_team, game_id):
+        df_team_wls = self.lab2ai_conn.get_team_vs_wls(team_code, versus_team, game_id)
+        wls_list = df_team_wls['WLS'].tolist()
+        return wls_list
     # endregion [ETC FUNCTIONS]
 
     # region [HITTER EVENT]
@@ -729,9 +715,9 @@ class Records(object):
         data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '승리팀_연승패'}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
-        df_team_score = self.set_wls_score(df_score, team_code)
-        wls_list = df_team_score['WLS'].tolist()
+        # df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
+        wls_list = self.set_wls_score(game_id, team_code)
+        # wls_list = df_team_score['WLS'].tolist()
         continue_w = 0
         after_w_game_cnt = 1
         after_d_cnt = 0
@@ -776,9 +762,9 @@ class Records(object):
         data_dict = {cfg.SUBJECT: '팀기록1', cfg.CATEGORY: '패배팀_연승패'}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
-        df_team_score = self.set_wls_score(df_score, team_code)
-        wls_list = df_team_score['WLS'].tolist()
+        # df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
+        wls_list = self.set_wls_score(game_id, team_code)
+        # wls_list = df_team_score['WLS'].tolist()
 
         continue_l = 0
         continue_w = 0
@@ -825,10 +811,10 @@ class Records(object):
                      '승리팀': self.MINOR_TEAM_NAME[team_code], '패배팀': self.MINOR_TEAM_NAME[versus_team]}
         result_list = []
 
-        df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
-        df_versus = df_score[df_score['GMKEY'].str.contains("{0}{1}|{1}{0}".format(team_code, versus_team))]
-        df_team_score = self.set_wls_score(df_versus, team_code)
-        wls_list = df_team_score['WLS'].tolist()
+        # df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
+        # df_versus = df_score[df_score['GMKEY'].str.contains("{0}{1}|{1}{0}".format(team_code, versus_team))]
+        wls_list = self.set_vs_wls_score(team_code, versus_team, game_id)
+        # wls_list = df_team_score['WLS'].tolist()
 
         continue_w = 0
         continue_l = 0

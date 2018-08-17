@@ -55,6 +55,26 @@
         ORDER BY GDAY DESC
     </query>
 
+    <query id="get_team_wls">
+		SELECT GMKEY, GDAY, TB, WLS
+        FROM minor_baseball.pitcher
+        where gday like '{YEAR}%'
+        AND GDAY &lt;= {GDAY}
+        and PCODE IN ('T', 'B')
+        and (gmkey like '%__{TEAM}0' and tb = 'B' or gmkey like '%{TEAM}__0' and tb = 'T')
+        ORDER BY GDAY DESC
+	</query>
+
+    <query id="get_team_vs_wls">
+		SELECT GMKEY, GDAY, TB, WLS
+        FROM minor_baseball.pitcher
+        where gday like '{YEAR}%'
+        AND GDAY &lt;= {GDAY}
+        and PCODE IN ('T', 'B')
+        and (gmkey like '%{TEAM1}0' and tb = 'T' or gmkey like '%{TEAM2}0' and tb = 'B')
+        ORDER BY GDAY DESC
+	</query>
+
     <query id="get_gameinfo">
         SELECT GmKey, Gday, Dbhd, Stadium, Vteam, Hteam, Sttm, Entm, Dltm, Gmtm, Stad, Umpc, Ump1, Ump2, Ump3, Umpl, Umpr, Scoa, Scob, Temp, Mois, Weath, Wind, Wins, Gweek, Crowd, Chajun
         FROM minor_baseball.gameinfo

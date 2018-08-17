@@ -399,6 +399,36 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
+    def get_team_wls(self, team_code, game_id):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        gyear = game_id[0:4]
+        gday = game_id[0:8]
+
+        query_format = self.ql.get_query("query_common", "get_team_wls")
+        query = query_format.format(TEAM=team_code, YEAR=gyear, GDAY=gday)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
+    def get_team_vs_wls(self, team_code, versus_team, game_id):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        gyear = game_id[0:4]
+        gday = game_id[0:8]
+        team1 = "{}{}".format(team_code, versus_team)
+        team2 = "{}{}".format(versus_team, team_code)
+
+        query_format = self.ql.get_query("query_common", "get_team_vs_wls")
+        query = query_format.format(TEAM1=team1, TEAM2=team2, YEAR=gyear, GDAY=gday)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
     def get_test_team_scores(self, game_id=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')

@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from requests import get
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -22,33 +21,34 @@ from .controllers import RecordApp, GspreadTemplate
 # region [API]
 @csrf_exempt
 def get_article(request):
+    response = JsonResponse({'status': 'FAIL', 'message': 'Unkwon request method : %s' % request.method})
     if request.method == "GET" or request.method == "OPTIONS":
-        lab2ai_conn = Lab2AIConnector()
-        data = request.GET.get('game_id', None)
-        if data:
-            args, lab64_status = get_article_from_lab64(data)
+        # lab2ai_conn = Lab2AIConnector()
+        requested_game_id = request.GET.get('game_id', None)
+        if requested_game_id:
+            article_dict_v2 = RecordApp().get_article_v2(requested_game_id)
+            # args, lab64_status = get_article_from_lab64(requested_game_id)
 
-            game_id = args['game_id']
-            status = args['status']
-            le_id = args['le_id']
-            gyear = args['gyear']
-            serial = args['serial']
-            title = args['article']['title']
-            article = args['article']['body']
-            args_created_at = RecordApp().change_date_array(args['created_at'])
-            article_dict = {}
+            if article_dict_v2 is None:
+                args_v2, lab64_status_v2 = get_article_from_lab64_v2(requested_game_id)
+                if args_v2['success']:
+                    article_dict_v2 = RecordApp().set_article_v2_to_db(args_v2)
+            if isinstance(article_dict_v2, list):
+                article_dict = article_dict_v2[0]
+            else:
+                article_dict = article_dict_v2
 
-            if status == "OK":
-                article_dict['game_id'] = game_id
-                article_dict['status'] = status
-                article_dict['le_id'] = le_id
-                article_dict['gyear'] = gyear
-                article_dict['serial'] = serial
-                article_dict['title'] = title
-                article_dict['article'] = article
-                article_dict['created_at'] = args_created_at
-                lab2ai_conn.insert_article(article_dict)
-                response = JsonResponse(article_dict)
+            sender_dict= {}
+            if article_dict:
+                sender_dict['game_id'] = requested_game_id
+                sender_dict['status'] = 'OK'
+                sender_dict['le_id'] = article_dict['le_id']
+                sender_dict['gyear'] = article_dict['gyear']
+                sender_dict['serial'] = article_dict['serial']
+                sender_dict['title'] = article_dict['title']
+                sender_dict['article'] = article_dict['article']
+                sender_dict['created_at'] = article_dict['args_created_at']
+                response = JsonResponse(sender_dict)
             else:
                 response = JsonResponse({'status': 'FAIL', 'message': 'There are some missing data'})
         else:
@@ -87,6 +87,7 @@ def get_article(request):
 
 @csrf_exempt
 def get_article_v2(request):
+    response = JsonResponse({'status': 'FAIL', 'message': 'Unkwon request method : %s' % request.method})
     if request.method == "GET" or request.method == "OPTIONS":
         response_game_id = request.GET.get('game_id', None)
         if response_game_id:
@@ -170,21 +171,6 @@ def set_article(request):
 # endregion [API]
 
 
-@csrf_exempt
-def template_viewer(request, db_name=None):
-    worksheets = get_template_table_list()
-    table_list = [d.title for d in worksheets]
-    context = {"tables": table_list}
-
-    if db_name is not None:
-        worksheet_index = table_list.index(db_name)
-        list_of_hash = worksheets[worksheet_index].get_all_records()
-        if list_of_hash:
-            GspreadTemplate().set_rds_template_from_gspread(db_name, list_of_hash)
-
-    return render(request, 'blog/template_db_setting.html', context)
-
-
 # region [LAB64]
 def get_article_from_lab64(game_id):
     lab64_url = cfg.lab64_url
@@ -224,7 +210,22 @@ def get_article_text_dict(info_list):
 # endregion [LAB64]
 
 
-# region Blog
+# region [BLOG]
+@csrf_exempt
+def db_setting_viewer(request, db_name=None):
+    worksheets = get_template_table_list()
+    table_list = [d.title for d in worksheets]
+    context = {"tables": table_list}
+
+    if db_name is not None:
+        worksheet_index = table_list.index(db_name)
+        list_of_hash = worksheets[worksheet_index].get_all_records()
+        if list_of_hash:
+            GspreadTemplate().set_rds_template_from_gspread(db_name, list_of_hash)
+
+    return render(request, 'blog/template_db_setting.html', context)
+
+
 def post_list(request):
     return render(request, 'blog/post_list.html', {})
 
@@ -353,7 +354,7 @@ def change_password(request):
         form = PasswordChangeForm(user=request.user)
         args = {'form': form}
         return render(request, 'blog/change_password.html', args)
-# endregion Blog
+# endregion [BLOG]
 
 
 # region [ETC FUNCTIONS]
