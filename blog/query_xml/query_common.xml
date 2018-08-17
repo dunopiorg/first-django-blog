@@ -67,7 +67,7 @@
         SELECT game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key
         FROM oper_db.robot_article
         WHERE game_id = "{GAME_ID}"
-        ORDER BY serial DESC
+        ORDER BY time_key DESC
         LIMIT 1
     </query>
 
@@ -75,7 +75,7 @@
         SELECT game_id, le_id, serial, gyear, `status`, title, article, created_at, time_key
         FROM oper_db.robot_article_v2
         WHERE game_id = "{GAME_ID}"
-        ORDER BY serial DESC
+        ORDER BY time_key DESC
         LIMIT 1
     </query>
 
