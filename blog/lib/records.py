@@ -20,10 +20,12 @@ class Records(object):
         game_dt = datetime.strptime(game_date, '%Y%m%d')
         record_dt = datetime.strptime(record_date, '%Y%m%d')
         dt = game_dt - record_dt
-        if dt.days > 25:
+        if 60 > dt.days > 25:
             s_format = "{0}월 {1}일".format(record_dt.month, record_dt.day)
-        else:
+        elif dt.days <= 25:
             s_format = "지난 {0}일".format(record_dt.day)
+        else:
+            return None
 
         return s_format
 
@@ -74,9 +76,7 @@ class Records(object):
         return data_dict
 
     def get_hitter_n_continue_record(self, game_id, hitter_code):
-        how_dict = {'안타': self._HIT, '홈런': ['HR'], '2루타': ['H2'], '3루타': ['H3'],
-                    '출루': ['H1', 'H2', 'H3', 'HR', 'HI', 'HB', 'BB']}
-        place_dict = {'타점': ['E', 'R', 'H']}
+        how_dict = {'안타': 'HIT', '홈런': 'HR', '2루타': 'H2', '3루타': 'H3'}
 
         game_date = game_id[0:8]
         where_phrase = "AND GDAY <= '{0}'".format(game_date)
@@ -88,25 +88,16 @@ class Records(object):
             kbo_last_date = s_kbo_hitter['GDAY']
 
         where_phrase = "AND GDAY <= '{0}' AND GDAY > '{1}' AND GDAY LIKE '{2}%'".format(game_date, kbo_last_date, game_date[0:4])
-        df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, where_phrase=where_phrase)
+        # df = self.lab2ai_conn.get_hitter_gamecontapp_record(hitter_code, where_phrase=where_phrase)
+        df_hitter = self.lab2ai_conn.get_hitter(hitter_code, where_phrase=where_phrase)
 
-        s_temp = df.iloc[0]
+        s_temp = df_hitter.iloc[0]
         if s_temp['TB'] == 'T':
             hitter_team_cd = s_temp['GMKEY'][8:10]
         else:
             hitter_team_cd = s_temp['GMKEY'][10:12]
 
-        if df.empty:
-            return None
-        else:
-            df_game = df[['GMKEY', 'HOW', 'PLACE']]
-            s_how = df_game.groupby('GMKEY')['HOW'].apply(list)
-            s_place = df_game.groupby('GMKEY')['PLACE'].apply(list)
-
-        s_how = s_how.sort_index(ascending=False)
-        s_place = s_place.sort_index(ascending=False)
-
-        # N경기 안타, 출루 셋팅
+        # N경기 연속 안타
         n_game_continue = {}
         for how_k, how_v in how_dict.items():
             n_game_continue[how_k] = {
@@ -115,69 +106,25 @@ class Records(object):
                 '상대팀': ''
             }
             n_game_counter = 0
-            for i, (s_index, hows) in enumerate(s_how.items()):
-                if i == n_game_counter and any(item in how_v for item in hows):
+            for i, row in df_hitter.iterrows():
+                if i == n_game_counter and row[how_v] > 0:
                     n_game_counter += 1
                 else:
-                    if s_index[8:10] == hitter_team_cd:
-                        vs_team_cd = s_index[10:12]
+                    if row['GMKEY'][8:10] == hitter_team_cd:
+                        vs_team_cd = row['GMKEY'][10:12]
                     else:
-                        vs_team_cd = s_index[8:10]
+                        vs_team_cd = row['GMKEY'][8:10]
 
-                    n_game_continue[how_k] = {
-                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
-                        '경기수': n_game_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
-                    }
+                    continue_date = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    if continue_date:
+                        n_game_continue[how_k] = {
+                            '날짜': continue_date,
+                            '경기수': n_game_counter,
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                        }
                     break
 
-        # N경기 타점 셋팅
-        for place_k, place_v in place_dict.items():
-            n_game_continue[place_k] = {
-                '날짜': '',
-                '경기수': 0,
-                '상대팀': ''
-            }
-            n_game_counter = 0
-            for i, (s_index, places) in enumerate(s_place.items()):
-                if i == n_game_counter and any(item in place_v for item in places):
-                    n_game_counter += 1
-                else:
-                    if s_index[8:10] == hitter_team_cd:
-                        vs_team_cd = s_index[10:12]
-                    else:
-                        vs_team_cd = s_index[8:10]
-
-                    n_game_continue[place_k] = {
-                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
-                        '경기수': n_game_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
-                    }
-                    break
-
-        s_pa_how = df_game['HOW']
-        s_pa_place = df_game['PLACE']
-
-        # N타석 안타, 출루 셋팅
-        n_pa_counter = {}
-        for how_k, how_v in how_dict.items():
-            n_pa_counter[how_k] = 0
-            for i, how in enumerate(s_pa_how.values):
-                if i == n_pa_counter[how_k] and how in how_v:
-                    n_pa_counter[how_k] += 1
-                else:
-                    break
-
-        # N타석 타점 셋팅
-        for place_k, place_v in place_dict.items():
-            n_pa_counter[place_k] = 0
-            for i, place in enumerate(s_pa_place.values):
-                if i == n_pa_counter[place_k] and place in place_v:
-                    n_pa_counter[place_k] += 1
-                else:
-                    break
-
-        # N경기 만에 안타, 출루 셋팅
+        # N경기 만에 안타
         n_game_last = {}
         for how_k, how_v in how_dict.items():
             n_game_last[how_k] = {
@@ -185,27 +132,138 @@ class Records(object):
                 '경기수': 0,
                 '상대팀': ''
             }
-            n_game_last_counter = 1
-            for i, (s_index, hows) in enumerate(s_how.items()):
-                if i == 0 and not any(item in how_v for item in hows):
-                    break
-                elif i == 0 and any(item in how_v for item in hows):
+            n_game_last_counter = 0
+            for i, row in df_hitter.iterrows():
+                if i == 0 and row[how_v] > 0:
+                    n_game_last_counter += 1
                     continue
+                elif i == 0 and row[how_v] == 0:
+                    break
 
-                if i == n_game_last_counter and not any(item in how_v for item in hows):
+                if row[how_v] == 0:
                     n_game_last_counter += 1
                 else:
-                    if s_index[8:10] == hitter_team_cd:
-                        vs_team_cd = s_index[10:12]
+                    if row['GMKEY'][8:10] == hitter_team_cd:
+                        vs_team_cd = row['GMKEY'][10:12]
                     else:
-                        vs_team_cd = s_index[8:10]
+                        vs_team_cd = row['GMKEY'][8:10]
 
-                    n_game_last[how_k] = {
-                        '날짜': self.get_date_kor(game_date, s_index[0:8]),
-                        '경기수': n_game_last_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
-                    }
+                    last_date = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    if last_date:
+                        n_game_last[how_k] = {
+                            '날짜': last_date,
+                            '경기수': n_game_last_counter,
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                        }
                     break
+
+        # df_game = df[['GMKEY', 'HOW', 'PLACE']]
+        # s_how = df_game.groupby('GMKEY')['HOW'].apply(list)
+        # s_place = df_game.groupby('GMKEY')['PLACE'].apply(list)
+        #
+        # s_how = s_how.sort_index(ascending=False)
+        # s_place = s_place.sort_index(ascending=False)
+
+        # N경기 안타, 출루 셋팅
+        # n_game_continue = {}
+        # for how_k, how_v in how_dict.items():
+        #     n_game_continue[how_k] = {
+        #         '날짜': '',
+        #         '경기수': 0,
+        #         '상대팀': ''
+        #     }
+        #     n_game_counter = 0
+        #     for i, (s_index, hows) in enumerate(s_how.items()):
+        #         if i == n_game_counter and any(item in how_v for item in hows):
+        #             n_game_counter += 1
+        #         else:
+        #             if s_index[8:10] == hitter_team_cd:
+        #                 vs_team_cd = s_index[10:12]
+        #             else:
+        #                 vs_team_cd = s_index[8:10]
+        #
+        #             n_game_continue[how_k] = {
+        #                 '날짜': self.get_date_kor(game_date, s_index[0:8]),
+        #                 '경기수': n_game_counter,
+        #                 '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+        #             }
+        #             break
+
+        # N경기 타점 셋팅
+        # for place_k, place_v in place_dict.items():
+        #     n_game_continue[place_k] = {
+        #         '날짜': '',
+        #         '경기수': 0,
+        #         '상대팀': ''
+        #     }
+        #     n_game_counter = 0
+        #     for i, (s_index, places) in enumerate(s_place.items()):
+        #         if i == n_game_counter and any(item in place_v for item in places):
+        #             n_game_counter += 1
+        #         else:
+        #             if s_index[8:10] == hitter_team_cd:
+        #                 vs_team_cd = s_index[10:12]
+        #             else:
+        #                 vs_team_cd = s_index[8:10]
+        #
+        #             n_game_continue[place_k] = {
+        #                 '날짜': self.get_date_kor(game_date, s_index[0:8]),
+        #                 '경기수': n_game_counter,
+        #                 '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+        #             }
+        #             break
+
+        # s_pa_how = df_game['HOW']
+        # s_pa_place = df_game['PLACE']
+
+        # N타석 안타, 출루 셋팅
+        # n_pa_counter = {}
+        # for how_k, how_v in how_dict.items():
+        #     n_pa_counter[how_k] = 0
+        #     for i, how in enumerate(s_pa_how.values):
+        #         if i == n_pa_counter[how_k] and how in how_v:
+        #             n_pa_counter[how_k] += 1
+        #         else:
+        #             break
+
+        # N타석 타점 셋팅
+        # for place_k, place_v in place_dict.items():
+        #     n_pa_counter[place_k] = 0
+        #     for i, place in enumerate(s_pa_place.values):
+        #         if i == n_pa_counter[place_k] and place in place_v:
+        #             n_pa_counter[place_k] += 1
+        #         else:
+        #             break
+
+        # N경기 만에 안타, 출루 셋팅
+        # n_game_last = {}
+        # for how_k, how_v in how_dict.items():
+        #     n_game_last[how_k] = {
+        #         '날짜': '',
+        #         '경기수': 0,
+        #         '상대팀': ''
+        #     }
+        #     n_game_last_counter = 1
+        #     for i, (s_index, hows) in enumerate(s_how.items()):
+        #         if i == 0 and not any(item in how_v for item in hows):
+        #             break
+        #         elif i == 0 and any(item in how_v for item in hows):
+        #             continue
+        #
+        #         if i == n_game_last_counter and not any(item in how_v for item in hows):
+        #             n_game_last_counter += 1
+        #         else:
+        #             if s_index[8:10] == hitter_team_cd:
+        #                 vs_team_cd = s_index[10:12]
+        #             else:
+        #                 vs_team_cd = s_index[8:10]
+        #
+        #             n_game_last[how_k] = {
+        #                 '날짜': self.get_date_kor(game_date, s_index[0:8]),
+        #                 '경기수': n_game_last_counter,
+        #                 '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+        #             }
+        #             break
 
         return n_game_continue, n_game_last
 

@@ -178,9 +178,14 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
-    def get_hitter(self, hitter_code, limit=None):
+    def get_hitter(self, hitter_code, where_phrase=None, limit=None):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')
+
+        if where_phrase is None:
+            where_state = ' '
+        else:
+            where_state = ' {}'.format(where_phrase)
 
         if limit is None:
             limit_state = ' '
@@ -188,7 +193,7 @@ class Lab2AIConnector(object):
             limit_state = " LIMIT {0} ".format(limit)
 
         query_format = self.ql.get_query("query_hitter", "get_hitter")
-        query = query_format.format(HITTER=hitter_code, LIMIT=limit_state)
+        query = query_format.format(HITTER=hitter_code, WHERE=where_state, LIMIT=limit_state)
 
         df = pd.read_sql(query, conn)
         conn.close()

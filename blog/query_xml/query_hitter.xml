@@ -21,6 +21,7 @@
 		SELECT GMKEY, GDAY, TB, NAME, PCODE, TURN, ONETURN, PA, AB, RBI, RUN, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, ERR, LOB, SCORE
         FROM minor_baseball.hitter
         WHERE PCODE = '{HITTER}'
+		{WHERE}
         ORDER BY gday DESC
         {LIMIT}
 	</query>
