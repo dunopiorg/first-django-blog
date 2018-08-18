@@ -20,14 +20,12 @@ class Records(object):
         game_dt = datetime.strptime(game_date, '%Y%m%d')
         record_dt = datetime.strptime(record_date, '%Y%m%d')
         dt = game_dt - record_dt
-        if 60 > dt.days > 25:
+        if dt.days > 25:
             s_format = "{0}월 {1}일".format(record_dt.month, record_dt.day)
-        elif dt.days <= 25:
-            s_format = "지난 {0}일".format(record_dt.day)
         else:
-            return None
+            s_format = "지난 {0}일".format(record_dt.day)
 
-        return s_format
+        return s_format, dt.days
 
     @classmethod
     def get_minor_team_name(cls):
@@ -115,8 +113,8 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
 
-                    continue_date = self.get_date_kor(game_date, row['GMKEY'][0:8])
-                    if continue_date:
+                    continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    if continue_days <= 15:
                         n_game_continue[how_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
@@ -148,7 +146,7 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
 
-                    last_date = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                     if last_date:
                         n_game_last[how_k] = {
                             '날짜': last_date,
@@ -489,12 +487,13 @@ class Records(object):
                         vs_team_cd = row['GMKEY'][10:12]
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
-
-                    n_game_continue[wls_k] = {
-                        '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
-                        '경기수': n_game_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
-                    }
+                    continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    if continue_days <= 30:
+                        n_game_continue[wls_k] = {
+                            '날짜': continue_date,
+                            '경기수': n_game_counter,
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                        }
                     break
 
         # n경기 연속 홀드
@@ -513,11 +512,13 @@ class Records(object):
                 else:
                     vs_team_cd = row['GMKEY'][8:10]
 
-                n_game_continue['홀드'] = {
-                    '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
-                    '경기수': n_game_counter,
-                    '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
-                }
+                continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                if continue_days <= 30:
+                    n_game_continue['홀드'] = {
+                        '날짜': continue_date,
+                        '경기수': n_game_counter,
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    }
                 break
 
         # n경기 만에 승패세
@@ -542,9 +543,9 @@ class Records(object):
                         vs_team_cd = row['GMKEY'][10:12]
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
-
+                    last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                     n_game_last[wls_k] = {
-                        '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                        '날짜': last_date,
                         '경기수': n_game_last_counter,
                         '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
                     }
@@ -571,8 +572,9 @@ class Records(object):
                 else:
                     vs_team_cd = row['GMKEY'][8:10]
 
+                last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                 n_game_last['홀드'] = {
-                    '날짜': self.get_date_kor(game_date, row['GMKEY'][0:8]),
+                    '날짜': last_date,
                     '경기수': n_game_last_counter,
                     '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
                 }
