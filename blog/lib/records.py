@@ -101,7 +101,8 @@ class Records(object):
             n_game_continue[how_k] = {
                 '날짜': '',
                 '경기수': 0,
-                '상대팀': ''
+                '상대팀': '',
+                '스타디움': '',
             }
             n_game_counter = 0
             for i, row in df_hitter.iterrows():
@@ -113,12 +114,15 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
 
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                    s_gameinfo = df_gameinfo.iloc[0]
                     continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                     if continue_days <= 15:
                         n_game_continue[how_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
-                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
+                            '스타디움': s_gameinfo['Stadium']
                         }
                     break
 
@@ -128,7 +132,8 @@ class Records(object):
             n_game_last[how_k] = {
                 '날짜': '',
                 '경기수': 0,
-                '상대팀': ''
+                '상대팀': '',
+                '스타디움': '',
             }
             n_game_last_counter = 0
             for i, row in df_hitter.iterrows():
@@ -146,12 +151,15 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
 
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                    s_gameinfo = df_gameinfo.iloc[0]
                     last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                     if last_date:
                         n_game_last[how_k] = {
                             '날짜': last_date,
                             '경기수': n_game_last_counter,
-                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
+                            '스타디움': s_gameinfo['Stadium']
                         }
                     break
 
@@ -476,7 +484,8 @@ class Records(object):
             n_game_continue[wls_k] = {
                 '날짜': '',
                 '경기수': 0,
-                '상대팀': ''
+                '상대팀': '',
+                '스타디움': '',
             }
             n_game_counter = 0
             for i, row in df.iterrows():
@@ -488,11 +497,14 @@ class Records(object):
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
                     continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                    s_gameinfo = df_gameinfo.iloc[0]
                     if continue_days <= 30:
                         n_game_continue[wls_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
-                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd], 
+                            '스타디움': s_gameinfo['Stadium']
                         }
                     break
 
@@ -500,7 +512,8 @@ class Records(object):
         n_game_continue['홀드'] = {
             '날짜': '',
             '경기수': 0,
-            '상대팀': ''
+            '상대팀': '',
+            '스타디움': '',
         }
         n_game_counter = 0
         for i, row in df.iterrows():
@@ -512,12 +525,15 @@ class Records(object):
                 else:
                     vs_team_cd = row['GMKEY'][8:10]
 
+                df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                s_gameinfo = df_gameinfo.iloc[0]
                 continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                 if continue_days <= 30:
                     n_game_continue['홀드'] = {
                         '날짜': continue_date,
                         '경기수': n_game_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
+                        '스타디움': s_gameinfo['Stadium']
                     }
                 break
 
@@ -527,7 +543,8 @@ class Records(object):
             n_game_last[wls_k] = {
                 '날짜': '',
                 '경기수': 0,
-                '상대팀': ''
+                '상대팀': '',
+                '스타디움': '',
             }
             n_game_last_counter = 1
             for i, row in df.iterrows():
@@ -543,11 +560,15 @@ class Records(object):
                         vs_team_cd = row['GMKEY'][10:12]
                     else:
                         vs_team_cd = row['GMKEY'][8:10]
+
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                    s_gameinfo = df_gameinfo.iloc[0]
                     last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                     n_game_last[wls_k] = {
                         '날짜': last_date,
                         '경기수': n_game_last_counter,
-                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                        '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
+                        '스타디움': s_gameinfo['Stadium']
                     }
                     break
 
@@ -555,7 +576,8 @@ class Records(object):
         n_game_last['홀드'] = {
             '날짜': '',
             '경기수': 0,
-            '상대팀': ''
+            '상대팀': '',
+            '스타디움': '',
         }
         n_game_last_counter = 1
         for i, row in df.iterrows():
@@ -572,11 +594,14 @@ class Records(object):
                 else:
                     vs_team_cd = row['GMKEY'][8:10]
 
+                df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                s_gameinfo = df_gameinfo.iloc[0]
                 last_date, last_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
                 n_game_last['홀드'] = {
                     '날짜': last_date,
                     '경기수': n_game_last_counter,
-                    '상대팀': self.MINOR_TEAM_NAME[vs_team_cd]
+                    '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
+                    '스타디움': s_gameinfo['Stadium']
                 }
                 break
         return n_game_continue, n_game_last
