@@ -109,14 +109,18 @@ class Records(object):
                 if i == n_game_counter and row[how_v] > 0:
                     n_game_counter += 1
                 else:
-                    if row['GMKEY'][8:10] == hitter_team_cd:
-                        vs_team_cd = row['GMKEY'][10:12]
-                    else:
-                        vs_team_cd = row['GMKEY'][8:10]
+                    if n_game_counter == 0:
+                        break
 
-                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                    i_row = df_hitter.iloc[i - 1]
+                    if i_row['GMKEY'][8:10] == hitter_team_cd:
+                        vs_team_cd = i_row['GMKEY'][10:12]
+                    else:
+                        vs_team_cd = i_row['GMKEY'][8:10]
+
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=i_row['GMKEY'])
                     s_gameinfo = df_gameinfo.iloc[0]
-                    continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                    continue_date, continue_days = self.get_date_kor(game_date, i_row['GMKEY'][0:8])
                     if continue_days <= 15:
                         n_game_continue[how_k] = {
                             '날짜': continue_date,
@@ -492,18 +496,22 @@ class Records(object):
                 if i == n_game_counter and row['WLS'] == wls_v:
                     n_game_counter += 1
                 else:
-                    if row['TB'] == 'T':
-                        vs_team_cd = row['GMKEY'][10:12]
+                    if n_game_counter == 0:
+                        break
+
+                    i_row = df.iloc[i - 1]
+                    if i_row['TB'] == 'T':
+                        vs_team_cd = i_row['GMKEY'][10:12]
                     else:
-                        vs_team_cd = row['GMKEY'][8:10]
-                    continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
-                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                        vs_team_cd = i_row['GMKEY'][8:10]
+                    continue_date, continue_days = self.get_date_kor(game_date, i_row['GMKEY'][0:8])
+                    df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=i_row['GMKEY'])
                     s_gameinfo = df_gameinfo.iloc[0]
                     if continue_days <= 30:
                         n_game_continue[wls_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
-                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd], 
+                            '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                             '스타디움': s_gameinfo['Stadium']
                         }
                     break
@@ -520,14 +528,18 @@ class Records(object):
             if i == n_game_counter and row['HOLD'] > 0:
                 n_game_counter += 1
             else:
-                if row['TB'] == 'T':
-                    vs_team_cd = row['GMKEY'][10:12]
-                else:
-                    vs_team_cd = row['GMKEY'][8:10]
+                if n_game_counter == 0:
+                    break
 
-                df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=row['GMKEY'])
+                i_row = df.iloc[i - 1]
+                if i_row['TB'] == 'T':
+                    vs_team_cd = i_row['GMKEY'][10:12]
+                else:
+                    vs_team_cd = i_row['GMKEY'][8:10]
+
+                df_gameinfo = self.lab2ai_conn.get_gameinfo(game_id=i_row['GMKEY'])
                 s_gameinfo = df_gameinfo.iloc[0]
-                continue_date, continue_days = self.get_date_kor(game_date, row['GMKEY'][0:8])
+                continue_date, continue_days = self.get_date_kor(game_date, i_row['GMKEY'][0:8])
                 if continue_days <= 30:
                     n_game_continue['홀드'] = {
                         '날짜': continue_date,
