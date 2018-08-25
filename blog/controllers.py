@@ -251,7 +251,7 @@ class RecordApp(object):
                             info_dict['text'] += ' '
                             info_dict['text'] += pitcher_sentence['sentence']
                     article_list.append(info_dict['text'])
-                elif isinstance(info_dict['info'], list) and 'pcode' in info_dict['info'][0]:  # 주요선수
+                elif isinstance(info_dict['info'], list) and info_dict['info'] and 'pcode' in info_dict['info'][0]:  # 주요선수
                     for top_info in info_dict['info']:
                         if top_info['pcode'] in top_hitter_dict:
                             info_dict['text'] += ' '
