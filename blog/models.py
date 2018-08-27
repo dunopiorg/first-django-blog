@@ -418,6 +418,22 @@ class Lab2AIConnector(object):
         conn.close()
         return df
 
+    def get_today_team_record(self, game_id, wls):
+        conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
+                               db=self._DATABASE, charset='utf8mb4')
+
+        if wls == 'W':
+            wls_state = 'L'
+        else:
+            wls_state = 'W'
+
+        query_format = self.ql.get_query("query_common", "get_today_team_record")
+        query = query_format.format(GMKEY=game_id, WLS=wls_state)
+
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
     def get_team_vs_wls(self, team_code, versus_team, game_id):
         conn = pymysql.connect(host=self._HOST, port=self._PORT, user=self._USER, password=self._PASSWORD,
                                db=self._DATABASE, charset='utf8mb4')

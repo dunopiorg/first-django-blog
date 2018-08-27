@@ -37,7 +37,7 @@ class Records(object):
         df_team = cls.lab2ai_conn.get_kbo_team_name_info()
         return df_team.set_index('team')['team_kor'].to_dict()
 
-    def set_wls_score(self, game_id, team_code):
+    def get_wls_score(self, game_id, team_code):
         df_team_wls = self.lab2ai_conn.get_team_wls(team_code, game_id)
         wls_list = df_team_wls['WLS'].tolist()
         return wls_list
@@ -813,8 +813,12 @@ class Records(object):
         result_list = []
 
         # df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
-        wls_list = self.set_wls_score(game_id, team_code)
+        wls_list = self.get_wls_score(game_id, team_code)
+        df_winner_record = self.lab2ai_conn.get_today_team_record(game_id, 'W')
         # wls_list = df_team_score['WLS'].tolist()
+        if df_winner_record.empty:
+            return None
+        winner_record = df_winner_record.iloc[0]
         continue_w = 0
         after_w_game_cnt = 1
         after_d_cnt = 0
@@ -852,7 +856,9 @@ class Records(object):
         data_dict['직전_연패수'] = continue_l
         data_dict['승_이후_경기수'] = after_w_game_cnt
         data_dict['승_이후_무승부수'] = after_d_cnt
-        data_dict['승리팀'] = self.MINOR_TEAM_NAME[team_code]
+        data_dict['오늘_안타수'] = winner_record['HIT']
+        data_dict['오늘_홈런수'] = winner_record['HR']
+        data_dict['오늘_득점'] = winner_record['R']
         # result_list.append(data_dict)
 
         return data_dict
@@ -862,9 +868,14 @@ class Records(object):
         result_list = []
 
         # df_score = self.lab2ai_conn.get_team_score(team_code, game_id)
-        wls_list = self.set_wls_score(game_id, team_code)
+        wls_list = self.get_wls_score(game_id, team_code)
+        df_loser_record = self.lab2ai_conn.get_today_team_record(game_id, 'L')
         # wls_list = df_team_score['WLS'].tolist()
 
+        if df_loser_record.empty:
+            return None
+
+        loser_record = df_loser_record.iloc[0]
         continue_l = 0
         continue_w = 0
         after_l_game_cnt = 1
@@ -900,7 +911,9 @@ class Records(object):
         data_dict['직전_연승수'] = continue_w
         data_dict['패_이후_경기수'] = after_l_game_cnt
         data_dict['패_이후_무승부수'] = after_d_cnt
-        data_dict['패배팀'] = self.MINOR_TEAM_NAME[team_code]
+        data_dict['오늘_안타수'] = loser_record['HIT']
+        data_dict['오늘_홈런수'] = loser_record['HR']
+        data_dict['오늘_득점'] = loser_record['R']
         # result_list.append(data_dict)
 
         return data_dict

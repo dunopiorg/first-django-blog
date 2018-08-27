@@ -59,10 +59,18 @@
 		SELECT GMKEY, GDAY, TB, WLS
         FROM minor_baseball.pitcher
         where gday like '{YEAR}%'
-        AND GDAY &lt;= {GDAY}
+        AND GDAY &lt;= '{GDAY}'
         and PCODE IN ('T', 'B')
         and (gmkey like '%__{TEAM}0' and tb = 'B' or gmkey like '%{TEAM}__0' and tb = 'T')
         ORDER BY GDAY DESC
+	</query>
+
+    <query id="get_today_team_record">
+		SELECT GMKEY, GDAY, TB, WLS, PA, AB, HIT, H2, H3, HR, SB, CS, SH, SF, BB, IB, HP, KK, GD, WP, BK, ERR, R, ER
+        FROM minor_baseball.pitcher
+        where GMKEY = '{GMKEY}'
+        and PCODE IN ('T', 'B')
+        and WLS = '{WLS}'
 	</query>
 
     <query id="get_team_vs_wls">
