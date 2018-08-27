@@ -836,7 +836,9 @@ class Records(object):
             else:
                 break
 
-        for wls in wls_list:
+        for i, wls in enumerate(wls_list):
+            if i == 0:
+                continue
             if wls == 'L':
                 continue_l += 1
             else:
