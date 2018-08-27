@@ -241,15 +241,15 @@ def futures(request, game_id):
     article_dict_v2 = RecordApp().get_article_v2(game_id)
 
     # Lab64 요청
-    if article_dict_v1 is None:
-        call_refresh_game_lab64(game_id)
-        args, lab64_status = get_article_from_lab64(game_id)
-        if args['success']:
-            article_dict_v1 = RecordApp().set_article_v1_to_db(args)
-        else:
-            return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
-    else:
-        article_dict_v1 = article_dict_v1[0]
+    # if article_dict_v1 is None:
+    #     call_refresh_game_lab64(game_id)
+    #     args, lab64_status = get_article_from_lab64(game_id)
+    #     if args['success']:
+    #         article_dict_v1 = RecordApp().set_article_v1_to_db(args)
+    #     else:
+    #         return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
+    # else:
+    #     article_dict_v1 = article_dict_v1[0]
 
     if article_dict_v2 is None:
         args_v2, lab64_status_v2 = get_article_from_lab64_v2(game_id)
@@ -260,6 +260,7 @@ def futures(request, game_id):
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
     else:
         article_dict_v2 = article_dict_v2[0]
+    article_dict_v1 = article_dict_v2
 
     title_v1 = article_dict_v1['title']
     article_text_v1 = article_dict_v1['article']
@@ -285,10 +286,11 @@ def refresh_futures(request, version, game_id):
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args['status']})
     else:
-        article_dict_v1 = RecordApp().get_article(game_id)[0]
+        # article_dict_v1 = RecordApp().get_article(game_id)[0]
         args_v2, lab64_status_v2 = get_article_from_lab64_v2(game_id)
         if args_v2['success']:
             article_dict_v2 = RecordApp().set_article_v2_to_db(args_v2)
+            article_dict_v1 = article_dict_v2
         else:
             return render(request, 'blog/futures_article.html', {'status': 'ERROR', 'error': args_v2['status']})
 

@@ -22,12 +22,14 @@ class RecordApp(object):
         if win_team_data:
             _win_team = self.get_variable_dict(win_team_data)
             data_dict['승리팀'] = _win_team
+            data_dict['팀전적'] = ''
             # sentence_list.extend(win_team_data)
 
         loss_team_data = self.record.get_team_loss_record(loss_team, game_id)
         if loss_team_data:
             _loss_team = self.get_variable_dict(loss_team_data)
             data_dict['패배팀'] = _loss_team
+            data_dict['팀전적'] = ''
             # sentence_list.extend(loss_team_data)
 
         versus_team_data = self.record.get_team_versus_record(win_team, loss_team, game_id)

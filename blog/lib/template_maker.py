@@ -39,7 +39,7 @@ class Template(object):
         for sub in subject_list:
             df_sub_data = df_data[df_data[cfg.SUBJECT] == sub]
             if df_sub_data.empty:
-                return result_list
+                continue
             df_sub_db = team_para_db[team_para_db[cfg.SUBJECT] == sub]
             sub_data_keys = list(df_sub_data[cfg.CATEGORY].unique())
             for i, row_sub_db in df_sub_db.iterrows():
