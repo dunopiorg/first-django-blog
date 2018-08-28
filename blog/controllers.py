@@ -47,24 +47,45 @@ class RecordApp(object):
 
         return result_list
 
+    def get_team_draw(self, game_id):
+        data_dict = {'무승부': ''}
+
+        top_team_data = self.record.get_team_draw_record(game_id, 'T')
+        if top_team_data:
+            _top_team = self.get_variable_dict(top_team_data)
+            data_dict['원정팀'] = _top_team
+
+        bottom_team_data = self.record.get_team_draw_record(game_id, 'B')
+        if bottom_team_data:
+            _bottom_team = self.get_variable_dict(bottom_team_data)
+            data_dict['홈팀'] = _bottom_team
+
+        combine_var = self.template.get_combine_variable(data_dict, cfg.TABLE_COMBINE_VARIABLE)
+        data_dict.update(combine_var)
+
+        result_sentence = self.template.get_sentence_list(data_dict, cfg.TABLE_TEAM_SENTENCE)
+
     def get_paragraph(self, game_id):
+        result = ''
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)
         team_score = df_all_score.iloc[0]
         t_socre = team_score['TPOINT']
         b_socre = team_score['BPOINT']
 
-        if t_socre > b_socre:
-            win_team = game_id[8:10]
-            loss_team = game_id[10:12]
-        elif t_socre < b_socre:
-            loss_team = game_id[8:10]
-            win_team = game_id[10:12]
+        if t_socre == b_socre:
+            self.get_team_draw(game_id)
         else:
-            return ''
+            if t_socre > b_socre:
+                win_team = game_id[8:10]
+                loss_team = game_id[10:12]
+            else:
+                loss_team = game_id[8:10]
+                win_team = game_id[10:12]
 
-        result_list = self.get_team_paragraph(win_team, loss_team, game_id)
-        result_list = [d for d in result_list if d]
-        result = ' '.join(result_list)
+
+            result_list = self.get_team_paragraph(win_team, loss_team, game_id)
+            result_list = [d for d in result_list if d]
+            result = ' '.join(result_list)
 
         return result
     # endregion [TEAM EVENT]

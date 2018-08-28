@@ -424,8 +424,10 @@ class Lab2AIConnector(object):
 
         if wls == 'W':
             wls_state = 'L'
-        else:
+        elif wls == 'L':
             wls_state = 'W'
+        else:
+            wls_state = 'D'
 
         query_format = self.ql.get_query("query_common", "get_today_team_record")
         query = query_format.format(GMKEY=game_id, WLS=wls_state)

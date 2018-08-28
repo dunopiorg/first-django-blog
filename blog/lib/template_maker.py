@@ -85,6 +85,22 @@ class Template(object):
             val.__setattr__(d['key'], d['value'])
 
         return val
+
+    def get_combine_variable(self, data_dict, table_name):
+        result_list = []
+        result_dict = {}
+        lab2ai_conn = Lab2AIConnector()
+        df_db = lab2ai_conn.get_template_db_by_name(table_name)
+
+        for i, row in df_db.iterrows():
+            if all(subject in data_dict.keys() for subject in row['subject'].split(',')):
+                row_condition = row[cfg.CONDITIONS]
+                str_condition = row_condition.format(**data_dict)
+                if eval(str_condition):
+                    result_dict[row[cfg.NAME]] = self.get_text(row[cfg.SENTENCE], data_dict)
+                    result_list.append(result_dict)
+
+        return result_list
     # endregion [변수생성]
 
     # region [ETC FUNCTIONS]

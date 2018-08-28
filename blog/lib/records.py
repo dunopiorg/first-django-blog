@@ -978,6 +978,27 @@ class Records(object):
         versus_continue_dict['전적'] = versus_result
         # result_list.append(versus_score_dict)
         return versus_continue_dict
+
+    def get_team_draw_record(self, game_id, tb):
+        data_dict = {}
+
+        df_draw_record = self.lab2ai_conn.get_today_team_record(game_id, 'D')
+        if tb == 'T':
+            _tb = 'B'
+        else:
+            _tb = 'T'
+
+        team_code = game_id[8:10] if tb == 'T' else game_id[10:12]
+
+        s_team = df_draw_record[df_draw_record['TB'] == _tb].iloc[0]
+
+        data_dict[cfg.CATEGORY] = '무승부'
+        data_dict['이름'] = self.MINOR_TEAM_NAME[team_code]
+        data_dict['안타수'] = s_team['HIT']
+        data_dict['홈런수'] = s_team['HR']
+        data_dict['득점'] = s_team['R']
+
+        return data_dict
     # endregion [TEAM EVENT]
 
 
