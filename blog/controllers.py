@@ -49,6 +49,7 @@ class RecordApp(object):
 
     def get_team_draw(self, game_id):
         data_dict = {'무승부': ''}
+        result_list = []
 
         top_team_data = self.record.get_team_draw_record(game_id, 'T')
         if top_team_data:
@@ -61,9 +62,15 @@ class RecordApp(object):
             data_dict['홈팀'] = _bottom_team
 
         combine_var = self.template.get_combine_variable(data_dict, cfg.TABLE_COMBINE_VARIABLE)
-        data_dict.update(combine_var)
+        if combine_var:
+            for var_dict in combine_var:
+                data_dict.update(var_dict)
 
         result_sentence = self.template.get_sentence_list(data_dict, cfg.TABLE_TEAM_SENTENCE)
+        if result_sentence:
+            result_list.append(result_sentence[0]['sentence'])
+
+        return result_list
 
     def get_paragraph(self, game_id):
         result = ''
@@ -73,7 +80,9 @@ class RecordApp(object):
         b_socre = team_score['BPOINT']
 
         if t_socre == b_socre:
-            self.get_team_draw(game_id)
+            result_list = self.get_team_draw(game_id)
+            result_list = [d for d in result_list if d]
+            result = ' '.join(result_list)
         else:
             if t_socre > b_socre:
                 win_team = game_id[8:10]
@@ -81,7 +90,6 @@ class RecordApp(object):
             else:
                 loss_team = game_id[8:10]
                 win_team = game_id[10:12]
-
 
             result_list = self.get_team_paragraph(win_team, loss_team, game_id)
             result_list = [d for d in result_list if d]

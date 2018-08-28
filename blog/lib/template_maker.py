@@ -97,7 +97,7 @@ class Template(object):
                 row_condition = row[cfg.CONDITIONS]
                 str_condition = row_condition.format(**data_dict)
                 if eval(str_condition):
-                    result_dict[row[cfg.NAME]] = self.get_text(row[cfg.SENTENCE], data_dict)
+                    result_dict[row[cfg.NAME]] = self.get_text(row[cfg.VALUE], data_dict)
                     result_list.append(result_dict)
 
         return result_list
@@ -117,7 +117,8 @@ class Template(object):
                     c_str = text[index + 1]
                     change_form = "{0:%s}" % c_str
                     change_words = l10n.Template(change_form).format(l_str)[1:]
-                    text = text.replace(text[index:index + 2], change_words)
+                    # text = text.replace(text[index:index + 2], change_words)
+                    text = "".join((text[:index], change_words, text[index+2:]))
 
             # text = l10n.Template(s).format(**data_dict)
             # text = l10n.proofread(text)
