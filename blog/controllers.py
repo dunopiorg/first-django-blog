@@ -255,12 +255,12 @@ class RecordApp(object):
                                 hitter_sentence_list = self.template.get_sentence_list(data_dict, cfg.TABLE_HALF_INNING_SENTENCE)
                                 if hitter_sentence_list:
                                     hitter_event_info = hitter_sentence_list[0]
-                                    if _hitter_code in top_hitter_dict:
-                                        if hitter_event_info['sentence'] not in top_hitter_dict[_hitter_code]:
-                                            top_hitter_dict[_hitter_code].append(hitter_event_info['sentence'])
-                                    else:
-                                        info_dict['text'] += ' '
-                                        info_dict['text'] += hitter_event_info['sentence']
+                                    # if _hitter_code in top_hitter_dict:
+                                    #     if hitter_event_info['sentence'] not in top_hitter_dict[_hitter_code]:
+                                    #         top_hitter_dict[_hitter_code].append(hitter_event_info['sentence'])
+                                    # else:
+                                    info_dict['text'] += ' '
+                                    info_dict['text'] += hitter_event_info['sentence']
 
                 if isinstance(info_dict['info'], dict) and 'inning' in info_dict['info']:
                     if prev_inning == info_dict['info']['inning']:
@@ -268,10 +268,11 @@ class RecordApp(object):
                     else:
                         article_list.append(info_dict['text'])
                         prev_inning = info_dict['info']['inning']
-                elif isinstance(info_dict['info'], dict) and 'pcode' in info_dict['info']:  # 주요선수
-                    if info_dict['info']['pcode'] in top_hitter_dict:
-                        info_dict['text'] += ' '
-                        info_dict['text'] += ' '.join(top_hitter_dict[info_dict['info']['pcode']])
+                elif isinstance(info_dict['info'], dict) and 'pcode' in info_dict['info']:
+                    # 주요선수
+                    # if info_dict['info']['pcode'] in top_hitter_dict:
+                    #     info_dict['text'] += ' '
+                    #     info_dict['text'] += ' '.join(top_hitter_dict[info_dict['info']['pcode']])
                     if info_dict['info']['pcode'] in pitcher_list:
                         pitcher_info = self.get_pitcher_event(game_id, info_dict['info']['pcode'])
                         data_dict = {'투수': pitcher_info}
@@ -282,11 +283,12 @@ class RecordApp(object):
                             info_dict['text'] += ' '
                             info_dict['text'] += pitcher_sentence['sentence']
                     article_list.append(info_dict['text'])
-                elif isinstance(info_dict['info'], list) and info_dict['info'] and 'pcode' in info_dict['info'][0]:  # 주요선수
+                elif isinstance(info_dict['info'], list) and info_dict['info'] and 'pcode' in info_dict['info'][0]:
+                    # 주요선수
                     for top_info in info_dict['info']:
-                        if top_info['pcode'] in top_hitter_dict:
-                            info_dict['text'] += ' '
-                            info_dict['text'] += ' '.join(top_hitter_dict[top_info['pcode']])
+                        # if top_info['pcode'] in top_hitter_dict:
+                        #     info_dict['text'] += ' '
+                        #     info_dict['text'] += ' '.join(top_hitter_dict[top_info['pcode']])
                         if top_info['pcode'] in pitcher_list:
                             pitcher_info = self.get_pitcher_event(game_id, info_dict['info']['pcode'])
                             data_dict = {'투수': pitcher_info}
