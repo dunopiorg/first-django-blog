@@ -992,11 +992,14 @@ class Records(object):
 
         s_team = df_draw_record[df_draw_record['TB'] == _tb].iloc[0]
 
+        r = s_team['R']
+        hit = s_team['HIT']
+
         data_dict[cfg.CATEGORY] = '무승부'
         data_dict['이름'] = self.MINOR_TEAM_NAME[team_code]
-        data_dict['안타수'] = s_team['HIT']
+        data_dict['안타수'] = hit if hit > 0 else '무'
         data_dict['홈런수'] = s_team['HR']
-        data_dict['득점'] = s_team['R']
+        data_dict['득점'] = r if r > 0 else '무'
 
         return data_dict
     # endregion [TEAM EVENT]
