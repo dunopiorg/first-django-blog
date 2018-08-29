@@ -262,13 +262,14 @@ class RecordApp(object):
                                     info_dict['text'] += ' '
                                     info_dict['text'] += hitter_event_info['sentence']
 
-                if isinstance(info_dict['info'], dict) and 'inning' in info_dict['info']:
-                    if prev_inning == info_dict['info']['inning']:
-                        article_list[-1] += " {}".format(info_dict['text'])
-                    else:
-                        article_list.append(info_dict['text'])
-                        prev_inning = info_dict['info']['inning']
-                elif isinstance(info_dict['info'], dict) and 'pcode' in info_dict['info']:
+                # if isinstance(info_dict['info'], dict) and 'inning' in info_dict['info']:
+                #     if prev_inning == info_dict['info']['inning']:
+                #         article_list[-1] += " {}".format(info_dict['text'])
+                #     else:
+                #         article_list.append(info_dict['text'])
+                #         prev_inning = info_dict['info']['inning']
+                # elif isinstance(info_dict['info'], dict) and 'pcode' in info_dict['info']:
+                if isinstance(info_dict['info'], dict) and 'pcode' in info_dict['info']:
                     # 주요선수
                     # if info_dict['info']['pcode'] in top_hitter_dict:
                     #     info_dict['text'] += ' '
