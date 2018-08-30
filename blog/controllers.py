@@ -73,7 +73,6 @@ class RecordApp(object):
         return result_list
 
     def get_paragraph(self, game_id):
-        result = ''
         df_all_score = self.lab2ai_conn.get_test_team_scores(game_id)
         team_score = df_all_score.iloc[0]
         t_socre = team_score['TPOINT']

@@ -38,7 +38,7 @@ def get_article(request):
             else:
                 article_dict = article_dict_v2
 
-            sender_dict= {}
+            sender_dict = {}
             if article_dict:
                 sender_dict['game_id'] = requested_game_id
                 sender_dict['status'] = 'OK'

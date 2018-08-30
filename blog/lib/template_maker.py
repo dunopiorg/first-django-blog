@@ -33,7 +33,7 @@ class Template(object):
 
     def get_team_paragraph(self, df_data, data_dict):
         result_list = []
-        team_para_db = self.TEAM_PARAGRAPH_DB.sort_values(by=[cfg.SUBJECT, cfg.CATEGORY, cfg.INDEX])
+        team_para_db = self.TEAM_PARAGRAPH_DB.sort_values(by=[cfg.SUBJECT, cfg.INDEX, cfg.CATEGORY])
         subject_list = list(team_para_db[cfg.SUBJECT].unique())
 
         for sub in subject_list:
