@@ -99,6 +99,7 @@ class Template(object):
                 if eval(str_condition):
                     result_dict[row[cfg.NAME]] = self.get_text(row[cfg.VALUE], data_dict)
                     result_list.append(result_dict)
+                    break
 
         return result_list
     # endregion [변수생성]
