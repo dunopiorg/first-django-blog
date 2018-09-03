@@ -20,10 +20,12 @@ class Records(object):
         game_dt = datetime.strptime(game_date, '%Y%m%d')
         record_dt = datetime.strptime(record_date, '%Y%m%d')
         dt = game_dt - record_dt
-        if dt.days > 25:
-            s_format = "지난 {0}월 {1}일".format(record_dt.month, record_dt.day)
-        else:
-            s_format = "지난 {0}일".format(record_dt.day)
+        # if dt.days > 25:
+        #     s_format = "지난 {0}월 {1}일".format(record_dt.month, record_dt.day)
+        # else:
+        #     s_format = "지난 {0}일".format(record_dt.day)
+            
+        s_format = "지난 {0}월 {1}일".format(record_dt.month, record_dt.day)
 
         return s_format, dt.days
 
