@@ -858,12 +858,12 @@ class Records(object):
         data_dict['직전_연패수'] = continue_l
         data_dict['승_이후_경기수'] = after_w_game_cnt
         data_dict['승_이후_무승부수'] = after_d_cnt
-        data_dict['안타수'] = winner_record['HIT'] if winner_record['HIT'] > 0 else '무'
-        data_dict['홈런수'] = winner_record['HR'] if winner_record['HR'] > 0 else '무'
-        data_dict['득점'] = winner_record['R'] if winner_record['R'] > 0 else '무'
-        data_dict['오늘_안타수'] = winner_record['HIT']
-        data_dict['오늘_홈런수'] = winner_record['HR']
-        data_dict['오늘_득점'] = winner_record['R']
+        data_dict['안타수'] = winner_record['HIT']
+        data_dict['홈런수'] = winner_record['HR']
+        data_dict['득점'] = winner_record['R']
+        data_dict['오늘_안타수'] = winner_record['HIT'] if winner_record['HIT'] > 0 else '무'
+        data_dict['오늘_홈런수'] = winner_record['HR'] if winner_record['HR'] > 0 else '무'
+        data_dict['오늘_득점'] = winner_record['R'] if winner_record['R'] > 0 else '무'
         # result_list.append(data_dict)
 
         return data_dict
@@ -916,12 +916,12 @@ class Records(object):
         data_dict['직전_연승수'] = continue_w
         data_dict['패_이후_경기수'] = after_l_game_cnt
         data_dict['패_이후_무승부수'] = after_d_cnt
-        data_dict['안타수'] = loser_record['HIT'] if loser_record['HIT'] > 0 else '무'
-        data_dict['홈런수'] = loser_record['HR'] if loser_record['HR'] > 0 else '무'
-        data_dict['득점'] = loser_record['R'] if loser_record['R'] > 0 else '무'
-        data_dict['오늘_안타수'] = loser_record['HIT']
-        data_dict['오늘_홈런수'] = loser_record['HR']
-        data_dict['오늘_득점'] = loser_record['R']
+        data_dict['안타수'] = loser_record['HIT']
+        data_dict['홈런수'] = loser_record['HR']
+        data_dict['득점'] = loser_record['R']
+        data_dict['오늘_안타수'] = loser_record['HIT'] if loser_record['HIT'] > 0 else '무'
+        data_dict['오늘_홈런수'] = loser_record['HR'] if loser_record['HR'] > 0 else '무'
+        data_dict['오늘_득점'] = loser_record['R'] if loser_record['R'] > 0 else '무'
         # result_list.append(data_dict)
 
         return data_dict
