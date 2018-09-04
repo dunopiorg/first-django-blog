@@ -180,7 +180,7 @@ class RecordApp(object):
 
         return article_dict
 
-    def set_article_v2_to_db(self, args):
+    def set_article_v2_to_db(self, args, insert_flag=True):
         article_dict = {}
         lab2ai_conn = Lab2AIConnector()
 
@@ -204,7 +204,8 @@ class RecordApp(object):
 
         article_dict['article'] = article_text.rstrip('\n\n') + stadium_text
         article_dict['created_at'] = self.change_date_array(args['created_at'])
-        lab2ai_conn.insert_article_v2(article_dict)
+        if insert_flag:
+            lab2ai_conn.insert_article_v2(article_dict)
 
         return article_dict
 
@@ -399,6 +400,15 @@ class RecordApp(object):
         d = date_time
         result = datetime.strptime(d, "%Y-%d-%m %X").strftime("%Y-%m-%d %X")
         return result
+
+    def get_game_id_start_end_date(self, start_date, end_date):
+        df_gameinfo = self.lab2ai_conn.get_gameinfo()
+        df_gameinfo = df_gameinfo[(df_gameinfo['Gday'] >= start_date) & (df_gameinfo['Gday'] <= end_date)]
+        df_gameinfo = df_gameinfo.sort_values(by='Gday', ascending=False)
+
+        s_gameinfo = df_gameinfo['GmKey']
+        result_list = s_gameinfo.tolist()
+        return result_list
     # endregion [ETC FUNCTIONS]
 
 

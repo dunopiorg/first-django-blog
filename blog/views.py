@@ -306,6 +306,28 @@ def refresh_futures(request, version, game_id):
     return render(request, 'blog/futures_article.html', result_article)
 
 
+def get_plain_article(request):
+    result_articles = []
+    if request.method == 'GET':
+        if 'start' in request.GET:
+            start_date = request.GET.get('start', None)
+            end_date = request.GET.get('end', None)
+
+            record = RecordApp()
+            game_list = record.get_game_id_start_end_date(start_date, end_date)
+
+            for game_id in game_list:
+                result_args, lab64_status = get_article_from_lab64_v2(game_id)
+                if result_args['success']:
+                    article_dict = RecordApp().set_article_v2_to_db(result_args, insert_flag=False)
+                    text_list = article_dict['article'].split("\n\n")
+                    result_articles.append({'title': article_dict['title'], 'text_list': text_list, 'game_id': game_id})
+
+        articles = {'articles': result_articles}
+
+    return render(request, 'blog/plain_articles.html', articles)
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)

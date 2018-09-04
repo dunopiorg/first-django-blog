@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Plain Articles</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>
+                   <form action="/blog/plain_articles" method="GET" >
+                       <div class="form-group">
+                           <label for="StartDate">Start Date</label>
+                           <input type="text" class="form-control" id="startDate" name="start" aria-describedby="emailHelp" placeholder="Start Date">
+                       </div>
+                       <div class="form-group">
+                           <label for="EndDate">End Date</label>
+                           <input type="text" class="form-control" id="endDate" name="end" placeholder="End Date">
+                       </div>
+                       <button type="submit" class="btn btn-primary">Submit</button>
+                   </form>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+        <tr>
+            <th scope="row">#{{ article.game_id }}</th>
+            <td align="center">
+                <div class="card" align="left" style="width: 55rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Titile : {{article.title}}
+                        </h5>
+                        {% for text in article.text_list %}
+                            <p class="card-text">
+                                {{text}}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

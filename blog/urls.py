@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^publish/$', views.set_article, name='publish'),
     url(r'^get_article/$', views.get_article_v2),
     url(r'^update-template-db/$', views.db_setting_viewer),
+    url(r'^plain_articles$', views.get_plain_article),
     url(r'^update-template-db/(?P<db_name>\S+)/$', views.db_setting_viewer),
     url(r'^home$', views.home),
     url(r'^futures/(?P<game_id>\S+)$', views.futures),
