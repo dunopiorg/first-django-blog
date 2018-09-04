@@ -280,7 +280,8 @@ class RecordApp(object):
                                         #     if hitter_event_info['sentence'] not in top_hitter_dict[_hitter_code]:
                                         #         top_hitter_dict[_hitter_code].append(hitter_event_info['sentence'])
                                         # else:
-                                        if _final_hit.존재여부 and _final_hit.이닝 == _inning and _length == 1 and info_dict['text'][-2] == '다':
+                                        if _final_hit.존재여부 and _final_hit.이닝 == _inning and _length == 1\
+                                                and info_dict['text'][-2] == '다' and hitter_event_info['subject'] == '결승타':
                                             info_dict['text'] = "".join((info_dict['text'][:-2], '고, '))
                                         else:
                                             info_dict['text'] += ' '
