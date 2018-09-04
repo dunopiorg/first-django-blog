@@ -211,7 +211,7 @@ class RecordApp(object):
     def get_article_text_dict(self, info_list, game_id=None):
         result_dict = {}
         article_list = []
-        hitter_how_event_list = ['홈런', '안타', '2루타', '3루타']
+        hitter_how_event_list = ['홈런', '안타']
         prev_inning = 0
         final_hit_dict = self.get_final_hit_event(game_id)
         _final_hit = final_hit_dict['결승타']
