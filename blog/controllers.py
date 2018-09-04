@@ -261,6 +261,10 @@ class RecordApp(object):
                                 data_dict = {'_타격종류': _how_kor, '타자': hitter_info}
                                 if _final_hit.존재여부 and _final_hit.선수코드 == _hitter_code and \
                                         _final_hit.타격종류 == _how_kor and _final_hit.이닝 == _inning:
+                                    if _how == 'HR':
+                                        _final_hit.타격종류 = '홈런'
+                                    elif _how in ['H1', 'HI', 'HB', 'H2', 'H3']:
+                                        _final_hit.타격종류 = '안타'
                                     final_hit_dict['_기록리스트길이'] = _length
                                     data_dict.update(final_hit_dict)
                                 hitter_sentence_list = self.template.get_sentence_list(data_dict, cfg.TABLE_HALF_INNING_SENTENCE)

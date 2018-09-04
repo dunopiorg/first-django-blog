@@ -426,10 +426,7 @@ class Records(object):
                     if how_code not in cfg.HIT:
                         return data_dict
                     else:
-                        if how_code == 'HR':
-                            how_code = cfg.HOW_KOR_DICT[how_code]
-                        elif how_code in ['H1', 'HI', 'HB', 'H2', 'H3']:
-                            how_code = '안타'
+                        how_code = cfg.HOW_KOR_DICT[how_code]
 
                     inn_no = s_record['INN_NO']
                     data_dict['선수명'] = s_person['NAME']
