@@ -47,7 +47,7 @@ def get_article(request):
                 sender_dict['serial'] = article_dict['serial']
                 sender_dict['title'] = article_dict['title']
                 sender_dict['article'] = article_dict['article']
-                sender_dict['created_at'] = article_dict['args_created_at']
+                sender_dict['created_at'] = article_dict['created_at']
                 response = JsonResponse(sender_dict)
             else:
                 response = JsonResponse({'status': 'FAIL', 'message': 'There are some missing data'})
