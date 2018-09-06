@@ -993,6 +993,8 @@ class Records(object):
         loss_kor = "{}패".format(wls_list.count('L')) if wls_list.count('L') > 0 else "무패"
         if wls_list.count('D') == 0:
             versus_result = "{} {}".format(win_kor, loss_kor)
+        elif wls_list.count('L') == 0:
+            versus_result = "{} {}무".format(win_kor, wls_list.count('D'))
         else:
             versus_result = "{} {}무 {}".format(win_kor, wls_list.count('D'), loss_kor)
         versus_continue_dict['전적'] = versus_result
