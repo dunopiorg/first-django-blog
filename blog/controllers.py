@@ -212,6 +212,7 @@ class RecordApp(object):
     def get_article_text_dict(self, info_list, game_id=None):
         result_dict = {}
         article_list = []
+        used_hitter_dict = {}
         hitter_how_event_list = ['홈런', '안타']
         prev_inning = 0
         final_hit_dict = self.get_final_hit_event(game_id)
@@ -252,8 +253,9 @@ class RecordApp(object):
                         if 'hitter_events' not in info:
                             continue
                         _inning = info['inning']
-                        _length = len(info['hitter_events'])
+                        _hitter_event_length = len(info['hitter_events'])
                         for hitter_events in info['hitter_events']:
+                            _score_scenes_length = len(hitter_events['score_scenes'])
                             for score_scene in hitter_events['score_scenes']:
                                 _hitter_code = score_scene['hitter_or_runner'][0]['pcode']
                                 _how = score_scene['how']
@@ -266,7 +268,7 @@ class RecordApp(object):
                                         _final_hit.타격종류 = '홈런'
                                     elif _how in ['H1', 'HI', 'HB', 'H2', 'H3']:
                                         _final_hit.타격종류 = '안타'
-                                    final_hit_dict['_기록리스트길이'] = _length
+                                    final_hit_dict['_기록리스트길이'] = _hitter_event_length if _hitter_event_length >= _score_scenes_length else _score_scenes_length
                                     data_dict.update(final_hit_dict)
                                 hitter_sentence_list = self.template.get_sentence_list(data_dict, cfg.TABLE_HALF_INNING_SENTENCE)
                                 if hitter_sentence_list:
@@ -274,6 +276,12 @@ class RecordApp(object):
                                     for n, hitter_event_info in enumerate(hitter_sentence_list):
                                         if n == 2:
                                             break
+                                        if _hitter_code not in used_hitter_dict:
+                                            used_hitter_dict[_hitter_code] = []
+                                            used_hitter_dict[_hitter_code].append(hitter_event_info['sentence'])
+                                        elif _hitter_code in used_hitter_dict and hitter_event_info['sentence'] in used_hitter_dict[_hitter_code]:
+                                            continue
+
                                         if _hitter_code in top_hitter_how_dict:
                                             top_hitter_how_dict[_hitter_code].append(_how_kor)
                                             if _hitter_code not in top_hitter_info_dict:
@@ -281,7 +289,7 @@ class RecordApp(object):
                                         #     if hitter_event_info['sentence'] not in top_hitter_dict[_hitter_code]:
                                         #         top_hitter_dict[_hitter_code].append(hitter_event_info['sentence'])
                                         # else:
-                                        if _final_hit.존재여부 and _final_hit.이닝 == _inning and _length == 1\
+                                        if _final_hit.존재여부 and _final_hit.이닝 == _inning and _hitter_event_length == 1\
                                                 and info_dict['text'][-2] == '다' and hitter_event_info['subject'] == '결승타':
                                             info_dict['text'] = "".join((info_dict['text'][:-2], '고, '))
                                         else:
