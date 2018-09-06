@@ -103,6 +103,7 @@ class Records(object):
             n_game_continue[how_k] = {
                 '날짜': '',
                 '경기수': 0,
+                '일수': 0,
                 '상대팀': '',
                 '스타디움': '',
             }
@@ -127,6 +128,7 @@ class Records(object):
                         n_game_continue[how_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
+                            '일수': continue_days,
                             '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                             '스타디움': s_gameinfo['Stadium']
                         }
@@ -138,6 +140,7 @@ class Records(object):
             n_game_last[how_k] = {
                 '날짜': '',
                 '경기수': 0,
+                '일수': 0,
                 '상대팀': '',
                 '스타디움': '',
             }
@@ -164,6 +167,7 @@ class Records(object):
                         n_game_last[how_k] = {
                             '날짜': last_date,
                             '경기수': n_game_last_counter,
+                            '일수': last_days,
                             '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                             '스타디움': s_gameinfo['Stadium']
                         }
@@ -490,6 +494,7 @@ class Records(object):
             n_game_continue[wls_k] = {
                 '날짜': '',
                 '경기수': 0,
+                '일수': 0,
                 '상대팀': '',
                 '스타디움': '',
             }
@@ -513,6 +518,7 @@ class Records(object):
                         n_game_continue[wls_k] = {
                             '날짜': continue_date,
                             '경기수': n_game_counter,
+                            '일수': continue_days,
                             '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                             '스타디움': s_gameinfo['Stadium']
                         }
@@ -522,6 +528,7 @@ class Records(object):
         n_game_continue['홀드'] = {
             '날짜': '',
             '경기수': 0,
+            '일수': 0,
             '상대팀': '',
             '스타디움': '',
         }
@@ -546,6 +553,7 @@ class Records(object):
                     n_game_continue['홀드'] = {
                         '날짜': continue_date,
                         '경기수': n_game_counter,
+                        '일수': continue_days,
                         '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                         '스타디움': s_gameinfo['Stadium']
                     }
@@ -557,6 +565,7 @@ class Records(object):
             n_game_last[wls_k] = {
                 '날짜': '',
                 '경기수': 0,
+                '일수': 0,
                 '상대팀': '',
                 '스타디움': '',
             }
@@ -581,6 +590,7 @@ class Records(object):
                     n_game_last[wls_k] = {
                         '날짜': last_date,
                         '경기수': n_game_last_counter,
+                        '일수': last_days,
                         '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                         '스타디움': s_gameinfo['Stadium']
                     }
@@ -590,6 +600,7 @@ class Records(object):
         n_game_last['홀드'] = {
             '날짜': '',
             '경기수': 0,
+            '일수': 0,
             '상대팀': '',
             '스타디움': '',
         }
@@ -614,6 +625,7 @@ class Records(object):
                 n_game_last['홀드'] = {
                     '날짜': last_date,
                     '경기수': n_game_last_counter,
+                    '일수': last_days,
                     '상대팀': self.MINOR_TEAM_NAME[vs_team_cd],
                     '스타디움': s_gameinfo['Stadium']
                 }
