@@ -408,13 +408,19 @@ class Records(object):
         df_record_matrix = lab2ai_conn.get_ie_record_matrix_mix(game_id)
         df_record_matrix = df_record_matrix.sort_values(by='SEQNO', ascending=False)
 
+        s_record_matrix = df_record_matrix.iloc[0]
+        if s_record_matrix['AFTER_AWAY_SCORE_CN'] > s_record_matrix['AFTER_HOME_SCORE_CN']:
+            tb_win = 'T'
+        else:
+            tb_win = 'B'
+
         index_cnt = 0
         for i, row in df_record_matrix.iterrows():
             if index_cnt == 0 and row['AFTER_SCORE_GAP_CN'] == 0:
                 return data_dict
             else:
                 index_cnt += 1
-                if row['AFTER_SCORE_GAP_CN'] == 0:
+                if (tb_win == 'T' and row['AFTER_SCORE_GAP_CN'] >= 0) or (tb_win == 'B' and row['AFTER_SCORE_GAP_CN'] <= 0):
                     s_record = df_record_matrix.iloc[index_cnt - 2]
                     team_name = cls.get_minor_team_name()
 
